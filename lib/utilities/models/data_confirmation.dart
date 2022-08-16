@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled/controllers.dart';
+import 'package:untitled/features/landing_pages/home_main14.dart';
+import 'package:untitled/features/registration_feature/create_pin.dart';
 import 'package:untitled/features/registration_feature/sign_up_personal_details.dart';
+import 'package:untitled/main.dart';
 import 'package:untitled/utilities/constants/colors.dart';
 import 'package:untitled/utilities/constants/textstyles.dart';
 import 'package:untitled/utilities/widgets.dart';
@@ -16,7 +23,7 @@ class DataConfirmation extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding:  EdgeInsets.only(left: 10.w,top: 10.h,right: 10.w ),
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             child: SingleChildScrollView(
               child: (
@@ -45,7 +52,7 @@ class DataConfirmation extends StatelessWidget {
                             SizedBox(height: 43.h,),
                             Padding(
                               padding:  EdgeInsets.only(left: 35),
-                              child: Image.memory(base64String,width: 266.w,height: 163.h,),
+                              child: Image.network(context.read<FirstData>().userImgUrl.toString(),width: 266.w,height: 163.h,),
                             )
                           ],),),
                       SizedBox(height: 21.h,),
@@ -64,9 +71,9 @@ class DataConfirmation extends StatelessWidget {
                             DetailsTile(controller:confirmationEmailCont , title: 'Email address', icondata:Icons.email_outlined ,),
                             DetailsTile(controller:confirmationFirstnameCont , title: 'First name', icondata: Icons.drive_file_rename_outline,),
                             DetailsTile(controller:confirmationLastnameCont , title: 'Last name', icondata:Icons.drive_file_rename_outline ,),
-                            DetailsTile(controller:confirmationStreetAddressCont , title: 'Street Address', icondata:Icons.location_on ,),
-                            DetailsTile(controller:confirmationCityCont , title:'City' , icondata:Icons.location_city ,),
-                            DetailsTile(controller: confirmationCountryCont, title: 'Country of residence', icondata: Icons.apartment_sharp,),
+                            // DetailsTile(controller:confirmationStreetAddressCont , title: 'Street Address', icondata:Icons.location_on ,),
+                            // DetailsTile(controller:confirmationCityCont , title:'City' , icondata:Icons.location_city ,),
+                            // DetailsTile(controller: confirmationCountryCont, title: 'Country of residence', icondata: Icons.apartment_sharp,),
                             DetailsTile(controller:confirmationDobCont , title:'Date of Birth' , icondata: Icons.calendar_today,),
                             DetailsTile(controller:confirmationDocIDCont , title:'Document ID' , icondata:Icons.event_note_outlined ,),
                             SizedBox(height: 34.h,),
@@ -78,6 +85,9 @@ class DataConfirmation extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                     primary: kBlue),
                                 onPressed: ()async{
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) =>  CreateTPin()
+                                  ));
                                 },
                                 child: Text('Submit',style: TextStyle(fontSize: 15.sp),),
                               ),

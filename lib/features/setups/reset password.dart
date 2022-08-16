@@ -47,7 +47,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     padding:  EdgeInsets.only(bottom: 24.h,top: 9.h),
                     child:Flex(
                       direction: Axis.horizontal,
-                      children: [ InputBox(hintText: 'Email Adress or Phone Number', controller: emailphoneController)], )
+                      children: [ InputBox(hintText: 'Email Adress or Phone Number', controller: emailphoneController, textInputType: TextInputType.emailAddress,)], )
                   ),
                   SizedBox(
                     height: 51.h,
