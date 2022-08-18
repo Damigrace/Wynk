@@ -14,10 +14,14 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: WillPopScope(
+        onWillPop: () async{
+          print('now popping');
+          return Navigator.maybePop(context);
+        },
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
           child: Container(
             height: double.infinity,
@@ -28,10 +32,10 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Padding(
                     padding:  EdgeInsets.only(top: 305.h),
-                    child: Image.asset('lib/assets/images/image (1).png',width: 230.w,height: 142.h,),
+                    child: Image.asset('lib/assets/images/wynkimage.png',width: 230.w,height: 142.h,),
                   ),
                   Text('Rides. Payments. Lifestyle',style: TextStyle(
-                    fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.normal,
                       color: kLightPurple,
                       fontSize: 20.sp
                   ),),

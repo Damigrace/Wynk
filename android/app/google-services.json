@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "218005353166",
+    "project_id": "wynk-a4a14",
+    "storage_bucket": "wynk-a4a14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218005353166:android:e2572367a4c52e4fdd969f",
+        "android_client_info": {
+          "package_name": "com.example.untitled"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218005353166-b5func7u3bt48j33ern4fcut3oqr83ki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3sekKHKhGkjyPTFf8rLqahk2C-StoQ4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218005353166-b5func7u3bt48j33ern4fcut3oqr83ki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -75,7 +75,7 @@ class _SignUpPersonalDetailsState extends State<SignUpPersonalDetails> {
                       child: ElevatedButton(
 
                         style: ElevatedButton.styleFrom(
-                            primary: kBlue),
+                            backgroundColor: kBlue),
                         onPressed: ()async{
                           if(context.read<FirstData>().isReg==true){
                             showToast('You have a record in the database');
@@ -84,17 +84,12 @@ class _SignUpPersonalDetailsState extends State<SignUpPersonalDetails> {
                             });
                           }
                           context.read<FirstData>().getUsername(firstNameController.text);
-                          FocusScope.of(context).dispose();
-                          setState(() {
-                            showSpinner=true;
-                          });
+                          spinner(context);
                           await getVerificationDetails(context);
+                          Navigator.pop(context);
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) => const DataConfirmation()
                           ));
-                          setState(() {
-                            showSpinner=false;
-                          });
                           },
                         child: Text('Submit',style: TextStyle(fontSize: 15.sp),),
                       ),

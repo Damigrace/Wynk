@@ -7,6 +7,10 @@ List<String> iDTypes=[
   'National ID card',
   'Bank Verification Number',
   ];
+List<String> packages=[
+  'postpaid',
+  'prepaid'
+];
 List<String> carBrands=[
   'Car Brand 1',
   'Car Brand 2',

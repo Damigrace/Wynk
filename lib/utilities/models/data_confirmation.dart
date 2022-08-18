@@ -83,7 +83,7 @@ class DataConfirmation extends StatelessWidget {
                               width: double.infinity,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: kBlue),
+                                    backgroundColor: kBlue),
                                 onPressed: ()async{
                                   Navigator.push(
                                       context, MaterialPageRoute(builder: (context) =>  CreateTPin()

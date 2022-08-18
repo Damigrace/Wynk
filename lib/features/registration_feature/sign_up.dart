@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/features/registration_feature/sign_up_personal_details.dart';
 import 'package:untitled/main.dart';
 import 'package:untitled/utilities/constants/colors.dart';
@@ -49,10 +50,11 @@ class _SignUpState extends State<SignUp> {
                   ),
                   SizedBox(height: 33.h),
                   SizedBox(
-                    height: 70.h,
-                    width: 196.w,
-                    child: Text('Almost there...',
-                      style: kTextStyle1)),
+                    child: Container(
+                      width: 196.w,
+                      child: Text('Almost there...',
+                        style: kTextStyle1)),
+                  ),
                   Padding(
                     padding:  EdgeInsets.only(bottom: 15.h,top: 58.h),
                     child: Text('Identity Verification',
@@ -122,11 +124,14 @@ class _SignUpState extends State<SignUp> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: kBlue),
+                          backgroundColor: kBlue),
                       onPressed: () async {
                         setState(() {
                           showSpinner=true;
                         });
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('Origwynkid',context.read<FirstData>().uniqueId!
+                        );
                         switch(selectedIDType){
                           case 'National ID card': context.read<FirstData>().getSelectedId('nin');break;
                           case 'Bank Verification Number': context.read<FirstData>().getSelectedId('bvn');break;

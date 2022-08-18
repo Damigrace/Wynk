@@ -1,20 +1,21 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
+import 'package:infobip_rtc/infobip_rtc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/controllers.dart';
 import 'package:untitled/features/landing_pages/home_main14.dart';
+import 'package:untitled/features/landing_pages/welcome_page.dart';
 import 'package:untitled/features/registration_feature/register_page.dart';
 import 'package:untitled/features/registration_feature/signup_camera_permission.dart';
 import 'package:untitled/main.dart';
@@ -36,20 +37,27 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
   String? text;
   bool showSpinner=false;
   String? numCode;
-  bool numComplete=false;
   int selectedV=0;
   String? errorT;
+
+  var bordCol = kGrey1;
   @override
   void dispose() {
-    confirmTPinController.clear();
+
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
+
     text=context.read<FirstData>().username?.toLowerCase();
     // Uint8List? pic=base64Decode(context.read<FirstData>().userP.toString());
     return Scaffold(
       body: SafeArea(
+        child: WillPopScope(
+          onWillPop: () async{
+            return  await Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) =>  WelcomePage()));
+          },
         child: ModalProgressHUD(
           progressIndicator: CircularProgressIndicator(color: kBlue,),
           inAsyncCall: showSpinner,
@@ -58,7 +66,17 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
             child: SingleChildScrollView(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  backButton(context),
+                  Container(height: 36.h,width: 36.h,
+                    decoration: BoxDecoration(
+                        color: kBlue,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: GestureDetector(
+                      child: Icon(Icons.keyboard_arrow_left,color: Colors.white,size: 30.w,),
+                      onTap: ()=> Navigator.pushReplacement(
+                          context, MaterialPageRoute(builder: (context) =>  WelcomePage())),
+                    ),
+                  ),
                   SizedBox(height: 55.h,),
                   Align(
                     alignment: Alignment.center,
@@ -75,47 +93,7 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                   Container(
                     height: 71.h,
                     margin: const EdgeInsets.only(top: 9),
-                    child: IntlPhoneField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                      ],
-                      autofocus: true,
-                      controller: userNumLogController,
-                      autovalidateMode: AutovalidateMode.disabled,
-                      flagsButtonPadding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration:  InputDecoration(
-                        hintText: '8101234567',
-                        errorText: errorT,
-                        focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)
-                        ),
-                        counter: const Offstage(),
-                        labelText: 'Mobile Number',
-                        labelStyle: const TextStyle(color: Color(0xffAFAFB6)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7),
-                          borderSide: const BorderSide(),
-                        ),
-                      ),
-                      initialCountryCode: 'NG',
-                      showDropdownIcon: true,
-                      dropdownIconPosition:IconPosition.trailing,
-                      onChanged: (phone) {
-                        setState(() {
-                          if (userNumLogController.text.length<10){
-                            setState(() {
-                              errorT = 'Number Too Short';
-                              numComplete=false;
-                            });
-                          }
-                          else{
-                            FocusScope.of(context).nextFocus();
-                            numComplete=true;
-                            errorT = null;}
-                        });
-                        numCode=phone.countryCode;
-                      },
-                    ),
+                    child: phoneField()
                   ),
                   SizedBox(height: 36.h,),
                   Align(
@@ -153,46 +131,59 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                           fieldWidth: 51.w,
                         ),
                         animationDuration: Duration(milliseconds: 300),
-                        controller: confirmTPinController,
+                        controller: confirmAnotherUserPinController,
                         onCompleted: (v) async{
                           userConfirmTpin=v;
-                          setState(() {
-                            showSpinner=true;
-                          });
-
+                          showDialog(
+                            barrierDismissible: false,
+                              context: context,
+                              builder: (context)=>
+                              Center(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: kBlue,
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  width: 150.w,
+                                  child: Card(
+                                    color: kBlue,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(height: 10.h,),
+                                        SpinKitCircle(color: kYellow,),
+                                        SizedBox(height: 10.h,),
+                                        Text('Logging in...',style: TextStyle(color: Colors.white,fontSize: 18.sp),textAlign: TextAlign.center,),
+                                        SizedBox(height: 10.h,),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ));
                           final prefs = await SharedPreferences.getInstance();
-
                           try {
                             print(userConfirmTpin);
-                            Map loginResponse =
-                            await sendLoginDetails(pin: userConfirmTpin!,numCode: numCode);
-                            print('$userConfirmTpin,   2');
-                            fullnameCont.text = loginResponse['name'];
-                            emailController.text = loginResponse['email'];
-                            confirmationPhoneCont.text = loginResponse['phone'];
-                            prefs.setString('Origwynkid',loginResponse['username']);
-                            if(loginResponse['statusCode']==200){
-                               final userDet = await getUserRegisteredDetails(wynkId: loginResponse['username']);
+                            Map loginResponse = await sendLoginDetails2(pin: userConfirmTpin!,numCode: context.read<FirstData>().numCode);
+                            if(loginResponse['statusCode'] == 200){
+                              fullnameCont.text = loginResponse['name'];
+                              emailController.text = loginResponse['email'];
+                              confirmationPhoneCont.text = loginResponse['phone'];
+                              prefs.setString('Origwynkid',loginResponse['username']);
+                             final userDet = await getUserRegisteredDetails(wynkId: loginResponse['username']);
                               context.read<FirstData>().getUserP(prefs.getString('userPic'));
                               context.read<FirstData>().getUsername(userDet['firstname']);
-                              print('correct');
-                              setState(() {
-                                showSpinner=false;
-                              });
-                              FocusScope.of(context).dispose();
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) =>  HomeMain14()));}
 
-                            else if(loginResponse['statusCode']!=200){
-                              setState(() {
-                                showSpinner=false;
-                              });
-                              print('incorrect');
-                              showToast('It seems you entered a wrong pin! Try again.');}
+                              context.read<FirstData>().saveShowLoginNotif(true);
+                              prefs.setString('mypin',confirmAnotherUserPinController.text);
+                              confirmAnotherUserPinController.clear();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>  HomeMain14()));
+                            }
+                            else{
+                              Navigator.pop(context);
+                              showToast(loginResponse['errorMessage']);
+                            }
                           }
                           catch(e) {
-                            showSpinner = false;
-                            setState(() {});
                             confirmTPinController.clear();
                           }
                         }
@@ -209,7 +200,9 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(child: Text('Forgot Your PIN?',style: TextStyle(color: kBlue),),onPressed: (){},),
+                      TextButton(child: Text('Forgot Your PIN?',style: TextStyle(color: kBlue),),onPressed: (){
+                        //postRequest3(WynkId: 'WYNK77875279');
+                      },),
                       TextButton(
                         child: Text('Register',style: TextStyle(color:  kBlue,fontSize: 15.sp),),onPressed: (){
                         Get.to(()=>
@@ -221,7 +214,7 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
               ),
             ),
           ),
-        ),
+        ),)
       ),
     );
   }

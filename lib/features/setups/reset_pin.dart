@@ -78,7 +78,7 @@ class ResetPin extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: kBlue
+                        backgroundColor: kBlue
                     ),
                     onPressed: () async {
                       if(confirmTPinController.text==transactionPinController.text){

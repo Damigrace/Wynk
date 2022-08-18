@@ -2,14 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:untitled/features/vault/vault_home.dart';
 import 'package:untitled/main.dart';
 import 'package:untitled/services.dart';
 import 'package:untitled/utilities/constants/colors.dart';
 
 import '../../controllers.dart';
 import '../../utilities/widgets.dart';
+import '../local_notif.dart';
 class DriverFound extends StatefulWidget {
   DriverFound({Key? key}) : super(key: key);
 
@@ -18,17 +24,6 @@ class DriverFound extends StatefulWidget {
 }
 
 class _DriverFoundState extends State<DriverFound> {
-  String? rating = '4.4';
-
-  String? carMake = 'Toyota';
-
-  String? carModel = 'Camry';
-
-  String? carColor = 'Blue';
-
-  String? captainName = 'Adeola';
-
-  String? captainId = 'WYNK1234567';
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +32,7 @@ class _DriverFoundState extends State<DriverFound> {
       width:MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-      ),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
       padding: EdgeInsets.only(left: 40.w,right: 40.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +41,7 @@ class _DriverFoundState extends State<DriverFound> {
           SizedBox(height: 10.h,),
           Image.asset('lib/assets/images/handle.png',width: 57.w,height: 12.h,),
           SizedBox(height: 22.h,),
-          Text('Captain arrives in some minutes',style: TextStyle(fontSize: 18.sp),),
+          Text(context.watch<CaptainDetails>().captainArrivalInfo,style: TextStyle(fontSize: 18.sp),),
           SizedBox(height: 48.h,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,63 +49,72 @@ class _DriverFoundState extends State<DriverFound> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('$carColor $carMake $carModel',style: TextStyle(fontSize: 10.sp),),
+                  Text('${context.read<CaptainDetails>().carColor} ${context.read<CaptainDetails>().carBrand} ${context.read<CaptainDetails>().carModel}',style: TextStyle(fontSize: 10.sp),),
                   SizedBox(height: 9.h,),
-                  Text(captainId!,style: TextStyle(fontSize: 18.sp),),
+                  Text(context.read<CaptainDetails>().capPlate!,style: TextStyle(fontSize: 18.sp),),
                   SizedBox(height: 22.h,),
-                  Text('Your Captain is $captainName',style: TextStyle(fontSize: 18.sp),),
+                  Text('Your Captain is ${context.read<CaptainDetails>().capName}',style: TextStyle(fontSize: 18.sp),),
                 ],),
               Container(
                 width: 71.w,height: 81.h,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Positioned(child: CircleAvatar(
-                      radius: 35.w,
+                    Positioned(child: SizedBox(
+                      width: 70.w,
+                      height: 70.h,
+                      child: CircleAvatar(
+                       backgroundImage: NetworkImage('https://wynk.ng/stagging-api/picture/${context.read<CaptainDetails>().capId}.png'),
+                      ),
                     )),
                     Positioned(
-
                         bottom: 0,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal:9.w,vertical: 6.h ),
+                          padding: EdgeInsets.symmetric(horizontal:3.w,vertical: 2.h ),
                           height: 21.h,
                           width:49.w,
                           decoration:  BoxDecoration(
                               color: kBlue,
                               borderRadius:BorderRadius.circular(25)
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset('lib/assets/images/star.png'),
-                              Text(rating??'unknown',style: TextStyle(fontSize: 10.sp,color: Colors.white),)
-                            ],),
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: RatingBarIndicator(
+                              itemBuilder: (context, index) => Icon(Icons.star,color: kYellow,),
+                              rating: double.parse(context.read<CaptainDetails>().capRating!),
+                              direction: Axis.horizontal,
+                            ),
+                          ),
                         ))
                   ],
                 ),
               )
             ],),
+          Flexible(child:SizedBox(
+              height: 53.h
+          )),
           Container(
-            margin: EdgeInsets.only(top: 53.h),
+
             height: 51.h,
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  primary: kBlue
+                  backgroundColor: kBlue
               ),
               onPressed: (){
                 context.read<FirstData>().topBar(false);
                 context.read<FirstData>().backButton(true);
                 ContactCaptain(context);
-                controller1.jumpTo(0.2);
+                // capFoundCont.jumpTo(0.2);
 
               },
               child: Text('Contact Captain',style: TextStyle(fontSize: 15.sp),),
             ),
           ),
+          SizedBox(height: 10.h,)
         ],),);
   }
-}  final controller = DraggableScrollableController();
+}
 Future CallCaptainInApp(BuildContext context){
 
  return showModalBottomSheet(
@@ -140,46 +143,45 @@ Future CallCaptainInApp(BuildContext context){
             child: SingleChildScrollView(
                 controller: scrollController1,
                 physics: ClampingScrollPhysics(),
-                child: LayoutBuilder(builder: (context, constraints) {
+                child:  LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
                   if(controller2.size < 0.2){
-
-                    controller2.jumpTo(0.2);
-                    controller1.jumpTo(0.1);
-
-                    return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15.h,),
-                      Image.asset('lib/assets/images/handle_straight.png',width: 57.w,height: 7.h,),
-                      SizedBox(height: 59.h,),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 71.w,
-                            height: 71.w,
-                            child: Hero(
-                                tag: 'CA',
-                                child: CircleAvatar()) ,),
-                          SizedBox(width: 18.w,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Cap. Adeola',style: TextStyle(fontSize: 18.sp),),
-                              SizedBox(height: 4.h,),
-                              Text('Ringing...',style: TextStyle(fontSize: 12.sp,color: Colors.grey),),
-                            ],
-                          ),
-                          Expanded(child: SizedBox(width: 103.w,)),
-                          GestureDetector(
-                              onTap: (){
-                                Navigator.pop(context);controller1.jumpTo(0.4);
-                                context.read<FirstData>().backButton(true);},
-
-                              child: Image.asset('lib/assets/images/rides/ios call hangup.png',width: 42.w,height: 42.w,))
-                        ],),
-                    ],);}
-                  else{print('2');return Column(
+                    return  Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 15.h,),
+                        Image.asset('lib/assets/images/handle_straight.png',width: 57.w,height: 7.h,),
+                        SizedBox(height: 59.h,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 71.w,
+                              height: 71.w,
+                              child: Hero(
+                                  tag: 'CA',
+                                  child: CircleAvatar()) ,),
+                            SizedBox(width: 18.w,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Cap. Adeola',style: TextStyle(fontSize: 18.sp),),
+                                SizedBox(height: 4.h,),
+                                Text('Ringing...',style: TextStyle(fontSize: 12.sp,color: Colors.grey),),
+                              ],
+                            ),
+                            Expanded(child: SizedBox(width: 103.w,)),
+                            SizedBox(
+                                height: 50.w,
+                                width: 50.w,
+                                child: GestureDetector(
+                                    onTap: (){Navigator.pop(context);firstNavCont.jumpTo(0.4);
+                                    context.read<FirstData>().backButton(true);},
+                                    child: Image.asset('lib/assets/images/rides/ios call hangup.png'))),
+                          ],),
+                      ],
+                    );
+                  }
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -200,19 +202,71 @@ Future CallCaptainInApp(BuildContext context){
                           height: 50.w,
                           width: 50.w,
                           child: GestureDetector(
-                              onTap: (){Navigator.pop(context);controller1.jumpTo(0.4);
+                              onTap: (){Navigator.pop(context);firstNavCont.jumpTo(0.4);
                               context.read<FirstData>().backButton(true);},
                               child: Image.asset('lib/assets/images/rides/ios call hangup.png'))),
-                    ],);}
-                })
+                    ],);
+                },)
             ),);
         });
   });
 }
 String oneText = '';
-Future ContactCaptain(BuildContext context){
+ ContactCaptainCash(BuildContext context){
+  return Container(
+    height: 370.h,
+    width:MediaQuery.of(context).size.width,
+    decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+    ),
+    padding: EdgeInsets.only(left: 40.w,right: 40.w),
+    child: Column(
+      crossAxisAlignment:  CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.h,),
+        Align(
+            alignment: Alignment.center,
+            child: Image.asset('lib/assets/images/rides/handledown.png',width: 57.w,height: 12.h,)),
+        SizedBox(height: 28.h,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Contact Options',style: TextStyle(fontSize: 18.sp),),
+            CircleAvatar(child: Icon(Icons.clear,color: Colors.black,),radius: 21.r,backgroundColor: Colors.grey,)
+          ],
+        ),
+        SizedBox(height: 8.h,),
+        Text('Carrier rates will apply to all calls and messages',style: TextStyle(fontSize: 12.sp),),
+        SizedBox(height: 24.h,),
+        GestureDetector(
+            onTap: (){
+              Navigator.pop(context);
+              context.read<FirstData>().backButton(false);
+              CallCaptainInApp(context);
+            },
+            child: ContactMedia(detail: 'Call captain in-app', image: 'lib/assets/images/rides/callD_inapp.png',)),
+        SizedBox(height: 33.h,),
+        GestureDetector(
+            onTap: ()async{
+              final number = context.read<CaptainDetails>().capPhone;
+              bool? res = await FlutterPhoneDirectCaller.callNumber(number!);
+            },
+            child: ContactMedia(detail: 'Call captain by phone', image: 'lib/assets/images/rides/callD_byp.png')),
+        SizedBox(height: 33.h,),
+        GestureDetector(
+            onTap: (){
+              Navigator.pop(context);
+              RiderMessage(context);
+            },
+            child: ContactMedia(detail: 'Send text message to captain', image: 'lib/assets/images/rides/message.png')),
+        SizedBox(height: 33.h,),
+        ContactMedia(detail: 'Talk to support', image: 'lib/assets/images/rides/supp.png')
+      ],),);
+}
+ContactCaptain(BuildContext context){
   return showModalBottomSheet(
-    barrierColor: Colors.transparent,
+      barrierColor: Colors.transparent,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
       ),
@@ -225,44 +279,59 @@ Future ContactCaptain(BuildContext context){
           borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
       ),
       padding: EdgeInsets.only(left: 40.w,right: 40.w),
-      child: Column(
-        crossAxisAlignment:  CrossAxisAlignment.start,
+      child: Wrap(
         children: [
-          SizedBox(height: 16.h,),
-          Align(
-              alignment: Alignment.center,
-              child: Image.asset('lib/assets/images/rides/handledown.png',width: 57.w,height: 12.h,)),
-          SizedBox(height: 28.h,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment:  CrossAxisAlignment.start,
             children: [
-              Text('Contact Options',style: TextStyle(fontSize: 18.sp),),
-              CircleAvatar(child: Icon(Icons.clear,color: Colors.black,),radius: 21.r,backgroundColor: Colors.grey,)
-            ],
-          ),
-          SizedBox(height: 8.h,),
-          Text('Carrier rates will apply to all calls and messages',style: TextStyle(fontSize: 12.sp),),
-          SizedBox(height: 24.h,),
-          GestureDetector(
-              onTap: (){
-                Navigator.pop(context);
-                context.read<FirstData>().backButton(false);
-                CallCaptainInApp(context);
-             },
-              child: ContactMedia(detail: 'Call driver in-app', image: 'lib/assets/images/rides/callD_inapp.png',)),
-          SizedBox(height: 33.h,),
-          GestureDetector(
-              child: ContactMedia(detail: 'Call driver by phone', image: 'lib/assets/images/rides/callD_byp.png')),
-          SizedBox(height: 33.h,),
-          GestureDetector(
-              onTap: (){
-                Navigator.pop(context);
-                RiderMessage(context);
-              },
-              child: ContactMedia(detail: 'Send text message to driver', image: 'lib/assets/images/rides/message.png')),
-          SizedBox(height: 33.h,),
-          ContactMedia(detail: 'Talk to support', image: 'lib/assets/images/rides/supp.png')
-        ],),);
+              SizedBox(height: 16.h,),
+              Align(
+                  alignment: Alignment.center,
+                  child: Image.asset('lib/assets/images/rides/handledown.png',width: 57.w,height: 12.h,)),
+              SizedBox(height: 28.h,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Contact Options',style: TextStyle(fontSize: 18.sp),),
+                  CircleAvatar(child: Icon(Icons.clear,color: Colors.black,),radius: 21.r,backgroundColor: Colors.grey,)
+                ],
+              ),
+              SizedBox(height: 8.h,),
+              Text('Carrier rates will apply to all calls and messages',style: TextStyle(fontSize: 12.sp),),
+              SizedBox(height: 24.h,),
+              GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                    context.read<FirstData>().backButton(false);
+                    CallCaptainInApp(context);
+                  },
+                  child: ContactMedia(detail: 'Call captain in-app', image: 'lib/assets/images/rides/callD_inapp.png',)),
+              SizedBox(height: 33.h,),
+              GestureDetector(
+                  onTap: ()async{
+                    final number = context.read<CaptainDetails>().capPhone;
+                    bool? res = await FlutterPhoneDirectCaller.callNumber('+$number');
+                  },
+                  child: ContactMedia(detail: 'Call captain by phone', image: 'lib/assets/images/rides/callD_byp.png')),
+              SizedBox(height: 33.h,),
+              GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                    RiderMessage(context);
+                  },
+                  child: ContactMedia(detail: 'Send text message to captain', image: 'lib/assets/images/rides/message.png')),
+              SizedBox(height: 33.h,),
+              ContactMedia(detail: 'Talk to support', image: 'lib/assets/images/rides/supp.png')
+            ],),
+          Container(
+            padding:EdgeInsets.all(8),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom
+                )),
+          )
+        ],
+      ),);
   });
 }
 Future RiderMessage(BuildContext context){
@@ -301,6 +370,10 @@ Future RiderMessage(BuildContext context){
             width: 322.w,
             height: 207.h,
             child: TextField(
+              onTap: (){
+                Navigator.pop(context);
+                ChatScreen(context);
+              },
               controller: riderMessageFieldCont,
               keyboardType: TextInputType.multiline,
               maxLines: 10,
@@ -321,7 +394,7 @@ Future RiderMessage(BuildContext context){
             child: ElevatedButton(
 
               style: ElevatedButton.styleFrom(
-                  primary: kBlue),
+                  backgroundColor: kBlue),
               onPressed: ()async{
                 Navigator.pop(context);
                 ChatScreen(context);
@@ -395,7 +468,9 @@ Future ChatS(BuildContext context){
               },
               child: Text('Send Message',style: TextStyle(fontSize: 15.sp),),
             ),
-          ),],),);
+          ),
+
+        ],),);
 
   });
 }
@@ -435,11 +510,14 @@ Future ChatScreen(BuildContext context){
                         child: Image.asset('lib/assets/images/handle_straight.png',width: 57.w,height: 7.h,)),
                     Align(
                       alignment: Alignment.topRight,
-                      child: Container(
-                        margin:  EdgeInsets.only(top: 4.h),
-                        width: 43.w,
-                        height: 43.w,
-                        child: Image.asset('lib/assets/images/rides/cancel1.png'),
+                      child: GestureDetector(
+                        onTap: (){Navigator.pop(context);},
+                        child: Container(
+                          margin:  EdgeInsets.only(top: 4.h),
+                          width: 43.w,
+                          height: 43.w,
+                          child: Image.asset('lib/assets/images/rides/cancel1.png'),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -462,7 +540,8 @@ Future ChatScreen(BuildContext context){
                               hintText: 'Type your message here', controller: riderMessageFieldCont,
                               textInputType: TextInputType.multiline),
                           SizedBox(width: 9.w,),
-                          GestureDetector(child: Image.asset('lib/assets/images/riderSend.png',width: 51.w,height: 51.w,),onTap: (){
+                          GestureDetector(child: Image.asset('lib/assets/images/riderSend.png',width: 51.w,height: 51.w,),
+                            onTap: (){
                               context.read<FirstData>().addChat(ChatTile(
                                   text: riderMessageFieldCont.text,
                                   color: Colors.blue, time: 'Just now'));

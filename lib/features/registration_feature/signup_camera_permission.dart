@@ -8,6 +8,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/features/landing_pages/home_main14.dart';
+import 'package:untitled/services.dart';
 import 'package:untitled/utilities/widgets.dart';
 import 'dart:io';
 import '../../main.dart';
@@ -50,6 +51,7 @@ class _CamPermState extends State<CamPerm> {
     prefs.setString('userPic', userImg64);
     print(userImg64);
     return userImg64;
+
   }
   File? imageFile;
   getPicture()async{
