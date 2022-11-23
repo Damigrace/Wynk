@@ -714,10 +714,10 @@ Future<String> getActualLocale() async {
   var response = await http.get(uri);
   var data = json.decode(response.body);
   return data['countryCode'].toLowerCase();}
-final infoKey = "ae1fc6689028c2c53a8f18fcec7c5103-5ffc07c9-5a8e-4768-81de-723d661ceaf9";
+final infoKey = "INFO_KEY";
 void getInfobipApp()async{
 
-  var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/applications');
+  var url = await Uri.parse ('INFOBIP_URL');
   var response = await http.get(
     url,
     headers: {
@@ -741,7 +741,7 @@ void infobipVoiceCall()async{
       "type": "PHONE"
     },
     "from":"Alice",
-    "applicationId":"d8d84155-3831-43fb-91c9-bb897149a79d"
+    "applicationId":"APP_ID"
   });
   var response = await http.post(
     url,
@@ -759,7 +759,6 @@ void infobipVoiceCall()async{
 }
 
 infobipCall()async{
-final toks = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiI2ZGI0Yjk5NC04MjVhLTRmOTQtOGMwNi01NDc4MDZjMDMzZDIiLCJpZGVudGl0eSI6IkFsaWNlIiwiaXNzIjoiSW5mb2JpcCIsIm5hbWUiOiJBbGljZSBpbiBXb25kZXJsYW5kIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjQ0MjcxODAsImNhcHMiOltdfQ.Yfs_MiTVY3V7R2ZEhANwJaBRfgrb32ob11VyDb6rFK0';
   // final val = await genInfobipToken();
   // final token = val['token'];
   myCallListener callEventListener = myCallListener();
@@ -767,7 +766,7 @@ final toks = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiI2ZGI0Yjk5NC04MjVhL
   final outgoingCall = await InfobipRTC.call(callRequest);
   print(outgoingCall.status);
 }
-final appId = 'd8d84155-3831-43fb-91c9-bb897149a79d';
+final appId = 'APP_ID';
 
 class myCallListener implements CallEventListener{
 
