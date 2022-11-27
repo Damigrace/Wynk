@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/features/vault/vault_home.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
 
+import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
+import '../landing_pages/home_main14.dart';
 class VaultPaymentGateway extends StatelessWidget {
   const VaultPaymentGateway({Key? key}) : super(key: key);
 

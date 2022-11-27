@@ -12,13 +12,13 @@ import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/registration_feature/captain_f_registration.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
+import 'package:wynk/features/landing_pages/captain_online.dart';
+import 'package:wynk/features/registration_feature/captain_f_registration.dart';
+import 'package:wynk/features/ride/ride_destination.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/models/directions.dart';
+import 'package:wynk/utilities/models/directions_model.dart';
 
 import '../../controllers.dart';
 import '../../main.dart';
@@ -107,7 +107,7 @@ class _CaptainHomeState extends State<CaptainHome> with SingleTickerProviderStat
         anchor: Offset(0.5,0.5),
         markerId: MarkerId('origin'),
         infoWindow: InfoWindow(title: 'You are here'),
-        icon: BitmapDescriptor.fromBytes(context.read<FirstData>().curMarker2!)?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: BitmapDescriptor.fromBytes(context.read<FirstData>().curMarker2!),
         position: userCurLocat??initialCameraPosition.target,
         rotation: rotation??0,
         zIndex: 30

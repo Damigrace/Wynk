@@ -6,14 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/setups/reset_pin.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
 import 'dart:io';
+import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
 import '../registration_feature/patron_captain_login.dart';
 class Settings extends StatefulWidget {
    Settings({Key? key}) : super(key: key);

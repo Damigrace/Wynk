@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 
 import '../../controllers.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
 import 'add_funds2.dart';
 class AddFunds extends StatelessWidget {
    AddFunds({Key? key}) : super(key: key);

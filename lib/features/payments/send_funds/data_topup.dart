@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/services.dart';
+
 
 import '../../../controllers.dart';
 import '../../../main.dart';
+import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/constants/textstyles.dart';
 import '../../../utilities/widgets.dart';
@@ -167,7 +167,118 @@ class _DataTopUpState extends State<DataTopUp> {
         ),
         SizedBox(height: 10.h,),
         Container(
-            margin: EdgeInsets.only(top: 10.h),
+            margin: EdgeInsets.only(top: 10.h,bottom: 20.h),
+            height: 51.h,
+            width: double.infinity,
+            decoration:  BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(
+                    color: kGrey1),
+                color: kWhite),
+            child:Row(children: [
+              SizedBox(width: 10.w,),
+              Icon(Icons.wifi_sharp,color: kBlue,),
+              SizedBox(width: 10.w,),
+
+              Expanded(
+                child: TextField(
+                    controller: dataPlanCont,
+                    readOnly: true,
+                    style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
+                    decoration:   InputDecoration.collapsed(
+                      hintText: 'Choose Data plan',
+                      hintStyle:  kBoldGrey,)),
+              ),
+
+              GestureDetector(
+                  onTap: ()async{
+                    spinner(context);
+                    List<DataCard> dataCards = [];
+                    final res0 = await dataLookup(channel!);
+                    if(res0['statusCode'] == 200){
+                      List res =res0['message'];
+                      res.forEach((element)=>
+                          dataCards.add(DataCard.fromJson(element))
+                      );
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                          enableDrag: false,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(10),topLeft: Radius.circular(10))
+                          ),
+                          context: context,
+                          builder: (context){
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+                              child: ListView.builder(
+                                itemCount:dataCards.length ,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(height: 10.h,),
+                                      GestureDetector(
+                                        onTap:(){
+                                          Navigator.pop(context);
+                                          selectedCard = dataCards[index];
+                                          dataPlanCont.text = selectedCard!.description;
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal:10,vertical:8),
+                                          decoration:  BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: kWhite),
+                                          width: double.infinity,
+
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                      child: Text(dataCards[index].description,style: kBoldBlack,)),
+                                                  SizedBox(width: 10),
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Text('₦ ',style: TextStyle( fontWeight: FontWeight.w600,color: kBlue),),
+                                                      Text(dataCards[index].amount,style: kBoldBlue,)
+                                                    ],),
+                                                ],
+                                              ),
+                                              SizedBox(height: 20.h,),
+                                              Text(dataCards[index].type,style:  TextStyle(color: kGrey1),),
+                                              SizedBox(height: 10.h,),
+                                              Text('-------------------------------------------------------------------------------------------------------------------',
+                                                maxLines: 1,overflow: TextOverflow.clip,style: TextStyle(color: kGrey1),)
+                                            ],),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                            );
+                          });
+
+                    }
+                    else{
+                      showSnackBar(context, res0['errorMessage']);
+                    }
+                  },
+                  child: Icon(Icons.keyboard_arrow_down_sharp))
+
+            ],
+            )
+        ),
+        Container(
+            margin: EdgeInsets.only(bottom: 10.h),
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             height: 51.h,
             width: 326.w,
@@ -187,6 +298,7 @@ class _DataTopUpState extends State<DataTopUp> {
                     autofocus: true,
                     onChanged: (val)async{
                       if(val.length == 11){
+                        FocusScope.of(context).unfocus();
                         var res = val.split(' ').join();
                         newRes = '234${res.substring(1)}';
 
@@ -239,111 +351,7 @@ class _DataTopUpState extends State<DataTopUp> {
               ],
             )
         ),
-        Container(
-            margin: EdgeInsets.only(top: 10.h,bottom: 20.h),
-            height: 51.h,
-            width: double.infinity,
-            decoration:  BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                border: Border.all(
-                    color: kGrey1),
-                color: kWhite),
-            child:Row(children: [
-              SizedBox(width: 10.w,),
-              Icon(Icons.wifi_sharp,color: kBlue,),
-              SizedBox(width: 10.w,),
-              Expanded(
-                child: TextField(
-                    controller: dataPlanCont,
-                    readOnly: true,
-                    style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
-                        color: Colors.black
-                    ),
-                    decoration:   InputDecoration.collapsed(
-                      hintText: 'Choose Data plan',
-                      hintStyle:  kBoldGrey,)),
-              ),
-              GestureDetector(
-                  onTap: ()async{
-                    spinner(context);
-                    List<DataCard> dataCards = [];
-                    final res0 = await dataLookup(channel!);
-                    if(res0['statusCode'] == 200){
-                      List res =res0['message'];
-                      res.forEach((element)=>
-                          dataCards.add(DataCard.fromJson(element))
-                      );
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                          enableDrag: false,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(10),topLeft: Radius.circular(10))
-                          ),
-                          context: context,
-                          builder: (context){
-                            return Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
-                              child: ListView.builder(
-                                itemCount:dataCards.length ,
-                                shrinkWrap: true,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Column(
-                                    children: [
-                                      SizedBox(height: 10.h,),
-                                      GestureDetector(
-                                        onTap:(){
-                                          Navigator.pop(context);
-                                          selectedCard = dataCards[index];
-                                          dataPlanCont.text = selectedCard!.description;
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal:10,vertical:8),
-                                          decoration:  BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10),
-                                              color: kWhite),
-                                          width: double.infinity,
-                                          height: 120.h,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(dataCards[index].description,style: kBoldBlack,),
-                                                  Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Text('₦ ',style: TextStyle( fontWeight: FontWeight.w600,color: kBlue),),
-                                                      Text(dataCards[index].amount,style: kBoldBlue,)
-                                                    ],),
-                                                ],
-                                              ),
-                                              SizedBox(height: 20.h,),
-                                              Text(dataCards[index].type,style:  TextStyle(color: kGrey1),),
-                                              SizedBox(height: 10.h,),
-                                              Text('-------------------------------------------------------------------------------------------------------------------',
-                                                maxLines: 1,overflow: TextOverflow.clip,style: TextStyle(color: kGrey1),)
-                                            ],),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),
-                            );
-                          });
 
-                    }
-                    else{
-                      showSnackBar(context, res0['errorMessage']);
-                    }
-                  },
-                  child: Icon(Icons.keyboard_arrow_down_sharp))
-
-            ],
-            )
-        ),
         Align(
           alignment: Alignment.center,
           child: Container(
@@ -354,7 +362,6 @@ class _DataTopUpState extends State<DataTopUp> {
                   backgroundColor: kBlue),
               onPressed: (newRes == null || selectedCard == null ||context.read<FirstData>().fromWallet == null)?null
                   :() async{
-                print(newRes!);print(selectedCard);print(fromWallet);
                   await showDialog(
                       barrierDismissible: false,
                       context: context, builder: (context){
@@ -464,11 +471,11 @@ class _DataTopUpState extends State<DataTopUp> {
                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                                           PaymentGateway(
                                             future: dataPurchase(newRes!, selectedCard!.serviceName,
-                                                selectedCard!.productCode, context.read<FirstData>().fromWallet!, selectedCard!.amount),
+                                                selectedCard!.productCode, context.read<FirstData>().fromWallet!, selectedCard!.code),
                                             function: (){
                                               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                                   MobileRecharge()));
-                                            },
+                                            }, amount: selectedCard!.amount, purpose: 'data subscription',
                                           )
                                       ));
 
@@ -485,7 +492,7 @@ class _DataTopUpState extends State<DataTopUp> {
                   });
 
               },
-              child: Text('Pay',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
+              child: Text('Next',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
             ),
           ),
         )

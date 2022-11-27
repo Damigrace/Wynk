@@ -8,14 +8,15 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+
+import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../controllers.dart';
-import '../../utilities/models/otp_field.dart';
-import '../registration_feature/sign_up.dart';
+import '../../utilities/widgets.dart';
+import '../registration_feature/sign_up_personal_details.dart';
+
 class Verification extends StatefulWidget {
   const Verification({Key? key}) : super(key: key);
 
@@ -24,7 +25,6 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
-  Timer? time;
   int? seconds=59;
   int? minutes=2;
   timer()async{
@@ -173,7 +173,8 @@ class _VerificationState extends State<Verification> {
                             String statusCode=verificationResult['statusCode'].toString();
                             if(timeOut==false && statusCode=='200'){
                               showSnackBar(context,'OTP successfully verified!');
-                              Get.to(()=>SignUp());
+                              Navigator.pop(context);
+                              Get.to(()=>SignUpPersonalDetails());
                             }
                             else if(timeOut==true){
                               showSnackBar(context,'Timed out');
@@ -191,7 +192,17 @@ class _VerificationState extends State<Verification> {
                           Text('Didn\'t receive any',
                             style: kTextStyle2),
                           TextButton(
-                              onPressed: (){},
+                              onPressed: ()async{
+                                spinner(context);
+                                String? userMobileNo =context.read<FirstData>().userNumber;
+                                Map sentOtpUser=await resendOtp(userMobileNo: userMobileNo!);
+                                context.read<FirstData>().saveUniqueId(sentOtpUser['wynkid']);
+                                showSnackBar(context, sentOtpUser['message']);
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
+                                const Verification()
+                                ));
+                              },
                               child: Text('Code?',
                                 style: kTextStyle2.copyWith(color: kYellow),))
                         ],

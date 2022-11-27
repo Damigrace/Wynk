@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/widgets.dart';
 import '../../controllers.dart';
 import '../../utilities/models/otp_field.dart';
 import '../verification_feature/confirm_transaction_pin.dart';

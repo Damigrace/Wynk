@@ -4,20 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/airtime_topup.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/request_funds/req_funds.dart';
-import 'package:untitled/features/payments/send_funds/data_topup.dart';
-import 'package:untitled/features/payments/send_funds/send_to_bank.dart';
-import 'package:untitled/features/payments/send_funds/send_to_wynk.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/services.dart';
-
+import 'package:wynk/features/payments/request_funds/req_funds.dart';
+import 'package:wynk/features/payments/send_funds/sendcash.dart';
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/widgets.dart';
+import '../../controllers.dart';
+import '../../services.dart';
 
 class QRCode extends StatefulWidget {
   const QRCode({Key? key}) : super(key: key);
@@ -116,7 +108,7 @@ class _QRCodeState extends State<QRCode> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(fontSize: 15.sp),)),
                                               SizedBox(width: 10.w),
-                                              Text(walletName!??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                              Text(walletName!, style: TextStyle(fontWeight: FontWeight.w600))
                                             ],)
                                         ],),
                                         SizedBox(height:47.h),

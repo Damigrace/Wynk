@@ -7,11 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/widgets.dart';
 import 'dart:io';
 import '../../main.dart';
+import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
 import 'image.dart';
 class CamPerm extends StatefulWidget {
   const CamPerm({Key? key}) : super(key: key);

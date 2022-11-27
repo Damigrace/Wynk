@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/utilities/constants/colors.dart';
+import 'colors.dart';
 
 TextStyle kTextStyle1=TextStyle(fontSize:30.sp,color: Colors.black,fontWeight: FontWeight.w400);
 TextStyle kTextStyle2=TextStyle(fontSize: 15.sp);

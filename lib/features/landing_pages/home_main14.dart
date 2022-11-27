@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,43 +17,31 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/firebase/ride_schedule.dart';
-import 'package:untitled/features/local_notif.dart';
-import 'package:untitled/features/payments/airtime.dart';
-import 'package:untitled/features/payments/dstv.dart';
-import 'package:untitled/features/payments/gotv.dart';
-import 'package:untitled/features/payments/mobile_recharge.dart';
-import 'package:untitled/features/payments/request_funds/req_funds.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/features/payments/send_funds/sendfunds.dart';
-import 'package:untitled/features/ride/test.dart';
-import 'package:untitled/features/vault/vault_home.dart';
 
-import 'package:untitled/features/login_feature/another_user_login.dart';
-import 'package:untitled/features/login_feature/login_page.dart';
-import 'package:untitled/features/ride/ride_home.dart';
-import 'package:untitled/features/wynk-pass/pass_purchase_success.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/models/pdf.dart';
-import 'package:untitled/utilities/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../controllers.dart';
+import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import 'package:intl/intl.dart';
-
-import '../../utilities/firebase_dynamic_link.dart';
-import '../Test.dart';
+import '../../utilities/widgets.dart';
+import '../local_notif.dart';
+import '../login_feature/another_user_login.dart';
+import '../login_feature/login_page.dart';
+import '../payments/dstv.dart';
+import '../payments/gotv.dart';
 import '../payments/internet_sub_main.dart';
-import '../ride/patron_ride_commence.dart';
-import '../ride/ride_started.dart';
-import '../wynk-pass/wynk_pass_confirmation.dart';
+import '../payments/mobile_recharge.dart';
+import '../payments/request_funds/req_funds.dart';
+import '../payments/send_funds/sendcash.dart';
+import '../registration_feature/ride_online_map.dart';
+import '../ride/ride_home.dart';
+import '../vault/vault_home.dart';
+
 
 
 
@@ -109,7 +94,7 @@ class _HomeMain14State extends State<HomeMain14> {
     final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
-      print('newwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+
       handleDynamicLink(deepLink,context);
     }
     FirebaseDynamicLinks.instance.onLink(
@@ -135,17 +120,6 @@ class _HomeMain14State extends State<HomeMain14> {
 
   }
   void getCapDet()async{
-    final prefs = await SharedPreferences.getInstance();
-    final userDet =await getCapDetails(prefs.getString('Origwynkid'));
-    context.read<FirstData>().saveVaultB(userDet['currentBalance'].toString());
-    context.read<FirstData>().saveTodayEarning(userDet['todayearning'].toString());
-    context.read<FirstData>().saveAverageRating(userDet['averagerating'].toString());
-    context.read<FirstData>().saveTodayTrip(userDet['todaytrip'].toString());
-    final  response = await getUserRegisteredDetails(wynkId: prefs.getString('Origwynkid')!);
-    context.read<FirstData>().saveProfImg(response['passport']);
-    setState(() {
-      print('ok');
-    });
     Position currentLocation = await determinePosition(context);
     context.read<FirstData>().saveCurrentLocat(currentLocation.latitude, currentLocation.longitude);
   }
@@ -163,7 +137,7 @@ class _HomeMain14State extends State<HomeMain14> {
        anchor: Offset(0.5,0.5),
        markerId: MarkerId('captain'),
        infoWindow: InfoWindow(title: 'Captain'),
-       icon:BitmapDescriptor.fromBytes(context.read<FirstData>().curMarker2!)?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+       icon:BitmapDescriptor.fromBytes(context.read<FirstData>().curMarker2!),
        position:LatLng(double.parse(cap['latitude']),double.parse(cap['longitude'])),
      );
      context.read<FirstData>().saveCaps(captain);
@@ -174,6 +148,7 @@ class _HomeMain14State extends State<HomeMain14> {
   @override
   void initState() {
     getCapDet();
+    refresh(context);
     initDynamicLinks(context);
     balanceFN = FocusNode();
     text=context.read<FirstData>().username?.toLowerCase();
@@ -275,8 +250,6 @@ class _HomeMain14State extends State<HomeMain14> {
   @override
   Widget build(BuildContext context) {
     String imageUrl = 'http://wynk.ng/stagging-api/picture/${context.read<FirstData>().uniqueId}.png';
-    accountBalCont.text =  '₦${context.watch<FirstData>().vaultB}';
-    print('homepage called');
 
     return WillPopScope(
       onWillPop: ()async{
@@ -412,16 +385,22 @@ class _HomeMain14State extends State<HomeMain14> {
               context,
               MaterialPageRoute(
               builder: (context) =>
-              RideCommence())):Navigator.push(
+              GMapWebview(
+                  destination:LatLng(
+                      context.read<FirstData>().endPos!.geometry!.location!.lat!,
+                      context.read<FirstData>().endPos!.geometry!.location!.lng!),
+              ))):Navigator.push(
               context,
               MaterialPageRoute(
               builder: (context) =>
-              RideStarted()))
+                  GMapWebview(
+                    destination:context.read<RideDetails>().destPos!
+                  )))
               }:showSnackBar(context, 'You do not have an active ride');
             },
             child: CircleAvatar(
               radius: 40.r,
-              backgroundColor: kBlue,
+              backgroundColor: kYellow,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -456,7 +435,7 @@ class _HomeMain14State extends State<HomeMain14> {
                               child: TextField(
                                 focusNode: balanceFN,
                             textAlign: TextAlign.end,
-                            style:TextStyle(color: Colors.green,fontSize: 18.sp) ,
+                            style:TextStyle(color: kBlue,fontSize: 18.sp,fontWeight: FontWeight.w600) ,
                             obscureText: showBalance,
                             obscuringCharacter: '*',
                             decoration: InputDecoration.collapsed(hintText: ''),
@@ -509,6 +488,7 @@ class _HomeMain14State extends State<HomeMain14> {
                                   GestureDetector(
                                       child: Image.asset('lib/assets/images/functions/ride.png'),
                                   onTap: () async{
+                                        print(context.read<FirstData>().userType!);
                                   try  {
                                     showDialog(
                                         barrierDismissible: false,
@@ -536,11 +516,9 @@ class _HomeMain14State extends State<HomeMain14> {
                                   },),
                                   SizedBox(width: 7.w,),
                                   GestureDetector(
-                                      onTap: ()async{
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                            MobileRecharge()));
-                                      },
-                                      child: Image.asset('lib/assets/images/functions/top_up.png',)),
+                                      onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                                          VaultHome())),
+                                      child: Image.asset('lib/assets/images/functions/my vault.png')),
                                   SizedBox(width: 7.w,),
                                   GestureDetector(
                                       onTap: ()=> Navigator.push(
@@ -563,9 +541,11 @@ class _HomeMain14State extends State<HomeMain14> {
                                       child: Image.asset('lib/assets/images/functions/request_funds-removebg-preview (1).png')),
                                   SizedBox(width: 7.w,),
                                   GestureDetector(
-                                      onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                          VaultHome())),
-                                      child: Image.asset('lib/assets/images/functions/my vault.png')),
+                                      onTap: ()async{
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                                            MobileRecharge()));
+                                      },
+                                      child: Image.asset('lib/assets/images/functions/top_up.png',)),
                                   SizedBox(width: 7.w,),
                                   GestureDetector(
                                       onTap:() =>showSnackBar(context,'This is not available yet'),
@@ -574,7 +554,6 @@ class _HomeMain14State extends State<HomeMain14> {
                                   GestureDetector(
                                       onTap:() =>showSnackBar(context,'This is not available yet'),
                                       child: Image.asset('lib/assets/images/functions/delivery.png')),
-
                                 ],
                               )),
                           Padding(
@@ -690,7 +669,7 @@ class _HomeMain14State extends State<HomeMain14> {
                                   children: [
                                     GestureDetector(
                                         onTap:()async{
-                                          print('hh');
+                                          getCharges();
                                           //infobipVoiceCall();
                                          // multiChoiceLookup('DSTV');
 
@@ -707,11 +686,40 @@ class _HomeMain14State extends State<HomeMain14> {
                                         //    await file.create(recursive: true);
                                         //    await file.writeAsBytes(res);
                                         //  }
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Test1()));
+                                        //   Uint8List? green;
+                                        //   Uint8List? red;
+                                        //
+                                        //     final ByteData bytes = await rootBundle.load('lib/assets/images/dest_donut.png');
+                                        //     green = bytes.buffer.asUint8List();
+                                        //     final ByteData bytes1 = await rootBundle.load('lib/assets/images/dest_donut.png');
+                                        //     red = bytes1.buffer.asUint8List();
+                                        //   Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //           builder: (context) =>
+                                        //               TandC()));
+
+                                          // String appleUrl = 'https://maps.apple.com/?saddr=&daddr=5,7&directionsmode=driving';
+                                          // String googleUrl = 'https://www.google.com/maps/search/?api=1&query=-3.8232,-38.481700';
+                                          //
+                                          //
+                                          // if (Platform.isAndroid) {
+                                          //   if (await canLaunchUrl(Uri.parse(googleUrl))) {
+                                          //     await launchUrl(Uri.parse(googleUrl));
+                                          //   } else {
+                                          //     if (await canLaunchUrl(Uri.parse(appleUrl))) {
+                                          //       await launchUrl(Uri.parse(appleUrl));
+                                          //     } else {
+                                          //       throw 'Could not open the map.';
+                                          //     }
+                                          //   }
+                                          // } else {
+                                          //   if  (await canLaunchUrl(Uri.parse(googleUrl))) {
+                                          //     await launchUrl(Uri.parse(googleUrl));
+                                          //   } else {
+                                          //     throw 'Could not open the map.';
+                                          //   }
+                                          // }
                                         },
                                         child: Discounts(image: Image.asset('lib/assets/images/discounts/item1.png'), itemDescription: 'Vegan Salad with Kebab and sauce',)),
                                     Discounts(image: Image.asset('lib/assets/images/discounts/item2.png'), itemDescription: 'Chocolate bar with Cream',),

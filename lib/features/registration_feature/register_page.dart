@@ -7,16 +7,14 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:infobip_rtc/infobip_rtc.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/login_feature/login_page.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:wynk/features/registration_feature/tandc.dart';
+import '../../controllers.dart';
+import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
+import '../login_feature/login_page.dart';
 import '../verification_feature/verification.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -103,7 +101,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     ),
                       Text('I accept Wynk\'s',style: TextStyle(fontSize: 15.sp),),
-                      TextButton(onPressed: (){}, child: Text('Terms & Conditions',
+                      TextButton(onPressed: (){
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) =>  TandC()
+                        ));
+                      }, child: Text('Terms & Conditions',
                           style: TextStyle(fontSize: 15.sp,color: kYellow)))
                     ],),
                   ),

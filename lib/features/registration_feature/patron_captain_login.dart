@@ -6,15 +6,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
 import '../landing_pages/captain_home.dart';
+import '../landing_pages/home_main14.dart';
 import 'captain_f_registration.dart';
 class UserSelector extends StatefulWidget {
   const UserSelector({Key? key}) : super(key: key);
@@ -26,6 +26,7 @@ class UserSelector extends StatefulWidget {
 class _UserSelectorState extends State<UserSelector> {
   var userPImage;
   void initState() {
+    print(context.read<FirstData>().userType!);
     // TODO: implement initState
     super.initState();
     String profileImg=context.read<FirstData>().userImgUrl.toString();
@@ -33,6 +34,7 @@ class _UserSelectorState extends State<UserSelector> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(body: SafeArea(child: 
     
     SingleChildScrollView(

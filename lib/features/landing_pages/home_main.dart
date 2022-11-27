@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
+
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
+
 class HomeMain extends StatefulWidget {
   const HomeMain({Key? key}) : super(key: key);
 

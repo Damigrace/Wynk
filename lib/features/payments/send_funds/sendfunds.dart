@@ -7,7 +7,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
+import '../../../controllers.dart';
 import '../../../main.dart';
 import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
@@ -253,7 +253,7 @@ class _SendFunds1State extends State<SendFunds1>{
                                                overflow: TextOverflow.ellipsis,
                                                style: TextStyle(fontSize: 15.sp),)),
                                              SizedBox(width: 10.w),
-                                             Text(walletName!??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                             Text(walletName!, style: TextStyle(fontWeight: FontWeight.w600))
                                            ],)
                                        ],),
                                        SizedBox(height:47.h),
@@ -508,11 +508,12 @@ class _SendFunds1State extends State<SendFunds1>{
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     PaymentGateway(
-                                                      future: wallet2wallet(fromWallet, sendFundsVaultNumCont.text, sendFundsAmountCont.text),
+                                                      future: wallet2wallet(fromWallet, sendFundsVaultNumCont.text,
+                                                          sendFundsAmountCont.text),
                                                       function: (){
                                                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                                             SendFunds1()));
-                                                      },
+                                                      }, amount:  sendFundsAmountCont.text, purpose: 'funds transfer',
                                                     )));
 
                                         //print('$fromWallet, ${sendFundsVaultNumCont.text}, ${sendFundsAmountCont.text}');

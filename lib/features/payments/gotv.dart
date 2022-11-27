@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/airtime_topup.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/send_funds/data_topup.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
 
+import '../../controllers.dart';
+import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
 import 'airtime_payment_gateway.dart';
 class GOTV extends StatefulWidget {
@@ -369,7 +366,7 @@ class _GOTVState extends State<GOTV> {
                                                                   builder: (
                                                                       context) =>
                                                                       GOTV()));
-                                                        },
+                                                        }, amount:  selectedCard!.amount, purpose: 'GoTV Subscription',
                                                       )));
                                             }
                                             else{

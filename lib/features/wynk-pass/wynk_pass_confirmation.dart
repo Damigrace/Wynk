@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/wynk-pass/pass_purchase.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/features/wynk-pass/pass_purchase.dart';
 
-import '../../controllers.dart';
+import '../../main.dart';
 import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
 class PassConfirmation extends StatefulWidget {
   const PassConfirmation({Key? key}) : super(key: key);
 

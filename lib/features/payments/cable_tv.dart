@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/features/payments/gotv.dart';
-import 'package:untitled/features/payments/startimes.dart';
-import 'package:untitled/features/payments/total_gas.dart';
-import 'package:untitled/main.dart';
+
 
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
 import 'dstv.dart';
+import 'gotv.dart';
 class CableTv extends StatefulWidget {
   const CableTv({Key? key}) : super(key: key);
 
@@ -106,16 +104,16 @@ class _CableTvState extends State<CableTv> {
                         child: Image.asset('lib/assets/images/gotv.png')),
                     title: Text('GoTV',style: TextStyle(fontSize: 15.sp),),
                   ),
-                  ListTile(
-                    onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                        Startimes())),
-                    contentPadding: EdgeInsets.only(left: 36.w),
-                    leading: SizedBox(
-                        width: 26.w,
-                        height: 26.w,
-                        child: Image.asset('lib/assets/images/startimes.png')),
-                    title: Text('Startimes',style: TextStyle(fontSize: 15.sp),),
-                  ),
+                  // ListTile(
+                  //   onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                  //       Startimes())),
+                  //   contentPadding: EdgeInsets.only(left: 36.w),
+                  //   leading: SizedBox(
+                  //       width: 26.w,
+                  //       height: 26.w,
+                  //       child: Image.asset('lib/assets/images/startimes.png')),
+                  //   title: Text('Startimes',style: TextStyle(fontSize: 15.sp),),
+                  // ),
                   ListTile(
 
                     contentPadding: EdgeInsets.only(left: 36.w),

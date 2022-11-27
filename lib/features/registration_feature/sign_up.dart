@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/registration_feature/sign_up_personal_details.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/features/registration_feature/sign_up_personal_details.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/constants/textstyles.dart';
+import 'package:wynk/utilities/widgets.dart';
 import '../../utilities/models/lists.dart';
 import '../../controllers.dart';
-import 'package:untitled/services.dart';
+import 'package:wynk/services.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);

@@ -1,18 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/internet_sub_main.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-
+import '../../controllers.dart';
+import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
 import 'airtime_payment_gateway.dart';
+import 'internet_sub_main.dart';
 class SmileSubPage extends StatefulWidget {
   const SmileSubPage({Key? key}) : super(key: key);
 
@@ -241,7 +238,7 @@ class _SmileSubPageState extends State<SmileSubPage> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(fontSize: 15.sp),)),
                                       SizedBox(width: 10.w),
-                                      Text(smileAccCont.text??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                      Text(smileAccCont.text, style: TextStyle(fontWeight: FontWeight.w600))
                                     ],)
                                 ],),
                                 SizedBox(height:47.h),
@@ -360,7 +357,7 @@ class _SmileSubPageState extends State<SmileSubPage> {
                                                                      function: (){
                                                                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                                                            InternetSubMain()));
-                                                                     },
+                                                                     }, amount:selectedCard!.price, purpose: 'Smile subscription',
                                                                    )));
                                                      },
                                                      child: Text('Pay',style: TextStyle(fontSize: 18.sp,color: Colors.white),),

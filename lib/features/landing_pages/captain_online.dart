@@ -13,18 +13,18 @@ import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/captain_home.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/payments/trip_page.dart';
-import 'package:untitled/features/registration_feature/captain_f_registration.dart';
-import 'package:untitled/features/ride/earnings_page.dart';
-import 'package:untitled/features/ride/ride_available.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/landing_pages/captain_home.dart';
+import 'package:wynk/features/landing_pages/home_main14.dart';
+import 'package:wynk/features/payments/trip_page.dart';
+import 'package:wynk/features/registration_feature/captain_f_registration.dart';
+import 'package:wynk/features/ride/earnings_page.dart';
+import 'package:wynk/features/ride/ride_available.dart';
+import 'package:wynk/features/ride/ride_destination.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/models/directions.dart';
+import 'package:wynk/utilities/models/directions_model.dart';
 
 import '../../main.dart';
 import '../../utilities/constants/env.dart';
@@ -233,7 +233,7 @@ class _CaptainOnlineState extends State<CaptainOnline> {
                         Positioned(
                           top: 39.h,
                           left: 25.w,
-                          child:Text('₦${balanceFormatter.format(double.parse(context.read<FirstData>().todayEarning!))}',style: TextStyle(fontSize: 25.sp,color: Color(0xff3ea57b)),)
+                          child:Text('₦${context.read<FirstData>().todayEarning!}',style: TextStyle(fontSize: 25.sp,color: Color(0xff3ea57b)),)
                           ,),
                         Positioned(
                           top: 23.h,

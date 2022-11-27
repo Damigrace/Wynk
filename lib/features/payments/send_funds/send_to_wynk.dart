@@ -4,8 +4,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/features/payments/send_funds/sendfunds.dart';
+import 'package:wynk/features/payments/send_funds/sendcash.dart';
+
 
 import '../../../controllers.dart';
 import '../../../main.dart';
@@ -97,7 +97,7 @@ class _SendToWynkState extends State<SendToWynk> {
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 15.sp),)),
                                         SizedBox(width: 10.w),
-                                        Text(walletName!??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                        Text(walletName!, style: TextStyle(fontWeight: FontWeight.w600))
                                       ],)
                                   ],),
                                   SizedBox(height:47.h),
@@ -363,11 +363,12 @@ class _SendToWynkState extends State<SendToWynk> {
                                   Navigator.pop(context);
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                                       PaymentGateway(
-                                        future: wallet2wallet(context.read<FirstData>().fromWallet, sendFundsVaultNumCont.text, sendFundsAmountCont.text),
+                                        future: wallet2wallet(context.read<FirstData>().fromWallet,
+                                            sendFundsVaultNumCont.text, sendFundsAmountCont.text),
                                         function: (){
                                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                               SendCash()));
-                                        },
+                                        }, amount: sendFundsAmountCont.text, purpose: 'funds transfer',
                                       )
                                   ));
 

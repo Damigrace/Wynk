@@ -18,12 +18,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/pdf.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/landing_pages/home_main14.dart';
+import 'package:wynk/features/ride/nav_screen.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/models/pdf.dart';
+import 'package:wynk/utilities/widgets.dart';
 
 import '../../main.dart';
 import '../../services.dart';

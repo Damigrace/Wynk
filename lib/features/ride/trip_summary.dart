@@ -5,9 +5,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
 
+import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';

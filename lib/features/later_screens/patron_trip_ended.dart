@@ -4,13 +4,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/ride/patron_invoice.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
 
+
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
+import '../ride/patron_invoice.dart';
 class PatronTripEnded extends StatefulWidget {
   const PatronTripEnded({Key? key}) : super(key: key);
 
@@ -22,7 +23,7 @@ class _PatronTripEndedState extends State<PatronTripEnded> {
   double? rate = 0;
   @override
   Widget build(BuildContext context) {
-
+    print(context.read<CaptainDetails>().total!);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -100,24 +101,15 @@ class _PatronTripEndedState extends State<PatronTripEnded> {
                 height: 51.h,
                 width: MediaQuery.of(context).size.width-42.w,
                 child: ElevatedButton(onPressed: ()async{
-                  showDialog(context: context, builder: (context){
-                    return Container(child:
-                    SpinKitCircle(
-                      color: kYellow,
-                    ),);
-                  });
+                  spinner(context);
                   rideRating(rideCode: context.read<CaptainDetails>().rideCode!, star: rate!,
                       comment: riderCommentCont.text, wynikd:context.read<FirstData>().uniqueId! );
-                  final userDet =await getCapDetails(context.read<FirstData>().uniqueId);
-                  context.read<FirstData>().saveVaultB(userDet['actualBalance'].toString());
-                  context.read<FirstData>().saveTodayEarning(userDet['todayearning'].toString());
-                  context.read<FirstData>().saveAverageRating(userDet['averagerating'].toString());
-                  context.read<FirstData>().saveTodayTrip(userDet['todaytrip'].toString());
-                  accountBalCont.text =  '₦${userDet['actualBalance'].toString()}';
+                 refresh(context);
                   Navigator.pop(context);
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
                       PatronInvoice()));
-                }, child: Text('Submit'),style: ElevatedButton.styleFrom(backgroundColor: kBlue),)),
+                },
+                  child: Text('Submit'),style: ElevatedButton.styleFrom(backgroundColor: kBlue),)),
 
         ],),
       ),

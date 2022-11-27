@@ -15,19 +15,15 @@ import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
-
 import '../../main.dart';
 import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
 import '../../utilities/models/directions.dart';
 import '../../utilities/models/directions_model.dart';
 import '../../utilities/models/pdf.dart';
+import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
 
 class PatronInvoice extends StatefulWidget {
 
@@ -144,44 +140,51 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                     SizedBox(height: 21.h,),
                     Screenshot(
                       controller: screenshotController,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              SizedBox(
-                                  width: 18.w,
-                                  height: 18.h,
-                                  child: Image.asset('lib/assets/images/greenmarker.png')),
-                              SizedBox(width: 21.w,),
-                              Expanded(
-                                child: Text( context.read<FirstData>().patronPickupPlace!,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 18.sp),),)
-                            ],
-                          ),
-                          IntrinsicHeight(
-                            child: Row(children: [
-                              SizedBox(height: 38.h,width: 9.w,),
-                              VerticalDivider(width: 3,color: Colors.black,),
-                              SizedBox(height: 38.h,)
-                            ],),
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                  width: 18.w,
-                                  height: 18.h,
-                                  child: Image.asset('lib/assets/images/redmarker.png')),
-                              SizedBox(width: 21.w,),
-                              Expanded(
-                                child: Text( context.read<FirstData>().patronDestPlace!,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 18.sp),),
-                              ),
-                            ],
-                          ),
-                        ],
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                    width: 18.w,
+                                    height: 18.h,
+                                    child: Image.asset('lib/assets/images/greenmarker.png')),
+                                SizedBox(width: 21.w,),
+                                Expanded(
+                                  child: Text( context.read<FirstData>().patronPickupPlace!,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 18.sp),),)
+                              ],
+                            ),
+                            IntrinsicHeight(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                SizedBox(height: 38.h,width: 9.w,),
+                                VerticalDivider(width: 3,color: Colors.black,),
+                                SizedBox(height: 38.h,)
+                              ],),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                    width: 18.w,
+                                    height: 18.h,
+                                    child: Image.asset('lib/assets/images/redmarker.png')),
+                                SizedBox(width: 21.w,),
+                                Expanded(
+                                  child: Text( context.read<FirstData>().patronDestPlace!,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 18.sp),),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -227,7 +230,7 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                             Text(context.read<CaptainDetails>().capPlate!,style: TextStyle(fontSize: 18.sp)),
                             SizedBox(height: 22.h,),
                             Text('${DateFormat.MMMMEEEEd().format(DateTime.now())}',style: TextStyle(fontSize: 18.sp),)
-                        ],),
+                          ],),
                         Screenshot(
                           controller: avatarController,
                           child: SizedBox(
@@ -250,9 +253,9 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
-                      Text('Fare',style: TextStyle(fontSize: 22..sp,fontWeight: FontWeight.w600),),
-                      Text('Amount',style: TextStyle(fontSize: 22..sp,fontWeight: FontWeight.w600))
-                    ]),
+                          Text('Fare',style: TextStyle(fontSize: 22..sp,fontWeight: FontWeight.w600),),
+                          Text('Amount',style: TextStyle(fontSize: 22..sp,fontWeight: FontWeight.w600))
+                        ]),
                     SizedBox(height: 20.h,),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -304,13 +307,13 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                 height: 61.h,
                 padding: EdgeInsets.only(left: 36.w, right: 36.w),
                 decoration: BoxDecoration(
-                  border: Border.all(color: kGrey1)
+                    border: Border.all(color: kGrey1)
                 ),
                 child: Center(child: Row(children: [
                   Image.asset('lib/assets/images/rides/wynkvaultwallet.png',height: 26.w,width: 26.w,),
                   SizedBox(width: 18.w,),
                   Flexible(child: SizedBox(width:260.w,child: Text('My Vault',style: TextStyle(fontSize: 18.sp),))),
-                  Text('₦ ${context.read<CaptainDetails>().total!}',style: TextStyle(fontSize: 18.sp))
+                  Text('₦ ${context.read<FirstData>().vaultB}',style: TextStyle(fontSize: 18.sp))
                 ],) ,),
               ),
               GestureDetector(
@@ -342,8 +345,8 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                   margin: EdgeInsets.only(left: 36.w, right: 36.w, top: 15.h),
                   height: 50.h,
                   decoration: BoxDecoration(
-                      color: kBlue,
-                      borderRadius: BorderRadius.circular(7),
+                    color: kBlue,
+                    borderRadius: BorderRadius.circular(7),
                   ),
                   child: Center(
                     child: Text('Return to Home',
@@ -353,34 +356,39 @@ class _PatronInvoiceState extends State<PatronInvoice> {
               SizedBox(height: 15.h,),
               GestureDetector(
                 onTap:()async{
-                  try{
+
+
                     final ByteData bytes = await rootBundle.load('lib/assets/images/rides/wynkvaultwallet.png');
                     final Uint8List list = bytes.buffer.asUint8List();
+                    Uint8List? green;
+                    Uint8List? red;
+                    final ByteData bytes0 = await rootBundle.load('lib/assets/images/greenmarker.png');
+                    green = bytes0.buffer.asUint8List();
+                    final ByteData bytes1 = await rootBundle.load('lib/assets/images/dest_donut.png');
+                    red = bytes1.buffer.asUint8List();
                     Uint8List? mapByte =await _googleMapController?.takeSnapshot();
-                    Uint8List? toFro = await screenshotController.capture(delay: const Duration(milliseconds: 10),pixelRatio: MediaQuery.of(context).devicePixelRatio).then((value) {return value;});
                     Uint8List? userAvat = await avatarController.capture(delay: const Duration(milliseconds: 10),pixelRatio: MediaQuery.of(context).devicePixelRatio).then((value) {return value;});
-                    final PDF = await pdf(toFro!, mapByte!,context.read<RideDetails>().riderName!,
-                        context.read<RideDetails>().pickupDate!,context.read<RideDetails>().fair!,
+                    final PDF = await pdf(green,red, mapByte!,context.read<CaptainDetails>().capName!,
+                        DateFormat.MMMMEEEEd().format(DateTime.now()),
                         list,context.read<CaptainDetails>().capPlate!,userAvat!,
                         context.read<CaptainDetails>().baseFair!,context.read<CaptainDetails>().time!,
                         context.read<CaptainDetails>().distance!,context.read<CaptainDetails>().convFee!,
-                        context.read<CaptainDetails>().roadMaint!,context.read<CaptainDetails>().total!);
+                        context.read<CaptainDetails>().roadMaint!,context.read<CaptainDetails>().total!,
+                        context.read<FirstData>().patronPickupPlace!,
+                        context.read<FirstData>().patronDestPlace!
+                    );
 
-                   await DocumentFileSavePlus.saveFile(PDF, "invoice${DateTime.now().toString()}.pdf", "appliation/pdf");
-                   showSnackBar(context,'Invoice downloaded successfully');
-                  }
-                  catch(e){
-                    print(e);
-                  }
+                    await DocumentFileSavePlus.saveFile(PDF, "invoice${DateTime.now().toString()}.pdf", "appliation/pdf");
+                    showSnackBar(context,'Invoice downloaded successfully');
                 } ,
                 child: Container(
                   width: 318.h,
                   margin: EdgeInsets.only(left: 36.w, right: 36.w, top: 15.h),
                   height: 50.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: kBlue)
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: kBlue)
                   ),
                   child: Center(
                     child: Text('Download invoice',

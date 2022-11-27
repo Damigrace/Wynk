@@ -1,4 +1,4 @@
-package com.example.untitled
+package ng.wynk.wynk
 
 import io.flutter.embedding.android.FlutterActivity
 

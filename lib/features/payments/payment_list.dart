@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/cable_tv.dart';
-import 'package:untitled/features/payments/power_topup.dart';
-import 'package:untitled/features/payments/govt_bill.dart';
-import 'package:untitled/features/payments/mobile_recharge.dart';
-import 'package:untitled/features/payments/lasu_sf.dart';
-import 'package:untitled/features/payments/school_fees_payment.dart';
-import 'package:untitled/features/payments/utility_main.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
+import 'package:wynk/features/payments/power_topup.dart';
+import 'package:wynk/features/payments/utility_main.dart';
 
+import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
 import '../landing_pages/home_main14.dart';
+import 'cable_tv.dart';
+import 'govt_bill.dart';
 import 'internet_sub_main.dart';
+import 'mobile_recharge.dart';
 class PaymentList extends StatefulWidget {
   const PaymentList({Key? key}) : super(key: key);
 
@@ -52,7 +48,7 @@ class _PaymentListState extends State<PaymentList> {
                       Text('Select\nPayment',style: TextStyle(fontSize: 26.sp),),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: kYellow,
+                            backgroundColor: kYellow,
                             padding: EdgeInsets.symmetric(vertical: 19.h,horizontal: 17.w)
                           ),
                           onPressed: (){}, child: Text('Pay Merchant'))
@@ -280,39 +276,39 @@ class _PaymentListState extends State<PaymentList> {
                       ],
                       )
                   ),
-                  GestureDetector(
-                    onTap: ()=>  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                        SchoolFeesPayment()),),
-                    child: Container(
-                        margin: EdgeInsets.only(bottom: 14.h),
-                        height: 61.h,
-                        width: double.infinity,
-                        decoration:  BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                                color: kGrey1),
-                            color: kWhite),
-                        child:Row(children: [
-                          SizedBox(width: 18.w,),
-                          Expanded(
-                            child: TextField(
-                                readOnly: true,
-                                onEditingComplete:()=> FocusScope.of(context).nextFocus(),
-                                style: TextStyle(fontSize: 15.sp),
-                                decoration:   InputDecoration.collapsed(
-                                    hintText: 'Tuition/School Fees',
-                                    hintStyle:  TextStyle(fontSize: 15.sp,
-                                        color: Colors.black
-                                    ))),
-                          ),
-                          Icon(
-                              Icons.keyboard_arrow_right
-                          ),
-                          SizedBox(width: 45.w,),
-                        ],
-                        )
-                    ),
-                  )
+                  // GestureDetector(
+                  //   onTap: ()=>  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                  //       SchoolFeesPayment()),),
+                  //   child: Container(
+                  //       margin: EdgeInsets.only(bottom: 14.h),
+                  //       height: 61.h,
+                  //       width: double.infinity,
+                  //       decoration:  BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(7),
+                  //           border: Border.all(
+                  //               color: kGrey1),
+                  //           color: kWhite),
+                  //       child:Row(children: [
+                  //         SizedBox(width: 18.w,),
+                  //         Expanded(
+                  //           child: TextField(
+                  //               readOnly: true,
+                  //               onEditingComplete:()=> FocusScope.of(context).nextFocus(),
+                  //               style: TextStyle(fontSize: 15.sp),
+                  //               decoration:   InputDecoration.collapsed(
+                  //                   hintText: 'Tuition/School Fees',
+                  //                   hintStyle:  TextStyle(fontSize: 15.sp,
+                  //                       color: Colors.black
+                  //                   ))),
+                  //         ),
+                  //         Icon(
+                  //             Icons.keyboard_arrow_right
+                  //         ),
+                  //         SizedBox(width: 45.w,),
+                  //       ],
+                  //       )
+                  //   ),
+                  // )
                 ],
               ),
             ),

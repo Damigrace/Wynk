@@ -13,18 +13,18 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/landing_pages/welcome_page.dart';
-import 'package:untitled/features/registration_feature/register_page.dart';
-import 'package:untitled/features/registration_feature/signup_camera_permission.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+
+import '../../controllers.dart';
+import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
 import '../../utilities/models/data_confirmation.dart';
+import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
+import '../landing_pages/welcome_page.dart';
+import '../registration_feature/register_page.dart';
 String? userConfirmTpin;
 class AnotherUserLogin extends StatefulWidget {
 
@@ -34,6 +34,13 @@ class AnotherUserLogin extends StatefulWidget {
 }
 
 class _AnotherUserLoginState extends State<AnotherUserLogin> {
+  UserType()async{
+    final val = await getUserType();
+    String userT = val!['usertype'];
+    print('test:$userT');
+    context.read<FirstData>().saveUserType(userT);
+    context.read<FirstData>().saveOriguser(userT);
+  }
   String? text;
   bool showSpinner=false;
   String? numCode;
@@ -169,6 +176,7 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                               emailController.text = loginResponse['email'];
                               confirmationPhoneCont.text = loginResponse['phone'];
                               prefs.setString('Origwynkid',loginResponse['username']);
+                              UserType();
                              final userDet = await getUserRegisteredDetails(wynkId: loginResponse['username']);
                               context.read<FirstData>().getUserP(prefs.getString('userPic'));
                               context.read<FirstData>().getUsername(userDet['firstname']);
@@ -218,5 +226,6 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
       ),
     );
   }
+
 }
 

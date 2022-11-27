@@ -12,17 +12,16 @@ import 'package:location/location.dart';
 import 'package:google_place/google_place.dart' hide Location;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
+import '../../utilities/models/directions.dart';
+import '../../utilities/models/directions_model.dart';
+import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
 import '../local_notif.dart';
 import '../modal_bottom_sheets/driver -search_mbs.dart';
 class RideCommence extends StatefulWidget {
@@ -67,7 +66,7 @@ class _RideCommenceState extends State<RideCommence> {
             if(notified2 == false){
               timer?.cancel();
               notified2= true;
-              Navigator.pushReplacementNamed(context,'/TripEnded');
+              Navigator.pushReplacementNamed(context,'/PatronTripEnded');
             }
           }
 

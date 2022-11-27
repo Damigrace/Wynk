@@ -6,9 +6,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/ride/captain_found.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
+import 'package:wynk/features/ride/captain_found.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/services.dart';
 
 import '../../utilities/constants/colors.dart';
 import '../local_notif.dart';
@@ -35,6 +35,18 @@ class DriverSearch extends StatefulWidget {
 class _DriverSearchState extends State<DriverSearch> {
   final balanceFormatter = NumberFormat("#,##0.00", "en_NG");
   bool notified1 = false;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer?.cancel();
+    super.dispose();
+  }
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    timer?.cancel();
+    super.deactivate();
+  }
   Timer? timer;
   @override
   Widget build(BuildContext context) {

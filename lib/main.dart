@@ -17,56 +17,44 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
+import 'package:wynk/features/ride_schedule/ride_schedule%20pickup.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/widgets.dart';
+
 import 'dart:io';
-import 'package:untitled/features/landing_pages/home_main.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/later_screens/patron_trip_ended.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/features/ride/patron_ride_commence.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/ride/ride_in_progress.dart';
-import 'package:untitled/features/ride/ride_started.dart';
-import 'package:untitled/features/ride/trip_ended.dart';
-import 'package:untitled/features/rides.dart';
-import 'package:untitled/features/vault/add_funds.dart';
-import 'package:untitled/features/vault/add_funds2.dart';
-import 'package:untitled/features/vault/add_funds3.dart';
-import 'package:untitled/features/vault/add_funds4.dart';
-import 'package:untitled/features/vault/add_funds5.dart';
-import 'package:untitled/features/vault/add_funds_payment_gateway%5D.dart';
-import 'package:untitled/features/vault/vault_home.dart';
-import 'package:untitled/features/login_feature/another_user_login.dart';
-import 'package:untitled/features/login_feature/login_page.dart';
-import 'package:untitled/features/registration_feature/confirm_pin.dart';
-import 'package:untitled/features/registration_feature/create_pin.dart';
-import 'package:untitled/features/registration_feature/patron_captain_login.dart';
-import 'package:untitled/features/registration_feature/register_page.dart';
-import 'package:untitled/features/registration_feature/sign_up.dart';
-import 'package:untitled/features/registration_feature/sign_up_personal_details.dart';
-import 'package:untitled/features/registration_feature/signup_camera_permission.dart';
-import 'package:untitled/features/ride_schedule/ride_schedule%20pickup.dart';
-import 'package:untitled/features/setups/create_transaction_pin.dart';
-import 'package:untitled/features/setups/reset%20password.dart';
-import 'package:untitled/features/setups/reset_pin.dart';
-import 'package:untitled/features/setups/vault_welcome.dart';
-import 'package:untitled/features/verification_feature/confirm_transaction_pin.dart';
-import 'package:untitled/features/verification_feature/verification.dart';
-import 'package:untitled/features/wynk-pass/wynk_sub_page.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 import 'controllers.dart';
+import 'features/firebase/ride_schedule.dart';
 import 'features/landing_pages/captain_home.dart';
+import 'features/landing_pages/captain_online.dart';
+import 'features/landing_pages/home_main14.dart';
+import 'features/later_screens/patron_trip_ended.dart';
 import 'features/local_notif.dart';
+import 'features/login_feature/another_user_login.dart';
+import 'features/payments/payment_list.dart';
+import 'features/registration_feature/patron_captain_login.dart';
+import 'features/registration_feature/register_page.dart';
+import 'features/ride/nav_screen.dart';
 import 'features/ride/patron_invoice.dart';
+import 'features/ride/patron_ride_commence.dart';
 import 'features/ride/ride_available.dart';
+import 'features/ride/ride_destination.dart';
 import 'features/ride/ride_home.dart';
 import 'features/landing_pages/welcome_page.dart';
+import 'features/ride/ride_in_progress.dart';
 import 'features/ride/ride_payment_gateway.dart';
+import 'features/ride/ride_started.dart';
+import 'features/ride/trip_ended.dart';
 import 'features/ride_schedule/ride_schedule_dest.dart';
+import 'features/rides.dart';
+import 'features/vault/add_funds.dart';
+import 'features/vault/add_funds2.dart';
+import 'features/vault/add_funds3.dart';
+import 'features/vault/add_funds4.dart';
+import 'features/vault/add_funds5.dart';
+import 'features/vault/add_funds_payment_gateway].dart';
+import 'features/vault/vault_home.dart';
+import 'features/wynk-pass/wynk_sub_page.dart';
 import 'utilities/firebase_dynamic_link.dart';
 
 
@@ -185,7 +173,8 @@ class MyApp extends StatelessWidget {
         '/Home' : (context)=> const HomeMain14(),
         '/UserSelector' : (context)=> const UserSelector(),
         '/CaptainHome' : (context)=> const CaptainHome(),
-        '/RideSchedule' : (context)=> const RideSchedule(),
+        '/RideSchedule' : (context)=>  RideSchedule(),
+        '/RideSchedulePickup' : (context)=>  RideSchedulePickup(),
         '/RideSchDestination' : (context)=>  RideSchDestination(),
          '/WelcomePage' : (context)=> const WelcomePage(),
         '/VaultHome' : (context)=> const VaultHome(),
@@ -274,6 +263,7 @@ class FirstData with ChangeNotifier{
   String? origUserType;
   List<RideDetail> rides = [];
   List<ListTile> utilities = [];
+  List<ListTile> transcards = [];
   String? serviceUnit;
   bool activeRide = false;
 
@@ -283,7 +273,6 @@ class FirstData with ChangeNotifier{
   }
   String? fromWallet;
   saveFromWallet(String val){
-    print('savedddddddddddddddddddddddddddd');
     print(val);
     fromWallet = val;
     notifyListeners();
@@ -299,6 +288,10 @@ class FirstData with ChangeNotifier{
   }
   saveUtil(ListTile val){
     utilities.add(val);
+    notifyListeners();
+  }
+  saveTransCard(ListTile val){
+    transcards.add(val);
     notifyListeners();
   }
   String? numCode;
@@ -797,7 +790,7 @@ class _SplashScreenState extends State<SplashScreen> {
   UserType()async{
     final val = await getUserType();
     String userT = val!['usertype'];
-
+    print('test:$userT');
     context.read<FirstData>().saveUserType(userT);
     context.read<FirstData>().saveOriguser(userT);
   }
@@ -813,16 +806,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
   Future <void> signin()async{
+
     UserType();
     getWalletDet();
     final prefs = await SharedPreferences.getInstance();
-    context.read<FirstData>().saveUserType('patron');
-    //prefs.setString('mypin','2442');
     context.read<FirstData>().getUserP(prefs.getString('userPic'));
     context.read<FirstData>().getUsername(prefs.getString('firstname'));
     if(prefs.getString('Origwynkid') == null){
       FocusScope.of(context).nearestScope;
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> AnotherUserLogin()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RegisterPage()));
     }
     else {
       context.read<FirstData>().saveUniqueId(prefs.getString('Origwynkid'));
@@ -913,17 +905,3 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
 }
-
-// child:
-// ScreenUtilInit(
-// designSize: const Size(390,844),
-// minTextAdapt: true,
-// splitScreenMode: true,
-// builder: (context, child){
-// return  HomeMain14();
-// },
-// )
-// ,
-// providers: [
-// ChangeNotifierProvider(create: (_)=>FirstData())
-// ]);

@@ -8,16 +8,17 @@ import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/ride/ride_history_invoice.dart';
-import 'package:untitled/features/ride_schedule/my_bookings.dart';
-import 'package:untitled/features/setups/settings.dart';
-import 'package:untitled/features/vault/vault_home.dart';
-import 'package:untitled/features/wynk-pass/no_pass_screen.dart';
-import 'package:untitled/features/wynk-pass/pass_status.dart';
+
 import '../controllers.dart';
 import '../features/landing_pages/home_main14.dart';
 import '../features/login_feature/another_user_login.dart';
 import '../features/login_feature/login_page.dart';
+import '../features/ride/ride_history_invoice.dart';
+import '../features/ride_schedule/my_bookings.dart';
+import '../features/setups/settings.dart';
+import '../features/transaction_history.dart';
+import '../features/wynk-pass/no_pass_screen.dart';
+import '../features/wynk-pass/pass_status.dart';
 import '../features/wynk-pass/wynk_pass_confirmation.dart';
 import '../features/wynk-pass/wynk_prepaid.dart';
 import '../main.dart';
@@ -218,7 +219,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     Navigator.pop(context);
     Navigator.pushNamed(context, '/RidesList');}
   }
-  void captDrawerItem(int index){
+  Future<void> captDrawerItem(int index) async {
     print(index);
     switch(index){
       case 0 :  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
@@ -262,13 +263,165 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         break;
       case 4 :Navigator.pop(context); Navigator.pushNamed(context, '/VaultHome');
       break;
+      case 5 :
+      spinner(context);
+      context.read<FirstData>().transcards.clear();
+      final response = await transHist();
+      if(response['statusCode'] == 200){
+        List res = response['message'];
+        res.forEach((element) {
+          if(element['products'] == 'w2b'){
+
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/functions/send_funds-removebg-preview (1).png')),
+              title: Text('Funds sent to ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'w2w'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/wynkimage.png')),
+              title: Text('Funds sent to ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'ride'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/rides/economy.png')),
+              title: Text('A  Ride with ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'airtime'){
+            String? image;
+            switch(element['channel']){
+              case  'MTN': image = 'lib/assets/images/quick_pay/image-6-1@1x.png';break;
+              case  '9 Mobile': image = 'lib/assets/images/quick_pay/image-9-1@1x.png';break;
+              case  'GLO': image = 'lib/assets/images/quick_pay/image-7-1@1x.png';break;
+              case  'Airtel': image = 'lib/assets/images/quick_pay/image-8-1@1x.png';break;
+            }
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset(image!) ),
+              title: Text('Airtime Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'power'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/payments/elec.png')),
+              title: Text('Power Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'cable'){
+            String? image;
+            switch(element['channel']){
+              case  'GOTV': image = 'lib/assets/images/gotv.png';break;
+              case  'DSTV': image = 'lib/assets/images/dstv.png';break;
+
+            }
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset(image!)),
+              title: Text('Cable Subscription for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'smile'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/subscriptions/smile.jpg')),
+              title: Text('Smile Data Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+        });
+        Navigator.pop(context);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>TransHistory()),);
+      }
+
+      else{
+        showSnackBar(context, response['errorMessage']);
+        Navigator.pop(context);
+      }
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          TransHistory())); break;
       case 9:
           gotoPassStat(context);
+        break;
+      case 11:
+        spinner(context);
+        final pos = await determinePosition(context);
+        await onlineStatus(0, LatLng(pos.latitude, pos.longitude));
+        Navigator.pop(context);
+        Navigator.pop(context);
+        showSnackBar(context, 'You are now offline. Return to Captain Home to go online.');
         break;
 
     }
   }
-  void patDrawerItem(int index){
+  Future<void> patDrawerItem(int index) async {
     print(index);
     switch(index){
       case 0 :  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
@@ -277,16 +430,162 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       case 1 : getRides();
       break;
       case 6 : Navigator.pop(context);Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+      MyBookingsMVP()));
+      break;
+      case 7 : Navigator.pop(context);Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
           Settings()));
       break;
       case 2 : Navigator.pop(context); Navigator.pushNamed(context, '/Payments');
       break;
       case 3 :  Navigator.pop(context); Navigator.pushNamed(context, '/UserSelector'); break;
+      case 5 :  spinner(context);
+      context.read<FirstData>().transcards.clear();
+      final response = await transHist();
+      if(response['statusCode'] == 200){
+        List res = response['message'];
+        res.forEach((element) {
+          if(element['products'] == 'w2b'){
+
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/functions/send_funds-removebg-preview (1).png')),
+              title: Text('Funds sent to ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'w2w'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/wynkimage.png')),
+              title: Text('Funds sent to ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'ride'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/rides/economy.png')),
+              title: Text('A  Ride with ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'airtime'){
+            String? image;
+            switch(element['channel']){
+              case  'MTN': image = 'lib/assets/images/quick_pay/image-6-1@1x.png';break;
+              case  '9 Mobile': image = 'lib/assets/images/quick_pay/image-9-1@1x.png';break;
+              case  'GLO': image = 'lib/assets/images/quick_pay/image-7-1@1x.png';break;
+              case  'Airtel': image = 'lib/assets/images/quick_pay/image-8-1@1x.png';break;
+            }
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset(image!) ),
+              title: Text('Airtime Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'power'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/payments/elec.png')),
+              title: Text('Power Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'cable'){
+            String? image;
+            switch(element['channel']){
+              case  'GOTV': image = 'lib/assets/images/gotv.png';break;
+              case  'DSTV': image = 'lib/assets/images/dstv.png';break;
+
+            }
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset(image!)),
+              title: Text('Cable Subscription for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+          else if(element['products'] == 'smile'){
+            var iniListTile = ListTile(
+              contentPadding: EdgeInsets.only(left: 36.w),
+              onTap: (){
+
+              },
+              leading: SizedBox(
+                  width: 26.w,
+                  height: 26.w,
+                  child: Image.asset('lib/assets/images/subscriptions/smile.jpg')),
+              title: Text('Smile Data Purchase for ${element['customer']}',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+              subtitle: Text('${element['created_date']}'),
+              trailing: Text('${element['amount']}',style: TextStyle(fontSize: 22.sp,)),
+            );
+            context.read<FirstData>().saveTransCard(iniListTile);
+          }
+        });
+        Navigator.pop(context);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>TransHistory()),);
+      }
+
+      else{
+        showSnackBar(context, response['errorMessage']);
+        Navigator.pop(context);
+      }
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          TransHistory())); break;
      // case 8: gotoPassStat(context);break;
-      case 5 : Navigator.pop(context); Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+      case 7 : Navigator.pop(context); Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
           MyBookingsMVP()));
       break;
-      case 9:
+      case 10:
         logoutConf();
         break;
       case 4 :Navigator.pop(context); Navigator.pushNamed(context, '/VaultHome');
@@ -308,12 +607,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       'Payments',
       'WynkSwitch',
       'My Vault',
-      'Inbox',
+      'Transaction History',
       'Settings',
       'Support',
       'Terms & Conditions',
       'Pass Status',
       'Log Out',
+      'Go Offline'
     ];
     List<String>patDrawerItemsList=[
       'Home',
@@ -321,6 +621,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       'Payments',
       'WynkSwitch',
       'My Vault',
+      'Transaction History',
       'My Bookings',
       'Settings',
       'Support',
@@ -854,7 +1155,7 @@ class Wallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bal = currentBalance ==''?'---':balanceFormatter.format(double.parse(currentBalance!)) ;
+    var bal = currentBalance ==''?'---':currentBalance! ;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -867,7 +1168,7 @@ class Wallet extends StatelessWidget {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('₦$bal',style: TextStyle(fontSize: 18.sp,color: Colors.green),),
+              Text('₦$bal',style: TextStyle(fontSize: 18.sp,color: kYellow,fontWeight: FontWeight.w600),),
               Icon(Icons.keyboard_arrow_right)
             ],
           ),
@@ -1375,6 +1676,8 @@ class _WalletContState extends State<WalletCont> {
           ),
           GestureDetector(
               onTap: ()async{
+
+
                 if(context.read<WalletDetails>().wallets.isEmpty){
                   if(checkingWallet){showSnackBar(context, 'Loading wallet...');}
                   else{
@@ -1408,7 +1711,7 @@ class _WalletContState extends State<WalletCont> {
                               return RadioListTile<int>(
                                   activeColor: kYellow,
                                   secondary: Text('₦ ${wallets.elementAt(index).currentBalance!}',
-                                    style: TextStyle(fontSize: 20.sp,color: Colors.black),),
+                                    style: TextStyle(fontSize: 18.sp,color: kYellow,fontWeight: FontWeight.w600),),
                                   title: Text(wallets.elementAt(index).walletName!,
                                     style: TextStyle(fontSize: 20.sp,color: Colors.black),),
                                   subtitle: Text(wallets.elementAt(index).walletNum!),
@@ -1424,7 +1727,8 @@ class _WalletContState extends State<WalletCont> {
                             },
                           ),
                         );
-                      });}
+                      });
+                }
               },
               child: Icon(Icons.keyboard_arrow_down_sharp))
 
@@ -1455,6 +1759,32 @@ class SmileCard{
         price : json['amount'],
         validity: json['price'],
         displayPrice: json['displayPrice']
+    );
+  }
+
+
+}
+
+class transCard{
+  final  String time;
+  final  String details;
+  final  String amount;
+  final  String productCode;
+  final  String customer;
+  transCard({
+    required this.customer,
+    required this.time,
+    required this.amount,
+    required this.details,
+    required this.productCode,
+  });
+  factory transCard.fromJson(Map<String,dynamic> json){
+    return transCard(
+        time : json['created_date'],
+        details : json['code'],
+        amount : json['amount'],
+      productCode: json['products'],
+      customer: json['customer'],
     );
   }
 

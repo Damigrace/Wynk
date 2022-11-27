@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/main.dart';
+
+import '../../main.dart';
+
 class ImageLoader extends StatelessWidget {
   const ImageLoader({Key? key}) : super(key: key);
 

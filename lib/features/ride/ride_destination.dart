@@ -11,16 +11,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
-
+import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
+import '../../utilities/constants/textstyles.dart';
 import '../../utilities/models/directions.dart';
+import '../../utilities/widgets.dart';
 
 class RideDestination extends StatefulWidget {
   RideDestination({Key? key, this.userLocation}) : super(key: key);
@@ -332,7 +330,7 @@ class _RideDestinationState extends State<RideDestination> {
                 alignment: Alignment.topRight,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/RideSchedule');
+                    Navigator.pushNamed(context, '/RideSchedulePickup');
                   },
                   child: Container(
                     width: 160.w,

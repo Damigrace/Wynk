@@ -6,13 +6,13 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/airtime_topup.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/send_funds/data_topup.dart';
-import 'package:untitled/features/payments/send_funds/send_to_bank.dart';
-import 'package:untitled/features/payments/send_funds/send_to_wynk.dart';
-import 'package:untitled/services.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/payments/airtime_topup.dart';
+import 'package:wynk/features/payments/payment_list.dart';
+import 'package:wynk/features/payments/send_funds/data_topup.dart';
+import 'package:wynk/features/payments/send_funds/send_to_bank.dart';
+import 'package:wynk/features/payments/send_funds/send_to_wynk.dart';
+import 'package:wynk/services.dart';
 
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/widgets.dart';
@@ -124,7 +124,7 @@ class _SendCashState extends State<SendCash> {
                                                overflow: TextOverflow.ellipsis,
                                                style: TextStyle(fontSize: 15.sp),)),
                                              SizedBox(width: 10.w),
-                                             Text(walletName!??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                             Text(walletName!, style: TextStyle(fontWeight: FontWeight.w600))
                                            ],)
                                        ],),
                                        SizedBox(height:47.h),

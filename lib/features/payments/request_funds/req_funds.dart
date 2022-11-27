@@ -15,12 +15,13 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
+
 import 'package:url_launcher/url_launcher.dart';
+import '../../../controllers.dart';
 import '../../../main.dart';
+import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
+import '../../../utilities/constants/textstyles.dart';
 import '../../../utilities/firebase_dynamic_link.dart';
 import '../../../utilities/widgets.dart';
 
@@ -33,7 +34,6 @@ class RequestFunds extends StatefulWidget {
 
 class _RequestFundsState extends State<RequestFunds> {
   int? selectedWallet;
-  String? toWallet;
   String? pin;
   String? res;
   bool nairaIsVisible = false;
@@ -59,9 +59,10 @@ class _RequestFundsState extends State<RequestFunds> {
       Navigator.pop(context);
       showSnackBar(context,'It seems this contact is not a Wynk user.');
     }
-    else{
+    else {
 
      final res = await walletLookup(response['wallet_number']);
+     senderVaultIdController.text = response['wallet_number'];
      Navigator.pop(context);
      if(res['statusCode'] == 200){
        String walletName = res['accountName'];
@@ -97,7 +98,7 @@ class _RequestFundsState extends State<RequestFunds> {
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
                        Text('Vault ID',style: TextStyle(fontSize: 15.sp),),
-                       Text(wallet!,style: TextStyle(fontWeight: FontWeight.w600))
+                       Text(response['wallet_number'],style: TextStyle(fontWeight: FontWeight.w600))
                      ],),
                    SizedBox(height:10.h),
                    Row(
@@ -107,7 +108,7 @@ class _RequestFundsState extends State<RequestFunds> {
                          overflow: TextOverflow.ellipsis,
                          style: TextStyle(fontSize: 15.sp),)),
                        SizedBox(width: 10.w),
-                       Text(walletName??'', style: TextStyle(fontWeight: FontWeight.w600))
+                       Text(walletName, style: TextStyle(fontWeight: FontWeight.w600))
                      ],)
                  ],),
                  SizedBox(height:47.h),
@@ -154,84 +155,7 @@ class _RequestFundsState extends State<RequestFunds> {
                 SizedBox(height: 25.h,),
                 Text('Request Funds',style: TextStyle(fontSize: 26.sp),),
                 SizedBox(height: 25.h,),
-                Container(
-                    margin: EdgeInsets.only(top: 14.h,bottom: 10.h),
-                    height: 51.h,
-                    width: double.infinity,
-                    decoration:  BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        border: Border.all(
-                            color: kGrey1),
-                        color: kWhite),
-                    child:Row(children: [
-                      SizedBox(width: 10.w,),
-                      Image.asset('lib/assets/images/rides/wynkvaultwallet.png',height: 30.w,width: 30.w,),
-                      SizedBox(width: 10.w,),
-                      Expanded(
-                        child: TextField(
-                            controller: selectWalletCont,
-                            readOnly: true,
-                            onEditingComplete:()=> FocusScope.of(context).nextFocus(),
-                            autofocus: true,
-                            style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
-                                color: Colors.black
-                            ),
-                            decoration:   InputDecoration.collapsed(
-                              hintText: 'Select Receiving Wallet',
-                              hintStyle:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
-                                  color: kGrey1
-                              ),)),
-                      ),
-                      GestureDetector(
-                          onTap: (){
-                            showModalBottomSheet(
-                                enableDrag: false,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(topRight: Radius.circular(10),topLeft: Radius.circular(10))
-                                ),
-                                context: context,
-                                builder: (context){
-                                  List<Wallet> wallets = context.watch<WalletDetails>().wallets;
-                                  return Container(
-                                    child: ListView.builder(
-                                      itemCount:wallets.length ,
-                                      shrinkWrap: true,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return RadioListTile<int>(
-                                            activeColor: kYellow,
-                                            secondary: Text('₦ ${wallets.elementAt(index).currentBalance!}',
-                                              style: TextStyle(fontSize: 20.sp,color: Colors.black),),
-                                            title: Text(wallets.elementAt(index).walletName!,
-                                              style: TextStyle(fontSize: 20.sp,color: Colors.black),),
-                                            subtitle: Text(wallets.elementAt(index).walletNum!),
-                                            value: index, groupValue: selectedWallet, onChanged: (val){
-                                          setState(() {
-                                            selectedWallet = index;
-                                            selectWalletCont.text = wallets.elementAt(index).walletName!;
-                                            Navigator.pop(context);
-                                            toWallet =  wallets.elementAt(index).walletNum!;
-                                          });
-                                        });
-                                      },
-                                    ),
-                                  );
-                                });
-                          },
-                          child: Icon(Icons.keyboard_arrow_down_sharp))
-                      // DropdownButton<Wallet>(
-                      //   underline: SizedBox(),
-                      //     icon: Icon(Icons.keyboard_arrow_down_sharp),
-                      //     items: walletDD,
-                      //     onChanged: ( Wallet? val){
-                      //      setState(() {
-                      //        selectWalletCont.text = val!.walletName!;
-                      //        walletNumber = val.walletNum;
-                      //      });
-                      // })
-                      // Icon(Icons.keyboard_arrow_down_sharp)
-                    ],
-                    )
-                ),
+                WalletCont(),
                 Container(
                     margin: EdgeInsets.only(top: 10.h),
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -376,7 +300,7 @@ class _RequestFundsState extends State<RequestFunds> {
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(fontSize: 15.sp),)),
                                                   SizedBox(width: 10.w),
-                                                  Text(walletName??'', style: TextStyle(fontWeight: FontWeight.w600))
+                                                  Text(walletName, style: TextStyle(fontWeight: FontWeight.w600))
                                                 ],)
                                             ],),
                                             SizedBox(height:47.h),
@@ -406,9 +330,7 @@ class _RequestFundsState extends State<RequestFunds> {
                                   showToast('We could not fetch beneficiary details');
                                 }
                               }
-                              else{
-                                showSnackBar(context, 'Please check Vault ID.');
-                              }
+
                             },
                             controller: senderVaultIdController,
                             keyboardType:TextInputType.number,
@@ -478,14 +400,14 @@ class _RequestFundsState extends State<RequestFunds> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: kBlue),
                     onPressed: () async {
-                      if(senderVaultIdController.text == toWallet){
+                      if(senderVaultIdController.text == context.read<FirstData>().fromWallet){
                         showToast('Source and Destination cannot be same');
                         return;
                       }
 
                       else{
                       spinner(context);
-                     final res = await requestFunds(senderVaultIdController.text, toWallet!, requestFundsAmountCont.text);
+                     final res = await requestFunds(senderVaultIdController.text, context.read<FirstData>().fromWallet!, requestFundsAmountCont.text);
                      if(res['statusCode'] == 200){
                        showToast('Fund Request sent');
                      }
@@ -505,7 +427,7 @@ class _RequestFundsState extends State<RequestFunds> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: kYellow),
-                    onPressed: (toWallet == null || requestFundsAmountCont.text == ''  )?null:()=>genQr(context),
+                    onPressed: (context.read<FirstData>().fromWallet == null || requestFundsAmountCont.text == ''  )?null:()=>genQr(context),
                     child: Text('Generate QRCode',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
                   ),
                 )
@@ -524,7 +446,7 @@ class _RequestFundsState extends State<RequestFunds> {
         ),
         context: context, builder: (context){
       String accountDetails = jsonEncode({
-        "vault":toWallet!,
+        "vault":context.read<FirstData>().fromWallet!,
         "wynkid":prefs.getString('Origwynkid')!,
         "amount":requestFundsAmountCont.text
       });
@@ -562,7 +484,7 @@ class _RequestFundsState extends State<RequestFunds> {
                       File(path).writeAsBytesSync(qrPic!);
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       var url = await AppUtils.buildDynamicLink(
-                          toWallet!,
+                          context.read<FirstData>().fromWallet!,
                           prefs.getString('Origwynkid')!,
                           requestFundsAmountCont.text
                       );

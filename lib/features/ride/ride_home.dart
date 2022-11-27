@@ -12,12 +12,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart' hide Location;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/features/ride/ride_destination.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/models/directions.dart';
+import 'package:wynk/utilities/models/directions_model.dart';
+import 'package:wynk/utilities/widgets.dart';
 
 import '../../controllers.dart';
 import '../../main.dart';

@@ -8,16 +8,15 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/registration_feature/signup_camera_permission.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
-import 'package:untitled/services.dart';
 import 'dart:io';
 
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
 String? userConfirmTpin;
 class ConfirmTPin extends StatefulWidget {
 
@@ -31,13 +30,7 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
   File? imageFile;
 
   int? picUploadMode;
-  UserType()async{
-    final val = await getUserType();
-    String userT = val!['usertype'];
 
-    context.read<FirstData>().saveUserType(userT);
-    context.read<FirstData>().saveOriguser(userT);
-  }
   getWalletDet()async{
     context.read<WalletDetails>().wallets.clear();
     final res = await walletDetails(context);
@@ -78,7 +71,6 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
                       print('1');
                       String user64Img= await userUmageAsString();
                       print('2');
-                      UserType();
                       getWalletDet();
                       await savePicture(user64Img, prefs.getString('Origwynkid')!);
 
@@ -123,6 +115,8 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
   Future picturing(BuildContext context)async{
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('mypin', confirmTPinController.text);
+    prefs.setString('Origwynkid', context.read<FirstData>().uniqueId!);
+
     await saveUserPin(context);
     Navigator.pop(context);
     await camPermission(context);
@@ -154,17 +148,6 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
 
     });
   }
-  showToast(String msg){
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: kBlueTint,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,11 +157,13 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
-                alignment: Alignment.bottomLeft,
+                alignment: Alignment.bottomRight,
                 child: backButton(context),
               ),
-              Text('Confirm Your Pin',style: kTextStyle1),
-              Text('Keep this number safe, its how you will authorize transactions  ',style: kTextStyle5),
+              SizedBox(height: 15.h,),
+              Text('Confirm Your Pin',style: kBoldBlack.copyWith(fontSize: 30.sp)),
+              SizedBox(height: 25.h,),
+              Text('Enter the same pin you entered in the previous step',style: kTextStyle5),
               Align(
                 alignment: Alignment.center,
                 child: Container(
@@ -240,6 +225,8 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
                     else if(confirmTPinController.text!=transactionPinController.text){
                       showSnackBar(context,'Pin Code Mismatch. Try Again');
                     }
+                    context.read<FirstData>().saveUserType('3');
+                    context.read<FirstData>().saveOriguser('3');
                   },
                   child: Text('Submit',style:kTextStyle2,),
                 ),

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:untitled/features/firebase/ride_schedule.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
+
+
+import '../firebase/ride_schedule.dart';
 class Activities extends StatefulWidget {
   const Activities({Key? key}) : super(key: key);
 

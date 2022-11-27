@@ -12,23 +12,20 @@ import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/ride_schedule/ride_schedule_dest.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
+import 'package:wynk/features/ride_schedule/ride_schedule_dest.dart';
 
 import '../../main.dart';
-import '../../utilities/constants/env.dart';
-class RideSchedule extends StatefulWidget {
-  const RideSchedule({Key? key}) : super(key: key);
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+
+class RideSchedulePickup extends StatefulWidget {
+  const RideSchedulePickup({Key? key}) : super(key: key);
 
   @override
-  State<RideSchedule> createState() => _RideScheduleState();
+  State<RideSchedulePickup> createState() => _RideSchedulePickupState();
 }
 
-class _RideScheduleState extends State<RideSchedule> {
+class _RideSchedulePickupState extends State<RideSchedulePickup> {
   SharedPreferences? prefs;
   initSharedPref()async{ prefs = await SharedPreferences.getInstance();}
   @override

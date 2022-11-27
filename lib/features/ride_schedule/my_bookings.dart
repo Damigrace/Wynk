@@ -6,29 +6,15 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/registration_feature/captain_f_registration.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/later_screens/activities.dart';
-import 'package:untitled/features/ride_schedule/ride_schedule%20pickup.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
 
-import '../../controllers.dart';
+
 import '../../main.dart';
-import '../../utilities/constants/env.dart';
 import '../../utilities/widgets.dart';
-import 'package:location/location.dart';
 
+import '../later_screens/activities.dart';
 import '../later_screens/deliveries.dart';
 
 

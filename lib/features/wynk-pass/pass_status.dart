@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/features/landing_pages/captain_online.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/widgets.dart';
 
 import '../../controllers.dart';
 import '../../services.dart';

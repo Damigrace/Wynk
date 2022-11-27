@@ -4,8 +4,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/features/payments/send_funds/sendfunds.dart';
+import 'package:wynk/features/payments/send_funds/sendcash.dart';
+
 
 import '../../../controllers.dart';
 import '../../../main.dart';
@@ -56,103 +56,102 @@ class _SendToBankState extends State<SendToBank> {
               Expanded(
                 child: TextField(
                   onTap: () async {
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context, builder: (context){
-                      return Container(child:
-                      SpinKitCircle(color: kYellow,),);
-                    });
+                    spinner(context);
                     final res = await commBanks();
-                    List bnk = res['message'] as List;
-                    List<BanksModel> list = [];
-                    for(var bank in bnk ){
-                     BanksModel banksModel = BanksModel(bankName:bank['bankName'],bankCode: bank['bankCode'] );
-                      list.add(banksModel);
-
-                    }
-                    List<BanksModel> searchList = list;
-                    void searchBank(String query){
-                      final suggestions = list.where((bank){
-                        final bankName = bank.bankName!.toLowerCase();
-                        final input = query.toLowerCase();
-                        return bankName.contains(input);
-                      }).toList();
-                      setState(() {
-                        searchList = suggestions;
-                      });
-                    }
-                    Navigator.pop(context);
-                    showModalBottomSheet(
-                        enableDrag: false,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(10),topLeft: Radius.circular(10))
-                        ),
-                        context: context,
-                        builder: (context){
-                          return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                    height: 51.h,
-                                    width: double.infinity,
-                                    decoration:  BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                        border: Border.all(
-                                            color: kGrey1),
-                                        color: kWhite),
-                                    child:Row(children: [
-                                      SizedBox(width: 18.w,),
-                                      Icon(Icons.search),
-                                      SizedBox(width: 10.w,),
-                                      Expanded(
-                                        child: TextField(
-                                          onChanged: (val){
-                                            setState(() {});
-                                            searchBank(val);
-
-                                          },
-                                          autofocus: true,
-                                          keyboardType: TextInputType.text,
-                                          style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
-                                              color: Colors.black
-                                          ),
-                                          decoration:   InputDecoration.collapsed(
-                                              hintText:  'Search bank',
-                                              hintStyle:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
-                                                  color: kGrey1
-                                              )),),
-
-                                      )
-                                    ],
-                                    )
-                                ),
-                                Expanded(child:   ListView.separated(
-                                  itemCount:searchList.length ,
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return ListTile(
-                                      onTap: (){
-                                        color = kGrey1;
-                                        selectBankCont.text = searchList.elementAt(index).bankName!;
-                                        bankCode = searchList.elementAt(index).bankCode!;
-                                        accType = 'bank';
-                                        // accType='bank';
-                                        // bankCode=list.elementAt(index)['bankCode'];
-
-                                        Navigator.pop(context);
-                                        changeBorder();
-                                      },
-                                      leading: Icon(Icons.food_bank),
-                                      title: Text( searchList.elementAt(index).bankName!,style: TextStyle(fontWeight: FontWeight.w600)),
-
-                                    );
-                                  }, separatorBuilder: (BuildContext context, int index) { return Divider(); },
-                                ))
-
-                              ],);
-                          },);
+                    if(res['statusCode'] == 200){
+                      List bnk = res['message'] as List;
+                      List<BanksModel> list = [];
+                      for(var bank in bnk ){
+                        BanksModel banksModel = BanksModel(bankName:bank['bankName'],bankCode: bank['bankCode'] );
+                        list.add(banksModel);}
+                      List<BanksModel> searchList = list;
+                      void searchBank(String query){
+                        final suggestions = list.where((bank){
+                          final bankName = bank.bankName!.toLowerCase();
+                          final input = query.toLowerCase();
+                          return bankName.contains(input);
+                        }).toList();
+                        setState(() {
+                          searchList = suggestions;
                         });
+                      }
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                          enableDrag: false,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(10),topLeft: Radius.circular(10))
+                          ),
+                          context: context,
+                          builder: (context){
+                            return StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                      height: 51.h,
+                                      width: double.infinity,
+                                      decoration:  BoxDecoration(
+                                          borderRadius: BorderRadius.circular(7),
+                                          border: Border.all(
+                                              color: kGrey1),
+                                          color: kWhite),
+                                      child:Row(children: [
+                                        SizedBox(width: 18.w,),
+                                        Icon(Icons.search),
+                                        SizedBox(width: 10.w,),
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: (val){
+                                              setState(() {});
+                                              searchBank(val);
+
+                                            },
+                                            autofocus: true,
+                                            keyboardType: TextInputType.text,
+                                            style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
+                                                color: Colors.black
+                                            ),
+                                            decoration:   InputDecoration.collapsed(
+                                                hintText:  'Search bank',
+                                                hintStyle:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
+                                                    color: kGrey1
+                                                )),),
+
+                                        )
+                                      ],
+                                      )
+                                  ),
+                                  Expanded(child:   ListView.separated(
+                                    itemCount:searchList.length ,
+                                    shrinkWrap: true,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return ListTile(
+                                        onTap: (){
+                                          color = kGrey1;
+                                          selectBankCont.text = searchList.elementAt(index).bankName!;
+                                          bankCode = searchList.elementAt(index).bankCode!;
+                                          accType = 'bank';
+                                          // accType='bank';
+                                          // bankCode=list.elementAt(index)['bankCode'];
+
+                                          Navigator.pop(context);
+                                          changeBorder();
+                                        },
+                                        leading: Icon(Icons.food_bank),
+                                        title: Text( searchList.elementAt(index).bankName!,style: TextStyle(fontWeight: FontWeight.w600)),
+
+                                      );
+                                    }, separatorBuilder: (BuildContext context, int index) { return Divider(); },
+                                  ))
+
+                                ],);
+                            },);
+                          });
+                    }
+                    else{
+                      Navigator.pop(context);
+                      showSnackBar(context, res['errorMessage']);
+                    }
                   },
 
                   style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600, color: Colors.black,overflow: TextOverflow.ellipsis),
@@ -251,7 +250,7 @@ class _SendToBankState extends State<SendToBank> {
                                       Text('Bank Name',style: TextStyle(fontSize: 15.sp),),
                                       SizedBox(width: 10.w),
                                       Flexible(
-                                        child: SizedBox(child: Text(selectBankCont.text??'',textAlign: TextAlign.end
+                                        child: SizedBox(child: Text(selectBankCont.text,textAlign: TextAlign.end
                                           ,style: TextStyle(fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis),maxLines: 2,)),
                                       )
                                     ],),
@@ -279,7 +278,7 @@ class _SendToBankState extends State<SendToBank> {
                                       SizedBox(width: 10.w),
                                       Flexible(
                                         child: SizedBox(
-                                            child: Text(accountNum!??'',
+                                            child: Text(accountNum!,
                                               style: TextStyle(fontWeight: FontWeight.w600,
                                                   overflow: TextOverflow.ellipsis),maxLines: 2,)),
                                       )
@@ -503,7 +502,7 @@ class _SendToBankState extends State<SendToBank> {
                                 SpinKitCircle(
                                   color: kYellow,
                                 ),);});
-                              Map loginResponse = await sendLoginDetails(pin: pin!);
+                              Map loginResponse = await sendLoginDetails(pin: pin);
                               inputVaultPin.clear();
                               if(loginResponse['statusCode'] != 200){
                                 Navigator.pop(context);
@@ -524,7 +523,7 @@ class _SendToBankState extends State<SendToBank> {
                                               function: (){
                                                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                                     SendCash()));
-                                              },
+                                              }, amount: sendFundsAmountCont.text, purpose: 'funds transfer',
                                             )));
 
                                 //print('$fromWallet, ${sendFundsVaultNumCont.text}, ${sendFundsAmountCont.text}');

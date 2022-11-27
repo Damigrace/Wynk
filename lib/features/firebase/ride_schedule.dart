@@ -67,10 +67,10 @@ class RideSchedule extends StatelessWidget {
     return FutureBuilder(
       future:  user.doc('another_user').collection('ride booking details').doc(bookingNum).get(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if(snapshot.hasData){
-          Map<String, dynamic> data = snapshot.data!;
-          print('data from database: ${data['name']}');
-        }
+        if(snapshot.hasData)
+          print(snapshot.data['name']);
+          // Map<String, dynamic> data = snapshot.data! as Map<String, dynamic>;
+          // print('data from database: ${data['name']}');}
         return Container();
       },);
   }

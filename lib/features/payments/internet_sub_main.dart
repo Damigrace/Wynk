@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/smile_sub_page.dart';
-import 'package:untitled/features/payments/spectranet_sub.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
+import 'package:wynk/features/payments/smile_sub_page.dart';
 
+import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/widgets.dart';
 import 'mobile_recharge.dart';
@@ -91,16 +89,16 @@ class _InternetSubMainState extends State<InternetSubMain> {
                         child: Image.asset('lib/assets/images/subscriptions/smile.jpg')),
                     title: Text('Smile Subscription',style: TextStyle(fontSize: 15.sp),),
                   ),
-                  ListTile(
-                    onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                        SpectranetSubPage())),
-                    contentPadding: EdgeInsets.only(left: 36.w),
-                    leading: SizedBox(
-                        width: 26.w,
-                        height: 26.w,
-                        child: Image.asset('lib/assets/images/subscriptions/spectra.jpg')),
-                    title: Text('Spectranet Subscription',style: TextStyle(fontSize: 15.sp),),
-                  ),
+                  // ListTile(
+                  //   onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                  //       SpectranetSubPage())),
+                  //   contentPadding: EdgeInsets.only(left: 36.w),
+                  //   leading: SizedBox(
+                  //       width: 26.w,
+                  //       height: 26.w,
+                  //       child: Image.asset('lib/assets/images/subscriptions/spectra.jpg')),
+                  //   title: Text('Spectranet Subscription',style: TextStyle(fontSize: 15.sp),),
+                  // ),
                   ListTile(contentPadding:EdgeInsets.only(left: 36.w),
                     onTap: ()=>showSnackBar(context, 'This is not available yet'),
                     leading: SizedBox(

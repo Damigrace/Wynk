@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   geolocator_windows
   modal_progress_hud_nsn
-  printing
   share_plus
   url_launcher_windows
 )

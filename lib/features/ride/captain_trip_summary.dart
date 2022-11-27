@@ -7,13 +7,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+
+import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
 class CaptainTripSummary extends StatefulWidget {
   const CaptainTripSummary({Key? key}) : super(key: key);
 
@@ -95,12 +95,8 @@ class _CaptainTripSummaryState extends State<CaptainTripSummary> {
                                 rideStat: 5,
                                 currentPos: LatLng(pos.latitude, pos.longitude),);
                               showToast(res!['errorMessage'].toString());
-                              final userDet =await getCapDetails(context.read<FirstData>().uniqueId);
-                              context.read<FirstData>().saveVaultB(userDet['actualBalance'].toString());
-                              context.read<FirstData>().saveTodayEarning(userDet['todayearning'].toString());
-                              context.read<FirstData>().saveAverageRating(userDet['averagerating'].toString());
-                              context.read<FirstData>().saveTodayTrip(userDet['todaytrip'].toString());
-                              accountBalCont.text =  '₦${userDet['currentBalance'].toString()}';
+                              refresh(context);
+
                               Navigator.pushNamedAndRemoveUntil(context, '/CaptainOnline', ModalRoute.withName('/CaptainHome'));
                             },
                             child: Image.asset('lib/assets/images/rides/cancel1.png',color: Colors.white,)),

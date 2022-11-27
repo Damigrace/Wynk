@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/vault/add_funds_payment_gateway%5D.dart';
-
+import '../../controllers.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/widgets.dart';
 class AddFunds5 extends StatelessWidget {
@@ -95,7 +93,7 @@ class AddFunds5 extends StatelessWidget {
                 width: 318.w,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: kBlue),
+                      backgroundColor: kBlue),
                   onPressed: ()  {
                     Navigator.of(context).pushNamed('/AddFundsGateway');
                   },

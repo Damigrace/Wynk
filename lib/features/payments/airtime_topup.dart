@@ -5,15 +5,15 @@ import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/payments/mobile_recharge.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/services.dart';
 
 import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
 import 'airtime_payment_gateway.dart';
+import 'mobile_recharge.dart';
 class AirtimeTopUp extends StatefulWidget {
   const AirtimeTopUp({Key? key}) : super(key: key);
 
@@ -62,6 +62,7 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
     super.deactivate();
   }
   bool nairaIsVisible = false;
+  BuildContext? ct;
   @override
   void initState() {
     // TODO: implement initState
@@ -201,16 +202,16 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                     autofocus: true,
                     onChanged: (val)async{
                       if(val.length == 11){
+                        FocusScope.of(context).unfocus();
                         var res = val.split(' ').join();
                         newRes = '234${res.substring(1)}';
-
                       }
                     },
 
                     keyboardType:TextInputType.number,
                     style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
                     decoration:   InputDecoration.collapsed(
-                        hintText:  'Enter phone',
+                        hintText:  'Enter Phone',
                         hintStyle:  TextStyle(fontSize: 18.sp,
                             color: kBlack1
                         )),),
@@ -294,7 +295,7 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                     keyboardType:TextInputType.number,
                     style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
                     decoration:   InputDecoration.collapsed(
-                        hintText:  'Minimum:NGN 500',
+                        hintText:  'Minimum of NGN 50',
                         hintStyle:  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,
                             color: kBlack1
                         )),),
@@ -311,7 +312,12 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue),
-              onPressed:(newRes == null || channel == null || context.read<FirstData>().fromWallet == null || airtimeAmountCont.text == "")?null:
+              onPressed:(
+                  newRes == null ||
+                      channel == null
+                          || context.read<FirstData>().fromWallet == null
+                  || airtimeAmountCont.text == ""
+              )?null:
                   () async{
                 await showDialog(
                     barrierDismissible: false,
@@ -331,15 +337,7 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Enter PIN',
-                                    style: TextStyle(fontSize: 15.sp),textAlign: TextAlign.center,),
-                                  SizedBox(height: 13.h,),
-                                  Text('Enter your 4-digit PIN to authorise \nthis transaction.',
-                                      style: TextStyle(fontSize: 10.sp)),
-                                ],),
+                              Text('Transaction details',style:  TextStyle(fontSize: 20.sp),),
                               GestureDetector(
                                 onTap: ()=>Navigator.pop(context),
                                 child: SizedBox(
@@ -347,6 +345,25 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                                     height: 42.w,
                                     child: Image.asset('lib/assets/images/rides/cancel1.png')),
                               )
+                            ],
+                          ),
+                          SizedBox(height: 15.h,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                            Text('Airtime Amount.',style:  TextStyle(fontSize: 16.sp),),
+                            Text('NGN ${airtimeAmountCont.text}',style:  TextStyle(fontSize: 18.sp,
+                            color: kBlue))
+                          ],),
+                          SizedBox(height: 10.h,),
+                          Container(color: kGrey1,height: 2,),
+                          SizedBox(height: 10.h,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 13.h,),
+                              Text('Enter your 4-digit PIN to authorise \nthis transaction.',
+                                  style: TextStyle(fontSize: 10.sp)),
                             ],),
                           Align(
                             alignment: Alignment.center,
@@ -414,15 +431,14 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                                     Navigator.pop(context);
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                                         PaymentGateway(
-                                          future: airtime(newRes!, 'service', channel!, context.read<FirstData>().fromWallet!, airtimeAmountCont.text),
+                                          future: airtime(newRes!, 'service', channel!,
+                                              context.read<FirstData>().fromWallet!, airtimeAmountCont.text),
                                           function: (){
                                             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
                                                 MobileRecharge()));
-                                          },
+                                          }, amount: airtimeAmountCont.text, purpose: 'airtime purchase',
                                         )
                                     ));
-                                    print('aaaaaaaaaaaaaaaaaa: ${ airtimeAmountCont.text}');
-
                                   }
                                 },
                                 child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),

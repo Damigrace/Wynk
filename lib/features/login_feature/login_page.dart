@@ -12,16 +12,16 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/registration_feature/register_page.dart';
-import 'package:untitled/features/registration_feature/signup_camera_permission.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/landing_pages/home_main14.dart';
+import 'package:wynk/features/registration_feature/register_page.dart';
+import 'package:wynk/features/registration_feature/signup_camera_permission.dart';
 
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/constants/textstyles.dart';
+import 'package:wynk/utilities/widgets.dart';
 
 import '../../utilities/models/data_confirmation.dart';
 import '../firebase/ride_schedule.dart';

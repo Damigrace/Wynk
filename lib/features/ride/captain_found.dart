@@ -5,25 +5,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:google_place/google_place.dart' hide Location;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/local_notif.dart';
-import 'package:untitled/features/modal_bottom_sheets/driver_found_mbs.dart';
-import 'package:untitled/features/ride/patron_ride_commence.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
-import 'package:untitled/utilities/widgets.dart';
-
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
-import '../modal_bottom_sheets/driver -search_mbs.dart';
+import '../../utilities/models/directions.dart';
+import '../../utilities/models/directions_model.dart';
+import '../../utilities/widgets.dart';
+import '../local_notif.dart';
+import '../modal_bottom_sheets/driver_found_mbs.dart';
+import '../registration_feature/ride_online_map.dart';
 class CaptainFound extends StatefulWidget {
 
   BitmapDescriptor? originBitmap;
@@ -41,9 +40,12 @@ class _CaptainFoundState extends State<CaptainFound> {
   var userPImage;
   double minChildSize = 0.1;
   double minChildSize1 = 0.2;
+  Timer? timer;
+  Timer? timer1;
   void endProcesses(){
     print('starting destruction');
     timer?.cancel();
+    timer1?.cancel();
     print('cancelled timer');
     _googleMapController?.dispose();
     print('disposed gmap controller');
@@ -76,7 +78,7 @@ class _CaptainFoundState extends State<CaptainFound> {
     googlePlace=GooglePlace(apikey);
     initSharedPref();
     // TODO: implement initState
-    timer = Timer.periodic(Duration(seconds: 30), (_)async {
+    timer1 = Timer.periodic(Duration(seconds: 30), (_)async {
       final det = await getCapDetails(context.read<CaptainDetails>().capId);
       capCurrLocat = LatLng(double.parse(det['current_lat']), double.parse(det['current_long']));
       _googleMapController?.moveCamera(
@@ -97,7 +99,6 @@ class _CaptainFoundState extends State<CaptainFound> {
   Marker? destination;
   Directions? info;
   Location location = Location();
-  Timer? timer;
   bool notified1 = false;
   bool notified2 = false;
   bool notified3 = false;
@@ -124,7 +125,12 @@ class _CaptainFoundState extends State<CaptainFound> {
               notified2 = true;
             }}break;
         case '8':
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RideCommence()));
+          endProcesses();
+          Get.to(()=>GMapWebview(
+            destination: LatLng(
+                context.read<FirstData>().endPos!.geometry!.location!.lat!,
+                context.read<FirstData>().endPos!.geometry!.location!.lng!),
+          ));
           NotificationService.showNotif('Wynk', 'Ride has started');
           timer?.cancel();
           break;

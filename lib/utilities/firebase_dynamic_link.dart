@@ -9,7 +9,7 @@ class AppUtils {
 
       link: Uri.parse('$url?vault=$vault&wynkid=$wynkid&amount=$amount'),
       androidParameters: AndroidParameters(
-        packageName: "com.example.untitled",
+        packageName: "",
         minimumVersion: 0,
       ),
 

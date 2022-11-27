@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/services.dart';
+import '../../services.dart';
 class Deliveries extends StatefulWidget {
   const Deliveries({Key? key}) : super(key: key);
 

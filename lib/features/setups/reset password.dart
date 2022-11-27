@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
 
 import '../../controllers.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
@@ -54,7 +54,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary:kBlue
+                          backgroundColor:kBlue
                       ),
                       onPressed: (){},// Method that handles 'reset password' functionality will be added here.
                       child: Text('Reset password',style: TextStyle(fontSize: 15.sp),),

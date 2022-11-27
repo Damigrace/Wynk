@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/models/data_confirmation.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
 import '../../controllers.dart';
+import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
+import 'create_pin.dart';
+import 'otherRegNIn.dart';
 Map? userData;
 dynamic  base64String;
 
@@ -85,13 +85,74 @@ class _SignUpPersonalDetailsState extends State<SignUpPersonalDetails> {
                           }
                           context.read<FirstData>().getUsername(firstNameController.text);
                           spinner(context);
-                          await getVerificationDetails(context);
+                          int res = await getVerificationDetails(context);
                           Navigator.pop(context);
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => const DataConfirmation()
-                          ));
+                          print(res);
+                          // Navigator.push(
+                          //     context, MaterialPageRoute(builder: (context) => const DataConfirmation()
+                          // ))
+                          if(res == 1){
+                          showDialog(context: context, builder: (context){
+                            return AlertDialog(
+                              title: Text('Confirm Details',style: kBoldBlack.copyWith(fontSize: 22.sp),),
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 150.w,
+                                    height: 2,
+                                    color: kYellow,
+                                  ),
+                                  SizedBox(height: 15.h,),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Name:',style: kBoldBlack,),
+                                    Expanded(
+                                      child: Container(
+                                          child: Text('${confirmationFirstnameCont.text} ${confirmationLastnameCont.text}',style: kBoldBlack,)),
+                                    )
+                                  ],
+                                ),
+                                  SizedBox(height: 10.h,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Birth Date',style: kBoldBlack,),
+                                      Text(confirmationDobCont.text,style: kBoldBlack,)
+                                    ],
+                                  ),
+                                  SizedBox(height: 15.h,),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 50.h,
+                                      width: 241.w,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: kBlue),
+                                        onPressed: ()  async{
+                                          Navigator.push(
+                                              context, MaterialPageRoute(builder: (context) =>  CreateTPin()
+                                          ));
+                                        },
+                                        child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
+                                      ),
+                                    ),
+                                  )
+                              ],),
+
+                            );
+                          });}
+                          else if (res == 2){
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => const OtherRegNin()
+                            ));
+                          };
                           },
-                        child: Text('Submit',style: TextStyle(fontSize: 15.sp),),
+                        child: Text('Next',style: TextStyle(fontSize: 15.sp),),
                       ),
                     ),
                   ],),

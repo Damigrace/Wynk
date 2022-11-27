@@ -12,28 +12,22 @@ import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/payments/internet_sub_main.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/qrcode.dart';
-import 'package:untitled/features/payments/send_funds/sendcash.dart';
-import 'package:untitled/features/registration_feature/captain_f_registration.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/setups/settings.dart';
-import 'package:untitled/features/vault/add_funds.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
 import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
 import '../../utilities/widgets.dart';
 import 'package:location/location.dart';
 
 import 'package:charts_flutter/flutter.dart' as myChart;
 
+import '../payments/internet_sub_main.dart';
 import '../payments/mobile_recharge.dart';
+import '../payments/payment_list.dart';
+import '../payments/qrcode.dart';
+import '../payments/send_funds/sendcash.dart';
+import '../setups/settings.dart';
 
 class VaultHome extends StatefulWidget {
   const VaultHome({Key? key}) : super(key: key);
@@ -43,9 +37,7 @@ class VaultHome extends StatefulWidget {
 }
 
 class _VaultHomeState extends State<VaultHome>{
-  final balanceFormatter = NumberFormat("#,##0.00", "en_NG");
-  num vaultMainBalance=20000;
-  num vaultHouseholdBalance=30000;
+
   SharedPreferences? prefs;
   initSharedPref()async{ prefs = await SharedPreferences.getInstance();}
   @override
@@ -64,18 +56,21 @@ class _VaultHomeState extends State<VaultHome>{
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   int? selectedV = 1;
   int? selectedV2 = 1;
+
    refresh()async{
     bool showSB = true;
     spinner(context);
-    context.read<WalletDetails>().wallets.clear();
+
     final res = await walletDetails(context);
+    context.read<WalletDetails>().wallets.clear();
     final wallets = res['message'] as List;
     for(var wallet in wallets){
       if(wallet['actualBalance'] == '' && showSB == true ){
         showSB = false;
         showSnackBar(context, 'We could not retrieve your wallet details at this time. Please bear with us.');
       }
-      else{  Wallet wal = Wallet(walletName: wallet['walletname'],
+      else{
+        Wallet wal = Wallet(walletName: wallet['walletname'],
           walletNum: wallet['walletnumber'], currentBalance: wallet['actualBalance']);
       context.read<WalletDetails>().saveWallet(wal);
       }}
@@ -160,21 +155,72 @@ class _VaultHomeState extends State<VaultHome>{
                       scrollDirection: Axis.horizontal,
                       children: [
                         GestureDetector(
-                          onTap:(){
-                            showDialog(context: context, builder: (context){
-                              return AlertDialog(
-                                title: Text('Vault Details'),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Bank: Polaris'),
-                                    SizedBox(height: 10.h,),
-                                    Text('Account Number : 0123456789')
-                                  ],
-                                ),
-                              );
-                            });
+                          onTap:()async{
+                            spinner(context);
+                           final res =await getNubanDet();
+                           if(res['statusCode'] == 200){
+                             Navigator.pop(context);
+                             await showDialog(
+                                 context: context, builder: (context){
+                               return AlertDialog(
+                                 contentPadding: EdgeInsets.all(10.w),
+                                 shape:  RoundedRectangleBorder(
+                                     borderRadius: BorderRadius.circular(18)
+                                 ),
+                                 content: Container(
+                                   child: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     mainAxisSize: MainAxisSize.min,
+                                     children: [
+                                       Column(
+                                         crossAxisAlignment: CrossAxisAlignment.start,
+                                         children: [
+                                           Text('Account Information',
+                                             style: TextStyle(fontSize: 20.sp),textAlign: TextAlign.center,),
+                                           SizedBox(height: 13.h,),
+                                           Text('Fund your wallet with this account details',
+                                               overflow: TextOverflow.ellipsis,
+                                               maxLines: 2,
+                                               style: TextStyle(fontSize: 12.sp,color: kYellow)),
+                                           SizedBox(height: 30.h,),
+                                         ],),
+                                       Column(children: [
+                                         Row(
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                           children: [
+                                             Text('Bank',style: TextStyle(fontSize: 15.sp),),
+                                             SizedBox(width: 10.w),
+                                             Flexible(
+                                               child: SizedBox(child: Text('POLARIS',textAlign: TextAlign.end
+                                                 ,style: TextStyle(fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis),maxLines: 2,)),
+                                             )
+                                           ],),
+                                         SizedBox(height:10.h),
+                                         Row(
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                           children: [
+                                             Text('Nuban',style: TextStyle(fontSize: 15.sp),),
+                                             SizedBox(width: 10.w),
+                                             Flexible(
+                                               child: SizedBox(child: Text(res['message']??'Not available yet'
+                                                 ,style: TextStyle(fontWeight: FontWeight.w600,
+                                                     overflow: TextOverflow.ellipsis),maxLines: 2,textAlign: TextAlign.end,)),
+                                             )
+                                           ],),
+                                         SizedBox(height:10.h),
+                                       ],),
+                                     ],
+                                   ),
+                                 ),
+                               );
+                             });
+                            }
+                           else {
+                             Navigator.pop(context);
+                             showSnackBar(context, res['errorMessage']);
+                           }
                           //  Navigator.of(context).pushNamed('/AddFunds');
                           },
                           child: Container(

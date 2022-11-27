@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/wynk-pass/wynk_pass_confirmation.dart';
-import 'package:untitled/features/wynk-pass/wynk_prepaid.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 
 import '../../controllers.dart';
+import '../../main.dart';
+import '../../utilities/widgets.dart';
 class WynkPassHome extends StatefulWidget {
   const WynkPassHome({Key? key}) : super(key: key);
 

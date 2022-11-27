@@ -17,17 +17,15 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/captain_home.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+import '../../controllers.dart';
 import '../../main.dart';
+import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
+import '../../utilities/models/directions.dart';
+import '../../utilities/models/directions_model.dart';
+import '../../utilities/widgets.dart';
 import '../landing_pages/home_main14.dart';
 import 'captain_trip_summary.dart';
 class RideStarted extends StatefulWidget {
@@ -440,7 +438,7 @@ class _RideStartedState extends State<RideStarted> {
                                   }
                                   else if(context.read<RideDetails>().paymentMode == 'wallet'){
                                     print('Ending ride');
-
+                                    refresh(context);
                                     final pos = await determinePosition(context);
                                     final res = await updateRideInfo(
                                         wynkid: context.read<FirstData>().uniqueId!,

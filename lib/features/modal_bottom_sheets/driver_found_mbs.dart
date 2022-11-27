@@ -8,12 +8,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/vault/vault_home.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
+
 
 import '../../controllers.dart';
+import '../../main.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/widgets.dart';
 import '../local_notif.dart';
 class DriverFound extends StatefulWidget {
@@ -460,7 +459,7 @@ Future ChatS(BuildContext context){
             child: ElevatedButton(
 
               style: ElevatedButton.styleFrom(
-                  primary: kBlue),
+                  backgroundColor: kBlue),
               onPressed: ()async{
                 ChatScreen(context);
                 riderMessageFieldCont.clear();

@@ -1,44 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/local_notif.dart';
-import 'package:untitled/features/payments/airtime.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/vault/vault_home.dart';
-import 'package:untitled/services.dart';
-
-import '../../controllers.dart';
-import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/widgets.dart';
+import '../landing_pages/home_main14.dart';
+import 'mobile_recharge.dart';
 class PaymentGateway extends StatelessWidget {
-   PaymentGateway({Key? key,required this.function,this.future,this.details}) : super(key: key);
+   PaymentGateway({Key? key,required this.function,this.future,this.details,required this. amount, required this.purpose}) : super(key: key);
   Function function;
   Future? future;
   String? details;
+  String? amount;
+  String? purpose;
   @override
   Widget build(BuildContext context) {
-    void getCapDet()async{
-      final prefs = await SharedPreferences.getInstance();
-      final userDet =await getCapDetails(prefs.getString('Origwynkid'));
-      context.read<FirstData>().saveVaultB(userDet['actualBalance'].toString());
-      context.read<FirstData>().saveTodayEarning(userDet['todayearning'].toString());
-      context.read<FirstData>().saveAverageRating(userDet['averagerating'].toString());
-      context.read<FirstData>().saveTodayTrip(userDet['todaytrip'].toString());
-      accountBalCont.text =  '₦${context.read<FirstData>().vaultB}';
-
-        context.read<WalletDetails>().wallets.clear();
-        final res = await walletDetails(context);
-        final wallets = res['message']as List;
-        for(var wallet in wallets){
-          Wallet wal = Wallet(walletName: wallet['walletname'],
-              walletNum: wallet['walletnumber'], currentBalance: wallet['actualBalance']);
-          context.read<WalletDetails>().saveWallet(wal);
-        }
-
-    }
 
     return Scaffold(
         body: FutureBuilder(
@@ -48,10 +24,10 @@ class PaymentGateway extends StatelessWidget {
             if(snapshot.hasData){
               print('has data');
               print(snapshot.data);
-              if(snapshot.data['statusCode'] == 200 || snapshot.data['code'] == '00'){
-                getCapDet();
+              if(snapshot.data['statusCode'] == 200){
+                refresh(context);
                 return Center(
-                    child: Column(
+                    child:Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Stack(children: [
@@ -66,7 +42,9 @@ class PaymentGateway extends StatelessWidget {
                             ),
                             width: 150.w,
                             height: 150.w,
+                            child: Image.asset('lib/assets/images/rides/wynkvaultwallet.png'),
                           ),
+
                           Positioned(
                               bottom: 0,
                               right: 0,
@@ -76,15 +54,39 @@ class PaymentGateway extends StatelessWidget {
                                   child: Image.asset('lib/assets/images/airtime_logo/payment_success.png'))),
                         ],),
                         SizedBox(height: 27.h,),
-                        Text(details??'Your payment was \nsuccessfull!',
-                          style: TextStyle(fontSize: 26.sp),
+                        Text('Success',
+                          style: TextStyle(fontSize: 26.sp,color: Colors.green),
                           textAlign: TextAlign.center,),
+                        SizedBox(height: 10.h,),
+                        Text.rich(
+
+                          TextSpan(
+
+                              style: TextStyle(fontSize: 14.sp,height: 1.3.h),
+                              text: 'You have successfully paid a sum of NGN ',
+                              children: [
+                                WidgetSpan(child:
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(amount!, style: TextStyle(fontSize: 14.sp),),
+                                    Text(' to Wynk for $purpose', style: TextStyle(fontSize: 14.sp),),
+                                  ],
+                                )
+                                )
+                              ]
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                         SizedBox(height: 54.h,),
                         GestureDetector(
-                          onTap: (){function();},
+                          onTap: (){{
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                                MobileRecharge()));
+                          };},
                           child: Container(
-
-                            width: 318.w,
+                            margin: EdgeInsets.symmetric(horizontal: 40.w),
+                            width: double.infinity,
                             height: 50.h,
                             decoration: BoxDecoration(
                               color: kBlue,
@@ -97,14 +99,16 @@ class PaymentGateway extends StatelessWidget {
                           ),),
                         GestureDetector(
                           onTap:(){
-                            Navigator.pop(context);
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                HomeMain14()), (Route<dynamic> route) => false);
+
+                            //Navigator.pop(context);
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                HomeMain14()));
                           } ,
                           child: Container(
-                            width: 318.w,
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(vertical:15.h,horizontal: 40.w),
                             height: 50.h,
-                            margin: EdgeInsets.only(top:15.h),
+
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(7),
@@ -115,24 +119,29 @@ class PaymentGateway extends StatelessWidget {
                                   style: TextStyle(fontSize: 15.sp)),
                             ),
                           ),),
-                      ],)
+                      ],),
                 );
               }
               else{
-                print( snapshot.data['errorMessage']);
+                Future.delayed(Duration(milliseconds: 5),(){
+                  showSnackBar(context, snapshot.data['errorMessage']);});
                 return Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Your payment was not \nsuccessfull!',
-                          style: TextStyle(fontSize: 26.sp),
-                          textAlign: TextAlign.center,),
-                        SizedBox(height: 54.h,),
-                        GestureDetector(
-                          onTap: (){function();},
-                          child: Container(
 
-                            width: 318.w,
+                        Text('Oops!!! \n Payment Unsuccessful!',
+                          style: TextStyle(fontSize: 26.sp,color: Colors.red),
+                          textAlign: TextAlign.center,),
+                        SizedBox(height: 30.h,),
+                        GestureDetector(
+                          onTap: (){{
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                MobileRecharge()));
+                          };},
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 40.w),
+                            width: double.infinity,
                             height: 50.h,
                             decoration: BoxDecoration(
                               color: kBlue,
@@ -145,14 +154,15 @@ class PaymentGateway extends StatelessWidget {
                           ),),
                         GestureDetector(
                           onTap:(){
-                            Navigator.pop(context);
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                HomeMain14()), (Route<dynamic> route) => false);
+                            //Navigator.pop(context);
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                HomeMain14()));
                           } ,
                           child: Container(
-                            width: 318.w,
+
+                            width: double.infinity,
                             height: 50.h,
-                            margin: EdgeInsets.only(top:15.h),
+                            margin: EdgeInsets.symmetric(vertical:15.h,horizontal: 40.w),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(7),
@@ -162,9 +172,8 @@ class PaymentGateway extends StatelessWidget {
                               child: Text('Go Home',
                                   style: TextStyle(fontSize: 15.sp)),
                             ),
-                          ),
-                        ),
-                      ],)
+                          ),),
+                      ],),
                 );
               }
             }

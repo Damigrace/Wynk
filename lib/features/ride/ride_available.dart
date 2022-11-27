@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wynk/features/registration_feature/ride_online_map.dart';
 import 'captain_trip_summary.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,16 +21,16 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/captain_home.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/ride/ride_started.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/landing_pages/captain_home.dart';
+import 'package:wynk/features/landing_pages/captain_online.dart';
+import 'package:wynk/features/ride/ride_destination.dart';
+import 'package:wynk/features/ride/ride_started.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/models/directions.dart';
+import 'package:wynk/utilities/models/directions_model.dart';
+import 'package:wynk/utilities/widgets.dart';
 
 import '../../main.dart';
 import '../../utilities/constants/env.dart';
@@ -950,7 +951,11 @@ class _RiderAvailableState extends State<RiderAvailable> {
                                                                          rideStat: 8);
                                                                      Navigator.pop(context);
                                                                      Navigator.pop(context);
-                                                                     Navigator.pushReplacementNamed(context, '/RideStarted');
+                                                                     Navigator.push(
+                                                                           context,
+                                                                           MaterialPageRoute(
+                                                                               builder: (context) =>
+                                                                                   GMapWebview(destination: context.read<RideDetails>().destPos??LatLng(context.read<FirstData>().lat!,context.read<FirstData>().long!))));
                                                                      tripPinController.clear();
                                                                    }
 

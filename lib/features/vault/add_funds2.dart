@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 
-import '../../controllers.dart';
-import 'add_funds3.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
+
 class AddFunds2 extends StatefulWidget {
    AddFunds2({Key? key}) : super(key: key);
 

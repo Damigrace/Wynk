@@ -1,21 +1,24 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:dio/dio.dart' ;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as htp;
 import 'package:infobip_rtc/api/listeners.dart';
 import 'package:infobip_rtc/infobip_rtc.dart';
 import 'package:infobip_rtc/model/events.dart';
 import 'package:infobip_rtc/model/requests.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/login_feature/login_page.dart';
-import 'package:untitled/features/verification_feature/confirm_transaction_pin.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
+import 'package:wynk/features/login_feature/login_page.dart';
+import 'package:wynk/features/registration_feature/otherRegNIn.dart';
+import 'package:wynk/features/verification_feature/confirm_transaction_pin.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/widgets.dart';
 import 'controllers.dart';
 import 'utilities/models/data_confirmation.dart';
 import 'features/registration_feature/register_page.dart';
@@ -26,10 +29,10 @@ import 'features/registration_feature/sign_up_personal_details.dart';
     final snackBar = SnackBar(
       backgroundColor: kBlueTint,
       content:  Text(msg,style: TextStyle(color: Colors.white),),
-      action: SnackBarAction(
+      action:SnackBarAction(
         textColor: kYellow,
         label:  'Dismiss',onPressed: (){},
-      ),
+      )
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -43,15 +46,13 @@ showToast( String msg){
       backgroundColor: kBlueTint,
       textColor: Colors.white,
       fontSize: 16.0
-  );
-}
-
-  Future<Map<String, dynamic>> postRequest({required String? IDType, required String? IDNum,required String? WynkId}) async {
-    print(IDType);
+  );}
+ var http =  htp.Client();
+  Future<Map<String, dynamic>> postRequest({required String? phone, required String? IDNum,required String? WynkId}) async {
     var url = await Uri.parse ('https://wynk.ng/stagging-api/authenticate-verifyme');
     var body = json.encode({
-      "verification_type": "$IDType",
-      "verification_number": "$IDNum",
+      "verification_type": "phone_number",
+      "verification_number": phone,
       "wynkid": "$WynkId"
     });
     var response = await http.post(
@@ -71,9 +72,9 @@ Future<Map<String, dynamic>> postRequest2({
   var url = await Uri.parse ('https://wynk.ng/stagging-api/registeration-process');
   print('$WynkId,$FirstName,$LastName');
   var body = json.encode({
-    // "email": email,
-    // "referral_code": referralCode,
-    // "address": address,
+    "email": email,
+    "referral_code": referralCode,
+    "address": address,
     "wynkid": "$WynkId",
     "firstname":FirstName,
     "lastname":LastName
@@ -109,25 +110,42 @@ Future<Map<String, dynamic>> postRequest3({
   return dataBody2;
 }
 
-  String otpUrl='http://api.ebulksms.com:8080/sendsms.json';
 String? userMobile;
-Future getVerificationDetails(BuildContext context)async {
+Future<int> getVerificationDetails(BuildContext context)async {
+
   String? uId=context.read<FirstData>().uniqueId;
-  Map userData = await postRequest(WynkId: uId, IDNum: idNumController.text, IDType: context.read<FirstData>().UserSelectedId);
-  if(userData['statusCode']=='User information not found in the database. Please check and try again.'){
-    showSnackBar(context,'User information not found in the database. Please check and try again.');
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+  Map userData = await postRequest(WynkId: uId, IDNum: idNumController.text, phone: context.read<FirstData>().userNumber);
+  if(userData['statusCode']=='201'){
+    Navigator.pop(context);
+    showSnackBar(context,userData['errorMessage']);
+    showDialog(context: context, builder: (context){
+      return AlertDialog();
+    });
+    return 0;
   }
  else {
-   await postRequest2(FirstName: firstNameController.text, LastName: lastNameController.text, WynkId:uId);
+    Map userData2 = await postRequest2(FirstName: firstNameController.text, LastName: lastNameController.text, WynkId:uId);
+    if(userData2['statusCode'] == 201){
+      print('this');
+
+      showSnackBar(context, userData2['errorMessage']);
+
+      return 2;
+    }
+    else{
   Map userData3= await postRequest3(WynkId:uId);
+
   if(userData3["phone"]==null){
     context.read<FirstData>().checkUserRegStat(true);
   showToast('It seems you have a record with us.');
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => const LoginPage()
   ));
+  return 0;
   }
+
+  else{
+    print('jjjjjjjjjjjjjjjj');
   confirmationPhoneCont.text=userData3["phone"];
   confirmationFirstnameCont.text=userData3['firstname'];
   confirmationLastnameCont.text=userData3['lastname'];
@@ -136,14 +154,28 @@ Future getVerificationDetails(BuildContext context)async {
   confirmationEmailCont.text=emailController.text;
   context.read<FirstData>().getUserImgUrl(userData3['passport']);
   print('post requesting completed');
-  Navigator.pop(context);
-  Navigator.push(
-      context, MaterialPageRoute(builder: (context) => const DataConfirmation()
-  ));
-  print('navigating completed');
-}}
+  //Navigator.pop(context);
+  return 1;
+}}}
+}
 Future<Map<String, dynamic>> sendUserMobileforOtp({required String userMobileNo}) async {
   var url = await Uri.parse ('$wynkBaseUrl/signup-otp');
+  var body = json.encode({
+    'phone': userMobileNo,
+  });
+  var response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: body,
+  );
+  var dataBody= json.decode(response.body);
+  print(dataBody);
+  return dataBody;
+}
+Future<Map<String, dynamic>> resendOtp({required String userMobileNo}) async {
+  var url = await Uri.parse ('$wynkBaseUrl/resend-otp');
   var body = json.encode({
     'phone': userMobileNo,
   });
@@ -181,7 +213,26 @@ Future<Map<String, dynamic>> sendLoginDetails({required String pin, String? numC
   print(dataBody);
   return dataBody;
 }
+refresh(BuildContext context)async{
+  // final prefs = await SharedPreferences.getInstance();
+  // final userDet =await getCapDetails(prefs.getString('Origwynkid'));
+print('calledddddddddddddddddddddddddddddddddd');
 
+  final res = await walletDetails(context);
+  final userDet =await getCapDetails(context.read<FirstData>().uniqueId);
+  context.read<WalletDetails>().wallets.clear();
+  final wallets = res['message']as List;
+  context.read<FirstData>().saveVaultB(wallets[0]['actualBalance'].toString());
+  context.read<FirstData>().saveTodayEarning(userDet['todayearning'].toString());
+  context.read<FirstData>().saveAverageRating(userDet['averagerating'].toString());
+  context.read<FirstData>().saveTodayTrip(userDet['todaytrip'].toString());
+  accountBalCont.text =  '₦${context.read<FirstData>().vaultB}';
+  for(var wallet in wallets){
+    Wallet wal = Wallet(walletName: wallet['walletname'],
+        walletNum: wallet['walletnumber'], currentBalance: wallet['actualBalance']);
+    context.read<WalletDetails>().saveWallet(wal);
+  }
+}
 Future<Map<String, dynamic>> sendLoginDetails2({required String pin, String? numCode}) async {
   String userNum = '$numCode${userNumLogController.text}';
   String userNumber = userNum.substring(1);
@@ -226,44 +277,44 @@ Future<Map<String, dynamic>> doOtpVerification({required String? otp,required St
   return dataBody;
 }
 
-  Map otpGenBody = {
-    "SMS": {
-      "auth": {
-        "username": "olumideogundele@gmail.com",
-        "apikey": "b97826d6ae9b6356f3f803e3692b4d6122360ddb"
-      },
-      "message": {
-        "sender": "Wynk",
-        "messagetext": "Your Wynk registration One Time Password(OTP) is $otp. Please use it within 3 minutes.",
-        "flash": "0"
-      },
-      "recipients":
-      {
-        "gsm": [
-          {
-            "msidn": "$userMobile",
-            "msgid": "uniqueid1"
-          },
-        ]
-      }
-    }
-  };
-  Future<Map<String, dynamic>> getOtp(BuildContext context) async {
-    userMobile=Provider.of<FirstData>(context,listen: false).userNumber;
-    print(userMobile);
-    var url = await Uri.parse(otpUrl);
-    var body = json.encode(otpGenBody);
-    var response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    );
-    var dataBody = json.decode(response.body);
-    print(dataBody);
-    return dataBody;
-  }
+  // Map otpGenBody = {
+  //   "SMS": {
+  //     "auth": {
+  //       "username": "olumideogundele@gmail.com",
+  //       "apikey": "b97826d6ae9b6356f3f803e3692b4d6122360ddb"
+  //     },
+  //     "message": {
+  //       "sender": "Wynk",
+  //       "messagetext": "Your Wynk registration One Time Password(OTP) is $otp. Please use it within 3 minutes.",
+  //       "flash": "0"
+  //     },
+  //     "recipients":
+  //     {
+  //       "gsm": [
+  //         {
+  //           "msidn": "$userMobile",
+  //           "msgid": "uniqueid1"
+  //         },
+  //       ]
+  //     }
+  //   }
+  // };
+  // Future<Map<String, dynamic>> getOtp(BuildContext context) async {
+  //   userMobile=Provider.of<FirstData>(context,listen: false).userNumber;
+  //   print(userMobile);
+  //   var url = await Uri.parse(otpUrl);
+  //   var body = json.encode(otpGenBody);
+  //   var response = await http.post(
+  //     url,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: body,
+  //   );
+  //   var dataBody = json.decode(response.body);
+  //   print(dataBody);
+  //   return dataBody;
+  // }
 Future<Map<String, dynamic>> saveUserPin(BuildContext context) async {
     Position pos =  await determinePosition(context);
   var url = await Uri.parse('https://wynk.ng/stagging-api/set-pin');
@@ -417,8 +468,8 @@ Future<Position> determinePosition(BuildContext context)async{
   serviceEnabled= await Geolocator.isLocationServiceEnabled();
   if(!serviceEnabled){
     showSnackBar(context, 'Location services are disabled');
+    Navigator.pop(context);
     await Geolocator.requestPermission();
-
     return Future.error('Location services are disabled');
   }
   permission=await Geolocator.checkPermission();
@@ -714,49 +765,33 @@ Future<String> getActualLocale() async {
   var response = await http.get(uri);
   var data = json.decode(response.body);
   return data['countryCode'].toLowerCase();}
-final infoKey = "ae1fc6689028c2c53a8f18fcec7c5103-5ffc07c9-5a8e-4768-81de-723d661ceaf9";
-void getInfobipApp()async{
 
-  var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/applications');
-  var response = await http.get(
-    url,
-    headers: {
-      "Authorization": "App $infoKey",
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-  );
-  var dataBody= json.decode(response.body);
-  print('getApp, ${dataBody}');
-  return dataBody;
-
-}
-void infobipVoiceCall()async{
-
-  var url = await Uri.parse ('https://qgvnxr.api.infobip.com/calls/1/calls');
-  var body = json.encode({
-
-    "endpoint": {
-      "phoneNumber": "2348106052327",
-      "type": "PHONE"
-    },
-    "from":"Alice",
-    "applicationId":"d8d84155-3831-43fb-91c9-bb897149a79d"
-  });
-  var response = await http.post(
-    url,
-    headers: {
-      "Authorization": "App $infoKey",
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: body
-  );
-  var dataBody= json.decode(response.body);
-  print('infobip V Call, ${dataBody}');
-  return dataBody;
-
-}
+// void infobipVoiceCall()async{
+//
+//   var url = await Uri.parse ('https://qgvnxr.api.infobip.com/calls/1/calls');
+//   var body = json.encode({
+//
+//     "endpoint": {
+//       "phoneNumber": "2348106052327",
+//       "type": "PHONE"
+//     },
+//     "from":"Alice",
+//     "applicationId":"d8d84155-3831-43fb-91c9-bb897149a79d"
+//   });
+//   var response = await http.post(
+//     url,
+//     headers: {
+//       "Authorization": "App $infoKey",
+//       "Content-Type": "application/json",
+//       "Accept": "application/json",
+//     },
+//     body: body
+//   );
+//   var dataBody= json.decode(response.body);
+//   print('infobip V Call, ${dataBody}');
+//   return dataBody;
+//
+// }
 
 infobipCall()async{
 final toks = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiI2ZGI0Yjk5NC04MjVhLTRmOTQtOGMwNi01NDc4MDZjMDMzZDIiLCJpZGVudGl0eSI6IkFsaWNlIiwiaXNzIjoiSW5mb2JpcCIsIm5hbWUiOiJBbGljZSBpbiBXb25kZXJsYW5kIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjQ0MjcxODAsImNhcHMiOltdfQ.Yfs_MiTVY3V7R2ZEhANwJaBRfgrb32ob11VyDb6rFK0';
@@ -767,7 +802,6 @@ final toks = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiI2ZGI0Yjk5NC04MjVhL
   final outgoingCall = await InfobipRTC.call(callRequest);
   print(outgoingCall.status);
 }
-final appId = 'd8d84155-3831-43fb-91c9-bb897149a79d';
 
 class myCallListener implements CallEventListener{
 
@@ -806,28 +840,28 @@ class myCallListener implements CallEventListener{
 
 
 }
-Future genInfobipToken()async{
-
-  var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/token');
-  var body = json.encode({
-  "identity": "Alice",
-  "applicationId": appId,
-  "displayName": "Alice in Wonderland",
-  });
-  var response = await http.post(
-    url,
-    headers: {
-     "Authorization": "App $infoKey",
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: body,
-  );
-  var dataBody= json.decode(response.body);
-  print('infobip token: ${dataBody}');
-  return dataBody;
-
-}
+// Future genInfobipToken()async{
+//
+//   var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/token');
+//   var body = json.encode({
+//   "identity": "Alice",
+//   "applicationId": appId,
+//   "displayName": "Alice in Wonderland",
+//   });
+//   var response = await http.post(
+//     url,
+//     headers: {
+//      "Authorization": "App $infoKey",
+//       "Content-Type": "application/json",
+//       "Accept": "application/json",
+//     },
+//     body: body,
+//   );
+//   var dataBody= json.decode(response.body);
+//   print('infobip token: ${dataBody}');
+//   return dataBody;
+//
+// }
 
 Future ridePayment({required String captainWynkId,required String? rideCode,String? paymentMeans})async{
 
@@ -1214,7 +1248,7 @@ Future responseFromPhone(String phoneNumber)async{
 }
 
 Future airtime(String phone,String service, String channel, String wallet,String amount)async{
-  print('airtiming');
+  print('airtiming000000000000000000000000000000000000000');
   print('$phone,$channel,$wallet,$amount');
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1226,7 +1260,6 @@ Future airtime(String phone,String service, String channel, String wallet,String
     'wallet_number': wallet,
     'amount':amount
   });
-  Response ress =await Dio().post('$wynkBaseUrl/airtime',data: body);
   print('airtiming2');
   var response = await http.post(
       url,
@@ -1236,11 +1269,8 @@ Future airtime(String phone,String service, String channel, String wallet,String
       body: body
   );
 
-  var dataBody= json.decode(ress.data);
+  var dataBody= json.decode(response.body);
   print('airtime: $dataBody');
-  selectWalletCont.clear();
-  airtimeAmountCont.clear();
-  contactSearchCont.clear();
   return dataBody;
 }
 
@@ -1260,9 +1290,26 @@ Future dataLookup (String channel)async{
   print(dataBody);
   return dataBody;
 }
+Future transHist ()async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var url = await Uri.parse ('$wynkBaseUrl/transaction-history');
+  var body = json.encode({
+    'wynkid': prefs.getString('Origwynkid')
+  });
+  var response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body
+  );
+  var dataBody= json.decode(response.body);
+  print('transH $dataBody');
+  return dataBody;
+}
 
-Future dataPurchase(String phone,String service, String productCode, String wallet,String amount)async{
-  print('$phone,$service,$productCode,$wallet,$amount');
+Future dataPurchase(String phone,String service, String productCode, String wallet,String code)async{
+  print('$phone,$service,$productCode,$wallet,$code');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var url = await Uri.parse ('$wynkBaseUrl/data-purchase');
   var body = json.encode({
@@ -1270,7 +1317,7 @@ Future dataPurchase(String phone,String service, String productCode, String wall
     'phone_number': phone,
     'productCode':productCode,
     'wallet_number': wallet,
-    'amount':amount,
+    'code':code,
     'service':service
   });
   print('data1');
@@ -1281,7 +1328,6 @@ Future dataPurchase(String phone,String service, String productCode, String wall
       },
       body: body
   );
-  print(response.body);
   var dataBody= json.decode(response.body);
   print('data2');
   print('da pu: $dataBody');
@@ -1476,5 +1522,37 @@ Future<Map<String, dynamic>> earnings() async {
   });
   Response response = await Dio().post('$wynkBaseUrl/todays-earnings-history',data: body);
   var dataBody = json.decode(response.data);
+  return dataBody;
+}
+
+Future<Map<String, dynamic>> submitReg(BuildContext context) async {
+
+  var body = json.encode({
+    "v_nin":virtNin.text,
+    "o_nin": origNin.text,
+    "wynkid": context.read<FirstData>().uniqueId,
+    "address": permAddressController.text,
+    "firstname":firstNameController.text,
+    "lastname":lastNameController.text,
+    "email":emailController.text,
+    "referral_code":refCodeController.text,
+  });
+  Response response = await Dio().post('$wynkBaseUrl/registeration-process-nin',data: body);
+  var dataBody = json.decode(response.data);
+  print('sec reg: $dataBody');
+  return dataBody;
+}
+Future getCharges ()async{
+  var url = await Uri.parse ('$wynkBaseUrl/get-charges-billspay');
+
+  var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+  );
+  var dataBody= json.decode(response.body);
+  print('charges breakdown $dataBody');
   return dataBody;
 }

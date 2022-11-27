@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:untitled/features/vault/add_funds4.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+
 
 import '../../controllers.dart';
-import '../../utilities/constants/textstyles.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
 class AddFunds3 extends StatefulWidget {
   AddFunds3({Key? key}) : super(key: key);
 
@@ -88,7 +86,7 @@ class _AddFunds3State extends State<AddFunds3> {
                       width: 318.w,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: kBlue),
+                            backgroundColor: kBlue),
                         onPressed: ()  {
                           Navigator.of(context).pushNamed('/AddFunds4');
                         },

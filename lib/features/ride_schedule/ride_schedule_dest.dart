@@ -11,18 +11,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/firebase/ride_schedule.dart';
-import 'package:untitled/features/ride/nav_screen.dart';
-import 'package:untitled/features/later_screens/my_bookings.dart';
-import 'package:untitled/features/ride_schedule/my_bookings.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 
+import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
 import '../../utilities/models/directions.dart';
+import '../../utilities/widgets.dart';
+import '../firebase/ride_schedule.dart';
+import 'my_bookings.dart';
 class RideSchDestination extends StatefulWidget {
   @override
   _RideSchDestinationState createState() => _RideSchDestinationState();
@@ -243,12 +241,7 @@ class _RideSchDestinationState extends State<RideSchDestination> {
                             if(originFieldController.text != null && startPosition == null && endPosition != null){
                               spinner(context);
                               predictions=[];
-                              print('1');
-                              // final direct=await DirectionsRepo().getDirections(origin: origin!.position, destination: destination!.position);
-                              // setState(() {
-                              //   _googleMapController?.animateCamera(CameraUpdate.newLatLngBounds(Directions.bbounds,100.w));
-                              //   info=direct;
-                              // });
+
                               Position position = await determinePosition(context);
                               LatLng userCoord = LatLng(position.latitude, position.longitude);
                               print(userCoord);

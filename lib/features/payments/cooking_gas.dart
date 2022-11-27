@@ -1,12 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/payments/payment_list.dart';
-import 'package:untitled/features/payments/total_gas.dart';
-import 'package:untitled/main.dart';
+
 
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
@@ -103,16 +98,16 @@ class _CookingGasState extends State<CookingGas> {
                         child: Image.asset('lib/assets/images/payments/ibile2.jpg')),
                     title: Text('IBILE Gas',style: TextStyle(fontSize: 15.sp),),
                   ),
-                  ListTile(
-                    onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                        TotalGas())),
-                    contentPadding: EdgeInsets.only(left: 36.w),
-                    leading: SizedBox(
-                        width: 26.w,
-                        height: 26.w,
-                        child: Image.asset('lib/assets/images/payments/total.png')),
-                    title: Text('Total Gas',style: TextStyle(fontSize: 15.sp),),
-                  ),
+                  // ListTile(
+                  //   onTap:()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                  //       TotalGas())),
+                  //   contentPadding: EdgeInsets.only(left: 36.w),
+                  //   leading: SizedBox(
+                  //       width: 26.w,
+                  //       height: 26.w,
+                  //       child: Image.asset('lib/assets/images/payments/total.png')),
+                  //   title: Text('Total Gas',style: TextStyle(fontSize: 15.sp),),
+                  // ),
                   ListTile(contentPadding: EdgeInsets.only(left: 36.w),                    leading: SizedBox(
                       width: 26.w,
                       height: 26.w,

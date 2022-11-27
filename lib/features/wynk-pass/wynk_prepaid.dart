@@ -4,14 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/wynk-pass/wynkpass_prepaid_confirmation.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/features/wynk-pass/wynkpass_prepaid_confirmation.dart';
 
-import '../../controllers.dart';
-import '../../services.dart';
+import '../../main.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/widgets.dart';
+
 class PassPurchaseConfirmPrepaid extends StatefulWidget {
   PassPurchaseConfirmPrepaid({Key? key}) : super(key: key);
   @override
@@ -96,14 +94,13 @@ class _PassPurchaseConfirmPrepaidState extends State<PassPurchaseConfirmPrepaid>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(19.h)
                         ),
-                          primary: kBlue
+                          backgroundColor: kBlue
                       ),
                       onPressed:(){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>  PrepaidPassConfirmation()));
                       },
                       child: Text('Continue',style: TextStyle(fontSize: 18.sp),),
-                    ),
-                  ),
+                    )),
                   SizedBox(width: 11.w,),
                   SizedBox(
                     height: 38.h,

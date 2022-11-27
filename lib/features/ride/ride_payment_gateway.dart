@@ -4,9 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:untitled/services.dart';
 
 import '../../main.dart';
+import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../local_notif.dart';
 class RidePaymentGateway extends StatelessWidget {
@@ -26,7 +26,7 @@ class RidePaymentGateway extends StatelessWidget {
           code: context.read<CaptainDetails>().rideCode!,
           currentPos: LatLng(pos.latitude, pos.longitude),
           rideStat: 1);
-      context.read<CaptainDetails>().saveFairDetails(res['base_fare'], res['time'], res['convinience_fee'], res['road_maintenance'], res['distance'], res['total']);
+     await context.read<CaptainDetails>().saveFairDetails(res['base_fare']??'--', res['time']??'--', res['convinience_fee']??'--', res['road_maintenance']??'--', res['distance']??'--', res['total']??'--');
     }
     print('save success 2');
     return res;

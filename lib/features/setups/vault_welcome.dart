@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/widgets.dart';
 
 import '../../controllers.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/models/otp_field.dart';
+import '../../utilities/widgets.dart';
 class VaultWelcome extends StatefulWidget {
   const VaultWelcome({Key? key}) : super(key: key);
 

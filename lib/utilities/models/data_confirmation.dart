@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/landing_pages/home_main14.dart';
-import 'package:untitled/features/registration_feature/create_pin.dart';
-import 'package:untitled/features/registration_feature/sign_up_personal_details.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
+import 'package:wynk/controllers.dart';
+import 'package:wynk/features/landing_pages/home_main14.dart';
+import 'package:wynk/features/registration_feature/create_pin.dart';
+import 'package:wynk/features/registration_feature/sign_up_personal_details.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/constants/textstyles.dart';
+import 'package:wynk/utilities/widgets.dart';
 class DataConfirmation extends StatelessWidget {
   const DataConfirmation({Key? key}) : super(key: key);
 

@@ -13,20 +13,15 @@ import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/landing_pages/captain_online.dart';
-import 'package:untitled/features/registration_feature/captain_f_registration.dart';
-import 'package:untitled/features/ride/ride_destination.dart';
-import 'package:untitled/features/later_screens/activities.dart';
-import 'package:untitled/services.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/models/directions.dart';
-import 'package:untitled/utilities/models/directions_model.dart';
+
 
 import '../../main.dart';
+import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/env.dart';
 import '../../utilities/widgets.dart';
 import 'package:location/location.dart';
 
+import 'activities.dart';
 import 'deliveries.dart';
 class MyBookings extends StatefulWidget {
   const MyBookings({Key? key}) : super(key: key);

@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
-import 'package:printing/printing.dart';
-import 'package:untitled/features/ride/patron_invoice.dart';
-import '../../main.dart';
-import '../constants/colors.dart';
+
 Future<Uint8List> pdf (
-    Uint8List to_fro,Uint8List map,String riderName, String pickupDate,
-    String fair,
+    Uint8List green,
+    Uint8List red,
+    Uint8List map,
+    String riderName,
+    String pickupDate,
     Uint8List walletPic,
     String capPlate,
     Uint8List capPic,
@@ -19,9 +19,10 @@ Future<Uint8List> pdf (
     String distance,
     String convFee,
     String roadMaint,
-    String total
+    String total,
+    String start,
+    String end
     )async{
-
   final pdf = Document();
   pdf.addPage(MultiPage(
       pageFormat: PdfPageFormat.a4,
@@ -59,11 +60,12 @@ Future<Uint8List> pdf (
         //
         //     ])
         Column(
-
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
 
             Row(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -71,6 +73,31 @@ Future<Uint8List> pdf (
                   children: [
                     Text('Wynk Ride Invoice',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),
                     SizedBox(height: 30.h),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                          Image(MemoryImage(green)),
+                          SizedBox(width: 21.w,),
+                          Text( start,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(fontSize: 18.sp),)
+                        ],),
+                        SizedBox(height: 38.h,),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                          Image(MemoryImage(red)),
+                          SizedBox(width: 21.w,),
+                          Text( end,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(fontSize: 18.sp),)
+                        ],),
+                      ],),
+                    SizedBox(height: 10.h),
                     Image(MemoryImage(map)),
                     SizedBox(height: 60.h),
                     Text('Your ride with $riderName',style: TextStyle(fontSize: 22),),
@@ -136,14 +163,16 @@ Future<Uint8List> pdf (
                   Text('NGN $total',style: TextStyle(fontSize: 25.sp,fontWeight: FontWeight.bold),),
                 ]),
             SizedBox(height: 60.h,),
-            Center(child: Row(children: [
+            Center(child:
+            Row(children: [
               Image(MemoryImage(walletPic)),
               SizedBox(width: 18.w,),
               Flexible(child: SizedBox(width:260.w,child: Text('My Vault',style: TextStyle(fontSize: 22.sp),))),
               Text('NGN $total',style: TextStyle(fontSize: 22.sp))
             ],) ,),
 
-            SizedBox(height: 15.h,),
+            SizedBox(height: 35.h,),
+            Text('Thank you for riding with wynk, You are highly appreciated.',style: TextStyle(fontSize: 28.sp))
           ],
         )
         ];

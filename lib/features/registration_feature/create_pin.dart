@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:untitled/controllers.dart';
-import 'package:untitled/features/registration_feature/confirm_pin.dart';
-import 'package:untitled/utilities/constants/colors.dart';
-import 'package:untitled/utilities/constants/textstyles.dart';
-import 'package:untitled/utilities/widgets.dart';
+
+import '../../controllers.dart';
+import '../../utilities/constants/colors.dart';
+import '../../utilities/constants/textstyles.dart';
+import '../../utilities/widgets.dart';
+import 'confirm_pin.dart';
+
 String? userTpin;
 class CreateTPin extends StatelessWidget {
 
@@ -22,8 +24,10 @@ class CreateTPin extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: backButton(context),
               ),
-              Text('Create Your Pin',style: kTextStyle1),
-              Text('Keep this number safe, its how you will authorize transactions  ',style: kTextStyle5),
+              SizedBox(height: 15.h,),
+              Text('Create Your Pin',style: kBoldBlack.copyWith(fontSize: 30.sp)),
+              SizedBox(height: 25.h,),
+              Text('Keep this pin safe, it is how you will authorize transactions.  ',style: kTextStyle5),
               Align(
                 alignment: Alignment.center,
                 child: Container(

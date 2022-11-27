@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/features/login_feature/another_user_login.dart';
-import 'package:untitled/main.dart';
-import 'package:untitled/utilities/constants/colors.dart';
 
+import '../../main.dart';
+import '../../utilities/constants/colors.dart';
+import '../login_feature/another_user_login.dart';
 import '../login_feature/login_page.dart';
 import '../registration_feature/register_page.dart';
 class WelcomePage extends StatelessWidget {
@@ -47,7 +47,7 @@ class WelcomePage extends StatelessWidget {
                           height: 51.h,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary:kBlue
+                                backgroundColor:kBlue
                             ),
                             onPressed: ()async{
                               final prefs = await SharedPreferences.getInstance();
@@ -71,7 +71,7 @@ class WelcomePage extends StatelessWidget {
                           height: 51.h,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: kYellow
+                                backgroundColor: kYellow
                             ),
                             onPressed: ()async{
                               Get.to(()=>
