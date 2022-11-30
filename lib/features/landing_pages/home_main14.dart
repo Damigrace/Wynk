@@ -20,8 +20,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:wynk/features/ride/patron_ride_commence.dart';
+import 'package:wynk/features/ride/ride_started.dart';
 import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
@@ -245,7 +245,6 @@ class _HomeMain14State extends State<HomeMain14> {
 
   }
 
-   final channel = WebSocketChannel.connect(Uri.parse('wss://wynk.ng/stagging-api/picture/get-notification'));
 
   @override
   Widget build(BuildContext context) {
@@ -385,17 +384,13 @@ class _HomeMain14State extends State<HomeMain14> {
               context,
               MaterialPageRoute(
               builder: (context) =>
-              GMapWebview(
-                  destination:LatLng(
-                      context.read<FirstData>().endPos!.geometry!.location!.lat!,
-                      context.read<FirstData>().endPos!.geometry!.location!.lng!),
-              ))):Navigator.push(
+              RideCommence()
+              )):Navigator.push(
               context,
               MaterialPageRoute(
               builder: (context) =>
-                  GMapWebview(
-                    destination:context.read<RideDetails>().destPos!
-                  )))
+                  CaptainRideStarted()
+              ))
               }:showSnackBar(context, 'You do not have an active ride');
             },
             child: CircleAvatar(
@@ -502,7 +497,12 @@ class _HomeMain14State extends State<HomeMain14> {
                                       context.read<FirstData>().saveCurrentLocat(currentLocation.latitude, currentLocation.longitude);
                                       Navigator.pop(context);
                                       if(context.read<FirstData>().userType! == '2'){
-                                        Navigator.pushNamed(context, '/CaptainHome');
+                                        if(context.read<FirstData>().capOnline == true){
+                                          Navigator.pushNamed(context, '/CaptainOnline');
+                                        }
+                                        else{
+                                          Navigator.pushNamed(context, '/CaptainHome');
+                                        }
                                       }
                                      else {
                                         getCaptsAround(currentLocation);
@@ -669,10 +669,11 @@ class _HomeMain14State extends State<HomeMain14> {
                                   children: [
                                     GestureDetector(
                                         onTap:()async{
-                                          getCharges();
+                                          getCapDetails(context.read<FirstData>().uniqueId);
+                                          // getCharges();
                                           //infobipVoiceCall();
                                          // multiChoiceLookup('DSTV');
-
+                                          //openMap(7, 5);
                                         // final res = await pdf();
                                         //  final output = await getExternalStorageDirectory();
                                         //  final file = File('${output!.path}/invoice.pdf');

@@ -12,6 +12,8 @@ import 'package:location/location.dart';
 import 'package:google_place/google_place.dart' hide Location;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wynk/features/ride/patron_ride_commence.dart';
+import 'package:wynk/features/ride/ride_started.dart';
 import '../../controllers.dart';
 import '../../main.dart';
 import '../../services.dart';
@@ -126,11 +128,7 @@ class _CaptainFoundState extends State<CaptainFound> {
             }}break;
         case '8':
           endProcesses();
-          Get.to(()=>GMapWebview(
-            destination: LatLng(
-                context.read<FirstData>().endPos!.geometry!.location!.lat!,
-                context.read<FirstData>().endPos!.geometry!.location!.lng!),
-          ));
+          Get.to(()=>RideCommence());
           NotificationService.showNotif('Wynk', 'Ride has started');
           timer?.cancel();
           break;

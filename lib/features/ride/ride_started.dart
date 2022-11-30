@@ -13,10 +13,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart' hide Location;
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wynk/utilities/constants/textstyles.dart';
 
 import '../../controllers.dart';
 import '../../main.dart';
@@ -28,13 +30,13 @@ import '../../utilities/models/directions_model.dart';
 import '../../utilities/widgets.dart';
 import '../landing_pages/home_main14.dart';
 import 'captain_trip_summary.dart';
-class RideStarted extends StatefulWidget {
+class CaptainRideStarted extends StatefulWidget {
 
   @override
-  State<RideStarted> createState() => _RideStartedState();
+  State<CaptainRideStarted> createState() => _CaptainRideStartedState();
 }
 
-class _RideStartedState extends State<RideStarted> {
+class _CaptainRideStartedState extends State<CaptainRideStarted> {
   String? tripPin;
   int? seconds;
   int? minutes;
@@ -57,14 +59,14 @@ class _RideStartedState extends State<RideStarted> {
     tripPinController.clear();
     locationSubscription?.cancel();
   }
-  void onlineStat(int stat)async{
-    final pos = await determinePosition(context);
-    onlineStatus(stat, LatLng(pos.latitude, pos.longitude));
-    originBitmap =  await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(),
-      "lib/assets/images/originmarker.png",
-    );
-  }
+  // void onlineStat(int stat)async{
+  //   final pos = await determinePosition(context);
+  //   onlineStatus(stat, LatLng(pos.latitude, pos.longitude));
+  //   originBitmap =  await BitmapDescriptor.fromAssetImage(
+  //     ImageConfiguration(),
+  //     "lib/assets/images/originmarker.png",
+  //   );
+  // }
   @override
   void initState() {
     context.read<FirstData>().saveActiveRide(true);
@@ -94,8 +96,49 @@ class _RideStartedState extends State<RideStarted> {
   Location location = Location();
   LatLng? userCurLocat;
   double? rotation;
+  showOpenMapSheet(){
+    showModalBottomSheet(
+        barrierColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+        ),
+        context: context, builder: (context){
+      return Container(
+        height: 200.h,
+        width:devWidth ,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+        ),
+        padding: EdgeInsets.only(top: 6.h,left: 10.w,right: 10.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('For better navigation, click the button below to use google map and click next to start navigating.',style: kBoldBlack.copyWith(fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+            SizedBox(height: 10.h,),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 50.h,
+                width: 300.w,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: kBlue),
+                  onPressed:(){
+                    Navigator.pop(context);
+                    MapsLauncher.launchCoordinates(context.read<RideDetails>().destPos!.latitude, context.read<RideDetails>().destPos!.longitude);
+                  },
+                  child: Text('Open Google Map',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
+                ),
+              ),
+            )
+          ],),);
+    });
+  }
   StreamSubscription?  locationSubscription;
   void GMapCont(GoogleMapController controller){
+    Future.delayed(Duration(seconds: 3),(){
+      showOpenMapSheet();
+    });
     _googleMapController=controller;
     mapLocations();
     genIconBitMap();
@@ -132,7 +175,7 @@ class _RideStartedState extends State<RideStarted> {
   void mapLocations()async{
     final direct=await DirectionsRepo().getDirections(
         origin: context.read<RideDetails>().pickupPos??LatLng(context.read<FirstData>().lat!,context.read<FirstData>().long!),
-         destination: context.read<RideDetails>().destPos??LatLng(context.read<FirstData>().lat!,context.read<FirstData>().long!));
+         destination: context.read<RideDetails>().destPos!);
     setState(() {
       _googleMapController?.moveCamera(CameraUpdate.newLatLngBounds(Directions.bbounds,50.w));
       info=direct;
@@ -173,9 +216,9 @@ class _RideStartedState extends State<RideStarted> {
   }
   LatLng? start;
   LatLng? end;
-
   @override
   Widget build(BuildContext context) {
+
     String pickup = context.read<RideDetails>().pickUp!;
     String dest = context.read<RideDetails>().destination!;
     curLocat=Marker(
@@ -463,7 +506,17 @@ class _RideStartedState extends State<RideStarted> {
                           ],),
                       ),
                     ],),)
-              ))
+              )),
+          Positioned(
+            top: 500.h,
+            right: 0,
+            child: GestureDetector(
+              child: CircleAvatar(child: Icon(Icons.more_horiz),),
+              onTap: (){
+                showOpenMapSheet();
+              },
+            )
+          )
         ],) ,),
     );
   }

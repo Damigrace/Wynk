@@ -87,7 +87,6 @@ class _SignUpPersonalDetailsState extends State<SignUpPersonalDetails> {
                           spinner(context);
                           int res = await getVerificationDetails(context);
                           Navigator.pop(context);
-                          print(res);
                           // Navigator.push(
                           //     context, MaterialPageRoute(builder: (context) => const DataConfirmation()
                           // ))

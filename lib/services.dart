@@ -7,12 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as htp;
-import 'package:infobip_rtc/api/listeners.dart';
-import 'package:infobip_rtc/infobip_rtc.dart';
-import 'package:infobip_rtc/model/events.dart';
-import 'package:infobip_rtc/model/requests.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wynk/features/login_feature/login_page.dart';
 import 'package:wynk/features/registration_feature/otherRegNIn.dart';
 import 'package:wynk/features/verification_feature/confirm_transaction_pin.dart';
@@ -214,9 +211,6 @@ Future<Map<String, dynamic>> sendLoginDetails({required String pin, String? numC
   return dataBody;
 }
 refresh(BuildContext context)async{
-  // final prefs = await SharedPreferences.getInstance();
-  // final userDet =await getCapDetails(prefs.getString('Origwynkid'));
-print('calledddddddddddddddddddddddddddddddddd');
 
   final res = await walletDetails(context);
   final userDet =await getCapDetails(context.read<FirstData>().uniqueId);
@@ -467,9 +461,10 @@ Future<Position> determinePosition(BuildContext context)async{
   LocationPermission? permission;
   serviceEnabled= await Geolocator.isLocationServiceEnabled();
   if(!serviceEnabled){
-    showSnackBar(context, 'Location services are disabled');
+   // showSnackBar(context, 'Location services are disabled');
     Navigator.pop(context);
     await Geolocator.requestPermission();
+    await Geolocator.openLocationSettings();
     return Future.error('Location services are disabled');
   }
   permission=await Geolocator.checkPermission();
@@ -766,104 +761,8 @@ Future<String> getActualLocale() async {
   var data = json.decode(response.body);
   return data['countryCode'].toLowerCase();}
 
-// void infobipVoiceCall()async{
-//
-//   var url = await Uri.parse ('https://qgvnxr.api.infobip.com/calls/1/calls');
-//   var body = json.encode({
-//
-//     "endpoint": {
-//       "phoneNumber": "2348106052327",
-//       "type": "PHONE"
-//     },
-//     "from":"Alice",
-//     "applicationId":"d8d84155-3831-43fb-91c9-bb897149a79d"
-//   });
-//   var response = await http.post(
-//     url,
-//     headers: {
-//       "Authorization": "App $infoKey",
-//       "Content-Type": "application/json",
-//       "Accept": "application/json",
-//     },
-//     body: body
-//   );
-//   var dataBody= json.decode(response.body);
-//   print('infobip V Call, ${dataBody}');
-//   return dataBody;
-//
-// }
 
-infobipCall()async{
-final toks = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiI2ZGI0Yjk5NC04MjVhLTRmOTQtOGMwNi01NDc4MDZjMDMzZDIiLCJpZGVudGl0eSI6IkFsaWNlIiwiaXNzIjoiSW5mb2JpcCIsIm5hbWUiOiJBbGljZSBpbiBXb25kZXJsYW5kIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjQ0MjcxODAsImNhcHMiOltdfQ.Yfs_MiTVY3V7R2ZEhANwJaBRfgrb32ob11VyDb6rFK0';
-  // final val = await genInfobipToken();
-  // final token = val['token'];
-  myCallListener callEventListener = myCallListener();
-  final callRequest = CallRequest(toks, 'test_destination', callEventListener);
-  final outgoingCall = await InfobipRTC.call(callRequest);
-  print(outgoingCall.status);
-}
-
-class myCallListener implements CallEventListener{
-
-
-  @override
-  void onEarlyMedia() {
-    // TODO: implement onEarlyMedia
-  }
-
-  @override
-  void onError(CallErrorEvent callErrorEvent) {
-    // TODO: implement onError
-  }
-
-  @override
-  void onEstablished(CallEstablishedEvent callEstablishedEvent) {
-    // TODO: implement onEstablished
-  }
-
-  @override
-  void onHangup(CallHangupEvent callHangupEvent) {
-    // TODO: implement onHangup
-  }
-
-  @override
-  void onRinging() {
-    // TODO: implement onRinging
-
-  }
-
-  @override
-  void onUpdated(CallUpdatedEvent callUpdatedEvent) {
-    // TODO: implement onUpdated
-  }
-
-
-
-}
-// Future genInfobipToken()async{
-//
-//   var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/token');
-//   var body = json.encode({
-//   "identity": "Alice",
-//   "applicationId": appId,
-//   "displayName": "Alice in Wonderland",
-//   });
-//   var response = await http.post(
-//     url,
-//     headers: {
-//      "Authorization": "App $infoKey",
-//       "Content-Type": "application/json",
-//       "Accept": "application/json",
-//     },
-//     body: body,
-//   );
-//   var dataBody= json.decode(response.body);
-//   print('infobip token: ${dataBody}');
-//   return dataBody;
-//
-// }
-
-Future ridePayment({required String captainWynkId,required String? rideCode,String? paymentMeans})async{
+  Future ridePayment({required String captainWynkId,required String? rideCode,String? paymentMeans})async{
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   print('${ prefs.getString('Origwynkid')},$captainWynkId,$rideCode,$paymentMeans');
@@ -1016,16 +915,21 @@ Future walletDetails(BuildContext context)async{
   var body = json.encode({
     'wynkid': prefs.getString('Origwynkid'),
   });
-  var response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: body,
-  );
-  var dataBody= json.decode(response.body);
-  print('wallet details: $dataBody');
-  return dataBody;
+  try{
+    var response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+    var dataBody= json.decode(response.body);
+    print('wallet details: $dataBody');
+    return dataBody;
+  }
+  catch(e){
+    showSnackBar(context, e.toString());
+  }
 }
 
 Future createWallet(String? accountName)async{
@@ -1171,22 +1075,28 @@ print('$accNum,$fromWallet,$amount,$beneName,$destBankCode');
   return dataBody;
 }
 
-Future getNubanDet()async{
+Future getNubanDet(BuildContext context)async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var url = await Uri.parse ('$wynkBaseUrl/get-nuban-details');
   var body = json.encode({
     'wynkid': prefs.getString('Origwynkid'),
   });
-  var response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: body
-  );
-  var dataBody= json.decode(response.body);
-  print('nu: $dataBody,${prefs.getString('Origwynkid')}');
-  return dataBody;
+  try{
+    var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body
+    );
+    var dataBody= json.decode(response.body);
+    print('nu: $dataBody,${prefs.getString('Origwynkid')}');
+    return dataBody;
+  }
+  catch (error){
+    showSnackBar(context, error.toString());
+    return null;
+  }
 }
 
 Future savePicture(String img, String wynkid)async{
@@ -1555,4 +1465,13 @@ Future getCharges ()async{
   var dataBody= json.decode(response.body);
   print('charges breakdown $dataBody');
   return dataBody;
+}
+openMap(double lat, double long)async{
+  String googleUrl = 'https://www.google.com/maps/search/?saddr=7.1,5.1&daddr=$lat,$long&directionsmode=driving';
+  if(await canLaunchUrl(Uri.parse(googleUrl))){
+    await launchUrl((Uri.parse(googleUrl)));
+  }
+  else{
+    throw 'Could not open Map.';
+  }
 }

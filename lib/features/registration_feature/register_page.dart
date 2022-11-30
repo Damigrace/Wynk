@@ -1,12 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:infobip_rtc/api/listeners.dart';
-import 'package:infobip_rtc/model/requests.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:wynk/features/login_feature/another_user_login.dart';
 import 'package:wynk/features/registration_feature/tandc.dart';
 import '../../controllers.dart';
 import '../../main.dart';
@@ -55,13 +54,6 @@ class _RegisterPageState extends State<RegisterPage> {
   String? get user=>Provider.of<FirstData>(context).userNumber;
   PhoneNumber number = PhoneNumber(isoCode: 'NG');
   int selectedV=0;
-
-  CallEventListener? callEventListener;
-
-  // void infobipR()async{
-  //   final callRequest = CallRequest('wedcvsjch', destination, callEventListener!);
-  //   final outgoingCall = await InfobipRTC.call(callRequest);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Text('Already a user?',style: TextStyle(fontSize: 20.sp),),
                         TextButton(onPressed: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                          const LoginPage()
+                          const AnotherUserLogin()
                           ));
                         }, child: Text('Login',
                             style: TextStyle(

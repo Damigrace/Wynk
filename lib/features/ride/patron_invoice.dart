@@ -378,7 +378,7 @@ class _PatronInvoiceState extends State<PatronInvoice> {
                         context.read<FirstData>().patronDestPlace!
                     );
 
-                    await DocumentFileSavePlus.saveFile(PDF, "invoice${DateTime.now().toString()}.pdf", "appliation/pdf");
+                    await DocumentFileSavePlus.saveFile(PDF, "Wynk Ride invoice${DateTime.now().toString()}.pdf", "appliation/pdf");
                     showSnackBar(context,'Invoice downloaded successfully');
                 } ,
                 child: Container(

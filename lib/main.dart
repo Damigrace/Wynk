@@ -166,6 +166,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<FirstData>().saveNuban('Not Available yet');
     return  GetMaterialApp(
       initialRoute: '/',
       routes: {
@@ -190,7 +191,7 @@ class MyApp extends StatelessWidget {
         '/RideDestination' : (context)=>  RideDestination(),
         '/RideEnded' : (context)=>  PatronInvoice(),
         '/RideInProgress' : (context)=>  RideInProgress(),
-        '/RideStarted' : (context)=>  RideStarted(),
+        '/RideStarted' : (context)=>  CaptainRideStarted(),
         '/RiderAvailable' : (context)=>  RiderAvailable(),
         '/RidePaymentGateway' : (context)=>  RidePaymentGateway(),
         '/PatronTripEnded' : (context)=>  PatronTripEnded(),
@@ -219,6 +220,7 @@ class FirstData with ChangeNotifier{
   List<ChatTile> messages = [ChatTile(text: 'You are welcome', color: Colors.green, time: 'Just now')];
   LatLngBounds? latLngBounds;
   String? userType;
+  String? nuban;
   double? lat;
   double? long;
   String? userP;
@@ -266,7 +268,11 @@ class FirstData with ChangeNotifier{
   List<ListTile> transcards = [];
   String? serviceUnit;
   bool activeRide = false;
-
+  bool capOnline = false;
+  saveCapOnlineStat(bool val){
+    capOnline = val;
+    notifyListeners();
+  }
   saveActiveRide(bool val){
     activeRide = val;
     notifyListeners();
@@ -275,6 +281,10 @@ class FirstData with ChangeNotifier{
   saveFromWallet(String val){
     print(val);
     fromWallet = val;
+    notifyListeners();
+  }
+  saveNuban(String val){
+    nuban = val;
     notifyListeners();
   }
   PendingDynamicLinkData? dataLink;
@@ -805,8 +815,17 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
   }
+  getNuban()async{
+    final res =await getNubanDet(context);
+    if(res['statusCode'] == 200){
+      context.read<FirstData>().saveNuban(res['message']);
+    }
+    else {
+      context.read<FirstData>().saveNuban('Not Available yet');
+    }
+  }
   Future <void> signin()async{
-
+    getNuban();
     UserType();
     getWalletDet();
     final prefs = await SharedPreferences.getInstance();

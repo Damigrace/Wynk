@@ -98,7 +98,13 @@ class _UserSelectorState extends State<UserSelector> {
                       context.read<FirstData>().saveCurrentLocat(currentLocation.latitude, currentLocation.longitude);
                       context.read<FirstData>().saveUserType('2');
                       Navigator.pop(context);
-                      Navigator.pushReplacementNamed(context, '/CaptainHome');
+                      if(context.read<FirstData>().capOnline == true){
+                        Navigator.pushNamed(context, '/CaptainOnline');
+                      }
+                      else{
+                        Navigator.pushNamed(context, '/CaptainHome');
+                      }
+
                     }
                   else{
                     if(context.read<FirstData>().lat != null){

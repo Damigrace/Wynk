@@ -151,7 +151,8 @@ class _CaptainHomeState extends State<CaptainHome> with SingleTickerProviderStat
 
                    if(passStatus['statusCode'] == 200){
                      Navigator.pop(context);
-                     Navigator.pushNamed(context,'/CaptainOnline');}
+                     context.read<FirstData>().saveCapOnlineStat(true);
+                     Navigator.pushReplacementNamed(context,'/CaptainOnline');}
                    else{
                      showToast(passStatus['errorMessage']);
                      final passNum = await passDetail();

@@ -244,10 +244,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 children: [
                   Text('This version of the app is an MVP. You can reach the support team by sending a whatsapp message to any contact below.'),
                   TextButton(
-                      onPressed:(){ launchUrl(Uri.parse('whatsapp://send?phone=+2348145568887&text=Hello'));},
+                      onPressed:(){ launchUrl(Uri.parse('whatsapp://send?phone=+2348106052329&text=Hello Dami'));},
                       child:Text('Contact 1')),
                   TextButton(
-                      onPressed:(){ launchUrl(Uri.parse('whatsapp://send?phone=+2348035538658&text=Hello'));},
+                      onPressed:(){ launchUrl(Uri.parse('whatsapp://send?phone=+2348035538658&text=Hello Olumide'));},
                       child:Text('Contact 2')),
                 ],
               )
@@ -1539,7 +1539,7 @@ class _phoneFieldState extends State<phoneField> {
       dropdownIcon: Icon(Icons.arrow_drop_down,color: kYellow,),
       dropdownTextStyle: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
       decoration:  InputDecoration(
-        hintText: '8101234567',
+        hintText: 'Enter Phone',
         hintStyle: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
         focusedBorder:  OutlineInputBorder(
             borderSide: BorderSide(color: bordCol,width: 2),
@@ -1677,7 +1677,6 @@ class _WalletContState extends State<WalletCont> {
           GestureDetector(
               onTap: ()async{
 
-
                 if(context.read<WalletDetails>().wallets.isEmpty){
                   if(checkingWallet){showSnackBar(context, 'Loading wallet...');}
                   else{
@@ -1688,7 +1687,7 @@ class _WalletContState extends State<WalletCont> {
                   final wallets = res['message']as List;
                   for(var wallet in wallets){
                     if(wallet['actualBalance'] == '' ){
-                      showSnackBar(context, 'We could not retrieve your wallet details at this time. Please bear with us.');
+                      showSnackBar(context, 'We could not retrieve your wallet details at this time. Kindly bear with us.');
                     }
                     else{  Wallet wal = Wallet(walletName: wallet['walletname'],
                         walletNum: wallet['walletnumber'], currentBalance: wallet['actualBalance']);

@@ -98,19 +98,29 @@ Future<Uint8List> pdf (
                         ],),
                       ],),
                     SizedBox(height: 10.h),
-                    Image(MemoryImage(map)),
-                    SizedBox(height: 60.h),
-                    Text('Your ride with $riderName',style: TextStyle(fontSize: 22),),
+                    Container(
+                      width: 380.w,
+                        height: 400.h,
+                        child: Image(MemoryImage(map)) ),
+                    SizedBox(height: 40.h),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Text('Your ride with $riderName',style: TextStyle(fontSize: 22),),
+                      SizedBox(width: 15.w),
+                      SizedBox(
+                        width: 80.w,
+                        height: 80.h,
+                        child: Image(MemoryImage(capPic)),
+                      )
+                    ]),
                     SizedBox(height: 15.h,),
                     Text(capPlate,style: TextStyle(fontSize: 22.sp)),
                     SizedBox(height: 22.h,),
                     Text('${DateFormat.MMMMEEEEd().format(DateTime.now())}',style: TextStyle(fontSize: 22),)
                   ],),
-                SizedBox(
-                  width: 80.w,
-                  height: 80.h,
-                  child: Image(MemoryImage(capPic)),
-                )
+
               ],
             ),
             SizedBox(height: 40.h),

@@ -193,6 +193,7 @@ class _CaptainOnlineState extends State<CaptainOnline> {
                       child: TextButton(
                         onPressed: ()async{
                           onlineStat(0);
+                          context.read<FirstData>().saveCapOnlineStat(false);
                           timer?.cancel();
                           Navigator.pushReplacement(
                               context, MaterialPageRoute(builder: (context) => const CaptainHome()
@@ -233,7 +234,8 @@ class _CaptainOnlineState extends State<CaptainOnline> {
                         Positioned(
                           top: 39.h,
                           left: 25.w,
-                          child:Text('₦${context.read<FirstData>().todayEarning!}',style: TextStyle(fontSize: 25.sp,color: Color(0xff3ea57b)),)
+                          child:Text('₦${context.read<FirstData>().todayEarning
+                          !}',style: TextStyle(fontSize: 25.sp,color: Color(0xff3ea57b)),)
                           ,),
                         Positioned(
                           top: 23.h,

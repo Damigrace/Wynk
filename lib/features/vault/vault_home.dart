@@ -156,71 +156,127 @@ class _VaultHomeState extends State<VaultHome>{
                       children: [
                         GestureDetector(
                           onTap:()async{
-                            spinner(context);
-                           final res =await getNubanDet();
-                           if(res['statusCode'] == 200){
-                             Navigator.pop(context);
-                             await showDialog(
-                                 context: context, builder: (context){
-                               return AlertDialog(
-                                 contentPadding: EdgeInsets.all(10.w),
-                                 shape:  RoundedRectangleBorder(
-                                     borderRadius: BorderRadius.circular(18)
-                                 ),
-                                 content: Container(
-                                   child: Column(
-                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                     mainAxisSize: MainAxisSize.min,
-                                     children: [
-                                       Column(
-                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                         children: [
-                                           Text('Account Information',
-                                             style: TextStyle(fontSize: 20.sp),textAlign: TextAlign.center,),
-                                           SizedBox(height: 13.h,),
-                                           Text('Fund your wallet with this account details',
-                                               overflow: TextOverflow.ellipsis,
-                                               maxLines: 2,
-                                               style: TextStyle(fontSize: 12.sp,color: kYellow)),
-                                           SizedBox(height: 30.h,),
-                                         ],),
-                                       Column(children: [
-                                         Row(
-                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                           children: [
-                                             Text('Bank',style: TextStyle(fontSize: 15.sp),),
-                                             SizedBox(width: 10.w),
-                                             Flexible(
-                                               child: SizedBox(child: Text('POLARIS',textAlign: TextAlign.end
-                                                 ,style: TextStyle(fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis),maxLines: 2,)),
-                                             )
-                                           ],),
-                                         SizedBox(height:10.h),
-                                         Row(
-                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                           children: [
-                                             Text('Nuban',style: TextStyle(fontSize: 15.sp),),
-                                             SizedBox(width: 10.w),
-                                             Flexible(
-                                               child: SizedBox(child: Text(res['message']??'Not available yet'
-                                                 ,style: TextStyle(fontWeight: FontWeight.w600,
-                                                     overflow: TextOverflow.ellipsis),maxLines: 2,textAlign: TextAlign.end,)),
-                                             )
-                                           ],),
-                                         SizedBox(height:10.h),
-                                       ],),
-                                     ],
-                                   ),
-                                 ),
-                               );
-                             });
-                            }
-                           else {
-                             Navigator.pop(context);
-                             showSnackBar(context, res['errorMessage']);
-                           }
+                            await showDialog(
+                                context: context, builder: (context){
+                              return AlertDialog(
+                                contentPadding: EdgeInsets.all(10.w),
+                                shape:  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18)
+                                ),
+                                content: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Account Information',
+                                            style: TextStyle(fontSize: 20.sp),textAlign: TextAlign.center,),
+                                          SizedBox(height: 13.h,),
+                                          Text('Fund your wallet with this account details',
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: TextStyle(fontSize: 12.sp,color: kYellow)),
+                                          SizedBox(height: 30.h,),
+                                        ],),
+                                      Column(children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Bank',style: TextStyle(fontSize: 15.sp),),
+                                            SizedBox(width: 10.w),
+                                            Flexible(
+                                              child: SizedBox(child: Text('POLARIS',textAlign: TextAlign.end
+                                                ,style: TextStyle(fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis),maxLines: 2,)),
+                                            )
+                                          ],),
+                                        SizedBox(height:10.h),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Nuban',style: TextStyle(fontSize: 15.sp),),
+                                            SizedBox(width: 10.w),
+                                            Flexible(
+                                              child: SizedBox(child: Text(context.read<FirstData>().nuban!
+                                                ,style: TextStyle(fontWeight: FontWeight.w600,
+                                                    overflow: TextOverflow.ellipsis),maxLines: 2,textAlign: TextAlign.end,)),
+                                            )
+                                          ],),
+                                        SizedBox(height:10.h),
+                                      ],),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                            //spinner(context);
+                           // final res =await getNubanDet();
+                           // if(res['statusCode'] == 200){
+                           //   Navigator.pop(context);
+                           //   await showDialog(
+                           //       context: context, builder: (context){
+                           //     return AlertDialog(
+                           //       contentPadding: EdgeInsets.all(10.w),
+                           //       shape:  RoundedRectangleBorder(
+                           //           borderRadius: BorderRadius.circular(18)
+                           //       ),
+                           //       content: Container(
+                           //         child: Column(
+                           //           crossAxisAlignment: CrossAxisAlignment.start,
+                           //           mainAxisSize: MainAxisSize.min,
+                           //           children: [
+                           //             Column(
+                           //               crossAxisAlignment: CrossAxisAlignment.start,
+                           //               children: [
+                           //                 Text('Account Information',
+                           //                   style: TextStyle(fontSize: 20.sp),textAlign: TextAlign.center,),
+                           //                 SizedBox(height: 13.h,),
+                           //                 Text('Fund your wallet with this account details',
+                           //                     overflow: TextOverflow.ellipsis,
+                           //                     maxLines: 2,
+                           //                     style: TextStyle(fontSize: 12.sp,color: kYellow)),
+                           //                 SizedBox(height: 30.h,),
+                           //               ],),
+                           //             Column(children: [
+                           //               Row(
+                           //                 crossAxisAlignment: CrossAxisAlignment.start,
+                           //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           //                 children: [
+                           //                   Text('Bank',style: TextStyle(fontSize: 15.sp),),
+                           //                   SizedBox(width: 10.w),
+                           //                   Flexible(
+                           //                     child: SizedBox(child: Text('POLARIS',textAlign: TextAlign.end
+                           //                       ,style: TextStyle(fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis),maxLines: 2,)),
+                           //                   )
+                           //                 ],),
+                           //               SizedBox(height:10.h),
+                           //               Row(
+                           //                 crossAxisAlignment: CrossAxisAlignment.start,
+                           //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           //                 children: [
+                           //                   Text('Nuban',style: TextStyle(fontSize: 15.sp),),
+                           //                   SizedBox(width: 10.w),
+                           //                   Flexible(
+                           //                     child: SizedBox(child: Text(res['message']??'Not available yet'
+                           //                       ,style: TextStyle(fontWeight: FontWeight.w600,
+                           //                           overflow: TextOverflow.ellipsis),maxLines: 2,textAlign: TextAlign.end,)),
+                           //                   )
+                           //                 ],),
+                           //               SizedBox(height:10.h),
+                           //             ],),
+                           //           ],
+                           //         ),
+                           //       ),
+                           //     );
+                           //   });
+                           //  }
+                           // else {
+                           //   Navigator.pop(context);
+                           //   showSnackBar(context, res['errorMessage']);
+                           // }
                           //  Navigator.of(context).pushNamed('/AddFunds');
                           },
                           child: Container(

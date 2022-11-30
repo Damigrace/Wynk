@@ -173,6 +173,7 @@ class _CaptainTripSummaryState extends State<CaptainTripSummary> {
                                 comment: captainCommentCont.text,wynikd: context.read<FirstData>().uniqueId!);
                             // Navigator.pop(context);
                             // Navigator.pop(context);
+                            refresh(context);
                             captainCommentCont.clear();
                             Navigator.pushNamedAndRemoveUntil(context, '/CaptainOnline', ModalRoute.withName('/CaptainHome'));
                             // Navigator.popUntil(context,ModalRoute.withName('/CaptainOnline'));

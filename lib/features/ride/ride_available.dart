@@ -10,6 +10,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wynk/features/registration_feature/ride_online_map.dart';
+import 'package:wynk/features/ride/patron_ride_commence.dart';
 import 'captain_trip_summary.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -272,6 +273,7 @@ class _RiderAvailableState extends State<RiderAvailable> {
                       Navigator.pop(context);
                       disableNotif(rideId: context.read<RideDetails>().rideId!, wynkid: context.read<FirstData>().uniqueId!);
                       onlineStat(0);
+                      context.read<FirstData>().saveCapOnlineStat(false);
                       Navigator.pushReplacementNamed(
                           context, '/CaptainOnline');
                     },
@@ -955,7 +957,7 @@ class _RiderAvailableState extends State<RiderAvailable> {
                                                                            context,
                                                                            MaterialPageRoute(
                                                                                builder: (context) =>
-                                                                                   GMapWebview(destination: context.read<RideDetails>().destPos??LatLng(context.read<FirstData>().lat!,context.read<FirstData>().long!))));
+                                                                                   CaptainRideStarted()));
                                                                      tripPinController.clear();
                                                                    }
 

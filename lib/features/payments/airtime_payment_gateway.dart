@@ -148,7 +148,7 @@ class PaymentGateway extends StatelessWidget {
                               borderRadius: BorderRadius.circular(7),
                             ),
                             child: Center(
-                              child: Text('Retry payment',
+                              child: Text('Retry Payment',
                                 style: TextStyle(fontSize: 15.sp,color: Colors.white),),
                             ),
                           ),),

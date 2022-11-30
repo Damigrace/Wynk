@@ -73,7 +73,7 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
                       print('2');
                       getWalletDet();
                       await savePicture(user64Img, prefs.getString('Origwynkid')!);
-
+                      getNubanDet(context);
                       Navigator.push(myC, MaterialPageRoute(builder: (context)=>const HomeMain14()));
                     },
                   ),
@@ -219,14 +219,15 @@ class _ConfirmTPinState extends State<ConfirmTPin> {
                   ),
                   onPressed: () async {
                     if(confirmTPinController.text==transactionPinController.text){
+                      context.read<FirstData>().saveUserType('3');
+                      context.read<FirstData>().saveOriguser('3');
                       spinner(context);
                   await picturing(context);
                     }
                     else if(confirmTPinController.text!=transactionPinController.text){
                       showSnackBar(context,'Pin Code Mismatch. Try Again');
                     }
-                    context.read<FirstData>().saveUserType('3');
-                    context.read<FirstData>().saveOriguser('3');
+
                   },
                   child: Text('Submit',style:kTextStyle2,),
                 ),

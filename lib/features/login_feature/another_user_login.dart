@@ -1,6 +1,4 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:infobip_rtc/infobip_rtc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -171,7 +169,8 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                           try {
                             print(userConfirmTpin);
                             Map loginResponse = await sendLoginDetails2(pin: userConfirmTpin!,numCode: context.read<FirstData>().numCode);
-                            if(loginResponse['statusCode'] == 200){
+                            if(loginResponse['statusCode'] == 200)
+                            {
                               fullnameCont.text = loginResponse['name'];
                               emailController.text = loginResponse['email'];
                               confirmationPhoneCont.text = loginResponse['phone'];
@@ -187,6 +186,7 @@ class _AnotherUserLoginState extends State<AnotherUserLogin> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>  HomeMain14()));
                             }
                             else{
+                              confirmAnotherUserPinController.clear();
                               Navigator.pop(context);
                               showToast(loginResponse['errorMessage']);
                             }

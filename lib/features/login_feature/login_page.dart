@@ -162,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                               try {
                                 Map loginResponse = await sendLoginDetails(pin: userConfirmTpin!);
                                 if(loginResponse['statusCode'] != 200){
+                                  loginPinCont.clear();
                                   Navigator.pop(context);
                                   showToast(loginResponse['errorMessage']);
                                 }
