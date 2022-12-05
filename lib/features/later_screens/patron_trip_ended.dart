@@ -63,7 +63,7 @@ class _PatronTripEndedState extends State<PatronTripEnded> {
                 SizedBox(width: 18.w,),
                 Text('Wynk Vault',style: TextStyle(fontSize: 18.sp),),
                 Flexible(child: SizedBox(width: 1000,)),
-                Text('NGN ${context.read<CaptainDetails>().total!}',style: TextStyle(fontSize: 18.sp),)
+                Text('₦‎ ${context.read<CaptainDetails>().total!}',style: TextStyle(fontSize: 18.sp),)
               ],),
             ),
             Container(

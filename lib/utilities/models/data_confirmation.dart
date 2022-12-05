@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:wynk/controllers.dart';
 import 'package:wynk/features/landing_pages/home_main14.dart';
 import 'package:wynk/features/registration_feature/create_pin.dart';
-import 'package:wynk/features/registration_feature/sign_up_personal_details.dart';
+import 'package:wynk/features/registration_feature/nigerian_reg.dart';
 import 'package:wynk/main.dart';
 import 'package:wynk/utilities/constants/colors.dart';
 import 'package:wynk/utilities/constants/textstyles.dart';

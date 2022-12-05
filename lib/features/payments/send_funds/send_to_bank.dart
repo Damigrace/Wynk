@@ -12,7 +12,7 @@ import '../../../main.dart';
 import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/widgets.dart';
-import '../airtime_payment_gateway.dart';
+import '../payment_gateway.dart';
 class SendToBank extends StatefulWidget {
   const SendToBank({Key? key}) : super(key: key);
 
@@ -403,154 +403,23 @@ class _SendToBankState extends State<SendToBank> {
           style: ElevatedButton.styleFrom(
               backgroundColor: kBlue),
           onPressed: () async {
-            await showDialog(
-                barrierDismissible: false,
-                context: context, builder: (context){
-              return AlertDialog(
-                contentPadding: EdgeInsets.all(30.w),
-                shape:  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)
-                ),
-                content: Container(
-                  width: 301.w,
-                  height:270.h,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Enter PIN',
-                                style: TextStyle(fontSize: 15.sp),textAlign: TextAlign.center,),
-                              SizedBox(height: 13.h,),
-                              Text('Enter your 4-digit PIN to authorise \nthis transaction.',
-                                  style: TextStyle(fontSize: 10.sp)),
-                            ],),
-                          GestureDetector(
-                            onTap: ()=>Navigator.pop(context),
-                            child: SizedBox(
-                                width: 42.w,
-                                height: 42.w,
-                                child: Image.asset('lib/assets/images/rides/cancel1.png')),
-                          )
-                        ],),
-
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          margin:  EdgeInsets.only(top: 20.h,bottom: 28.h),
-                          height: 61.h,
-                          width: 260.w,
-                          decoration:  BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),),
-                          child: PinCodeTextField(
-                            showCursor: true,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            autoUnfocus: true,
-                            autoDisposeControllers: false,
-                            keyboardType: TextInputType.number,
-                            onChanged: (v){},
-                            autoFocus: true,
-                            length: 4,
-                            obscureText: true,
-                            animationType: AnimationType.fade,
-                            pinTheme: PinTheme(
-                              activeFillColor: kWhite,
-                              inactiveFillColor: kWhite,
-                              selectedFillColor: kWhite,
-                              activeColor: kGrey1,
-                              inactiveColor: kGrey1,
-                              selectedColor: kGrey1,
-                              shape: PinCodeFieldShape.box,
-                              borderRadius: BorderRadius.circular(5),
-                              fieldHeight: 61.h,
-                              fieldWidth: 51.w,
-                            ),
-                            animationDuration: Duration(milliseconds: 300),
-                            controller: transactionPinController,
-                            onCompleted: (v) async{
-                              pin=v;
-                            },
-                            beforeTextPaste: (text) {
-                              print("Allowing to paste $text");
-                              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                              //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                              return true;
-                            }, appContext: context,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height:47.h),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          height: 50.h,
-                          width: 241.w,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: kBlue),
-                            onPressed: ()  async {
-                              transactionPinController.clear();
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context, builder: (context){
-                                return Container(child:
-                                SpinKitCircle(
-                                  color: kYellow,
-                                ),);});
-                              Map loginResponse = await sendLoginDetails(pin: pin);
-                              inputVaultPin.clear();
-                              if(loginResponse['statusCode'] != 200){
-                                Navigator.pop(context);
-                                showToast('Incorrect Transaction Pin');
-                              }
-                              else{
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                print('$accountNum:${context.read<FirstData>().fromWallet}:${sendFundsAmountCont.text}:$bankCode');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PaymentGateway(
-                                              details: 'Fund Successfully Sent for processing',
-                                              future: wallet2Bank(accountNum, context.read<FirstData>().fromWallet,
-                                                  sendFundsAmountCont.text,accountName!, bankCode!),
-                                              function: (){
-                                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                                    SendCash()));
-                                              }, amount: sendFundsAmountCont.text, purpose: 'funds transfer',
-                                            )));
-
-                                //print('$fromWallet, ${sendFundsVaultNumCont.text}, ${sendFundsAmountCont.text}');
-
-                                // final res = await wallet2wallet(fromWallet, sendFundsVaultNumCont.text, sendFundsAmountCont.text);
-                                // Navigator.pop(context);
-                                // Navigator.pop(context);
-
-                                // final passPaymentStat = await payForPass(passId: context.read<PassSubDetails>().passId!);
-                                // if(passPaymentStat['statusCode'] == 200){
-                                //   showToast(passPaymentStat['errorMessage']);
-                                //   Navigator.push(context, MaterialPageRoute(builder: (context)=>  PassPurchaseConfirm()));
-                                // }
-                                // else{
-                                //   Navigator.pop(context);
-                                //   showToast(passPaymentStat['errorMessage']);
-                                // }
-                              }                                    },
-                            child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+            (context.read<FirstData>().fromWallet == ''
+                || sendFundsAmountCont.text == ''
+                || bankCode == null
+                || accNumberCont.text == ''
+            )?null:() async {
+              context.read<FirstData>().savePayRoute('w2b');
+              context.read<PaymentData>().saveAccountNum(accNumberCont.text);
+              context.read<PaymentData>().saveAccountName(accountName!);
+              context.read<PaymentData>().saveAmount(sendFundsAmountCont.text);
+              context.read<PaymentData>().saveCode(bankCode!);
+              paymentConfirm(
+                  context,
+                  sendFundsAmountCont.text,
+                  'Funds transfer'
               );
-            });
+
+            };
           },
           child: Text('Next',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
         ),

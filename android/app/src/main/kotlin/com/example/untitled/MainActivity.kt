@@ -1,4 +1,4 @@
-package ng.wynk.wynksupapp
+package ng.wynk.wynksupappsupapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -10,7 +10,7 @@
 // import '../../utilities/constants/colors.dart';
 // import '../../utilities/constants/textstyles.dart';
 // import '../../utilities/widgets.dart';
-// import 'airtime_payment_gateway.dart';
+// import 'payment_gateway.dart';
 // class Startimes extends StatefulWidget {
 //   const Startimes({Key? key}) : super(key: key);
 //
@@ -140,7 +140,7 @@
 //                               keyboardType:TextInputType.text,
 //                               style: TextStyle(fontSize: 15.sp,),
 //                               decoration:   InputDecoration.collapsed(
-//                                   hintText:  'NGN 19,800',
+//                                   hintText:  '₦‎ 19,800',
 //                                   hintStyle:  TextStyle(fontSize: 15.sp,
 //                                       color: kBlack1
 //                                   )),),
@@ -149,7 +149,7 @@
 //                       ),
 //                     )
 //                 ),
-//                 Text('You will be charged a fee of NGN 120 for \nthis transaction.',style: TextStyle(fontSize: 12.5.sp,color: Colors.red),),
+//                 Text('You will be charged a fee of ₦‎ 120 for \nthis transaction.',style: TextStyle(fontSize: 12.5.sp,color: Colors.red),),
 //                 SizedBox(height: 88.h,),
 //                 SizedBox(
 //                   height: 50.h,

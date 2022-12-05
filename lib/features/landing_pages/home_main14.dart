@@ -147,8 +147,7 @@ class _HomeMain14State extends State<HomeMain14> {
 
   @override
   void initState() {
-    getCapDet();
-    refresh(context);
+    Future.delayed(Duration(milliseconds: 50),(){refresh(context);});
     initDynamicLinks(context);
     balanceFN = FocusNode();
     text=context.read<FirstData>().username?.toLowerCase();
@@ -641,7 +640,7 @@ class _HomeMain14State extends State<HomeMain14> {
                             child: Text('Discover Wynk',style: kTextStyle5,),
                           ),
                           Opacity(
-                            opacity: 0.4,
+                            opacity: 1,
                             child: SizedBox(
                                 height: 150.h,
                                 child: ListView(
@@ -661,7 +660,7 @@ class _HomeMain14State extends State<HomeMain14> {
                             child: Text('Discounts and Promotions',style: kTextStyle5,),
                           ),
                           Opacity(
-                            opacity: 0.4,
+                            opacity: 1,
                             child: SizedBox(
                                 height: 150.h,
                                 child: ListView(
@@ -669,7 +668,7 @@ class _HomeMain14State extends State<HomeMain14> {
                                   children: [
                                     GestureDetector(
                                         onTap:()async{
-                                          getCapDetails(context.read<FirstData>().uniqueId);
+
                                           // getCharges();
                                           //infobipVoiceCall();
                                          // multiChoiceLookup('DSTV');

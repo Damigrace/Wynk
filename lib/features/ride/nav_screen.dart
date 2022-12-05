@@ -433,7 +433,7 @@ class _NavScreenState extends State<NavScreen> {
                                        Rides(
                                          image: 'lib/assets/images/rides/economy.png',
                                          title: 'Economy',
-                                         time: '10:20 Dropoff',
+                                         time: '$totalDuration Dropoff',
                                          price: '₦ 700 - ₦ 1,100', color: Color(0xffF7F7F7),),
                                        SizedBox(height: 21.h,),
                                        Text('Select Payment Method',style: TextStyle(fontSize: 18.sp),),
@@ -563,7 +563,7 @@ class _NavScreenState extends State<NavScreen> {
                  child: Rides(
                    image: 'lib/assets/images/rides/sedan.png',
                    title: 'Sedan',
-                   time: '10:20 Dropoff',
+                   time: '$totalDuration Dropoff',
                    price: '₦ 900 - ₦ 1,500', color: Color(0xffF7F7F7),),
                ),
                SizedBox(height: 22.h,),
@@ -598,7 +598,7 @@ class _NavScreenState extends State<NavScreen> {
                                      Rides(
                                        image: 'lib/assets/images/rides/taxi.png',
                                        title: 'Taxi',
-                                       time: '10:20 Dropoff',
+                                       time: '$totalDuration Dropoff',
                                        price: '₦ 700 - ₦ 1,100', color: Colors.white,),
                                      SizedBox(height: 21.h,),
                                      Text('Select Payment Method',style: TextStyle(fontSize: 18.sp),),
@@ -642,7 +642,7 @@ class _NavScreenState extends State<NavScreen> {
                  child: Rides(
                    image: 'lib/assets/images/rides/taxi.png',
                    title: 'Taxi',
-                   time: '10:20 Dropoff',
+                   time: '$totalDuration Dropoff',
                    price: '₦ 700 - ₦ 1,100', color: Colors.white,),
                ),
                SizedBox(height: 22.h,),
@@ -677,7 +677,7 @@ class _NavScreenState extends State<NavScreen> {
                                      Rides(
                                        image: 'lib/assets/images/rides/moto.png',
                                        title: 'Moto',
-                                       time: '10:20 Dropoff',
+                                       time: '$totalDuration Dropoff',
                                        price: '₦ 500 - ₦ 700', color: Colors.white,),
                                      SizedBox(height: 21.h,),
                                      Text('Select Payment Method',style: TextStyle(fontSize: 18.sp),),
@@ -721,7 +721,7 @@ class _NavScreenState extends State<NavScreen> {
                  child:Rides(
                    image: 'lib/assets/images/rides/moto.png',
                    title: 'Moto',
-                   time: '10:20 Dropoff',
+                   time: '$totalDuration Dropoff',
                    price: '₦ 500 - ₦ 700', color: Colors.white,),
                ),
              ],

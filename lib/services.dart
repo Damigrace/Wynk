@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart' ;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as htp;
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,11 +17,13 @@ import 'package:wynk/features/registration_feature/otherRegNIn.dart';
 import 'package:wynk/features/verification_feature/confirm_transaction_pin.dart';
 import 'package:wynk/main.dart';
 import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/constants/textstyles.dart';
 import 'package:wynk/utilities/widgets.dart';
 import 'controllers.dart';
+import 'features/payments/payment_gateway.dart';
 import 'utilities/models/data_confirmation.dart';
 import 'features/registration_feature/register_page.dart';
-import 'features/registration_feature/sign_up_personal_details.dart';
+import 'features/registration_feature/nigerian_reg.dart';
   String wynkBaseUrl='https://wynk.ng/stagging-api';
 
   showSnackBar(BuildContext context, String msg){
@@ -1157,7 +1161,7 @@ Future responseFromPhone(String phoneNumber)async{
   return dataBody;
 }
 
-Future airtime(String phone,String service, String channel, String wallet,String amount)async{
+Future airtime(String phone, String channel, String wallet,String amount)async{
   print('airtiming000000000000000000000000000000000000000');
   print('$phone,$channel,$wallet,$amount');
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1474,4 +1478,135 @@ openMap(double lat, double long)async{
   else{
     throw 'Could not open Map.';
   }
+}
+
+Future<void> paymentConfirm(
+    BuildContext context,
+    String amount,
+    String purpose
+    ) async {
+  print('2');
+  showDialog(
+      barrierDismissible: false,
+      context: context, builder: (context){
+    return AlertDialog(
+      contentPadding: EdgeInsets.all(30.w),
+      shape:  RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18)
+      ),
+      content: Container(
+        width: 301.w,
+        // height:270.h,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Transaction details',style:  TextStyle(fontSize: 20.sp),),
+                GestureDetector(
+                  onTap: ()=>Navigator.pop(context),
+                  child: SizedBox(
+                      width: 42.w,
+                      height: 42.w,
+                      child: Image.asset('lib/assets/images/rides/cancel1.png')),
+                )
+              ],
+            ),
+            SizedBox(height: 15.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('You are about to pay',style:  kBoldBlack.copyWith(fontWeight: FontWeight.w400),),
+                Text('₦ $amount',style:  TextStyle(fontSize: 18.sp,
+                    color: kBlue,fontWeight: FontWeight.w600))
+              ],),
+            SizedBox(height: 10.h,),
+            Container(color: kGrey1,height: 2,),
+            SizedBox(height: 10.h,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 13.h,),
+                Text('Enter your 4-digit PIN to authorise \nthis transaction.',
+                    style: TextStyle(fontSize: 10.sp)),
+              ],),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                margin:  EdgeInsets.only(top: 20.h),
+                height: 61.h,
+                width: 260.w,
+                decoration:  BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),),
+                child: PinCodeTextField(
+                  showCursor: true,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  autoUnfocus: true,
+                  autoDisposeControllers: false,
+                  keyboardType: TextInputType.number,
+                  onChanged: (v){},
+                  autoFocus: true,
+                  length: 4,
+                  obscureText: true,
+                  animationType: AnimationType.fade,
+                  pinTheme: PinTheme(
+                    activeFillColor: kWhite,
+                    inactiveFillColor: kWhite,
+                    selectedFillColor: kWhite,
+                    activeColor: kGrey1,
+                    inactiveColor: kGrey1,
+                    selectedColor: kGrey1,
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(5),
+                    fieldHeight: 61.h,
+                    fieldWidth: 51.w,
+                  ),
+                  animationDuration: Duration(milliseconds: 300),
+                  controller: transactionPinController,
+                  beforeTextPaste: (text) {
+                    //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                    //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                    return true;
+                  }, appContext: context,
+                ),
+              ),
+            ),
+            SizedBox(height:47.h),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 50.h,
+                width: 241.w,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: kBlue),
+                  onPressed: ()  async{
+                    spinner(context);
+                    Map loginResponse = await sendLoginDetails(pin: transactionPinController.text);
+                    transactionPinController.clear();
+                    if(loginResponse['statusCode'] != 200){
+                      Navigator.pop(context);
+                      showToast('Incorrect Transaction Pin');
+                    }
+                    else{
+                      print('3');
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return PaymentGateway(amount: amount, purpose: purpose,
+                        );
+                      }));
+                      }
+                    },
+                  child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  });
 }

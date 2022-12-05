@@ -118,7 +118,11 @@ class _RideSchedulePickupState extends State<RideSchedulePickup> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Schedule a ride'),
-                        Image.asset('lib/assets/images/rides/cancel1.png',width: 33.w,height: 33.w,)
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
+                            child: Image.asset('lib/assets/images/rides/cancel1.png',width: 33.w,height: 33.w,))
                     ],),
                     SizedBox(height: 9.h,),
                     Material(

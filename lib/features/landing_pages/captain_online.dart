@@ -359,66 +359,73 @@ class _CaptainOnlineState extends State<CaptainOnline> {
               ],),
           );
         });
-    return Scaffold(
-      body: Stack(children: [
-        GoogleMap(
-          markers: {
-            if(origin!=null)origin!,
+    return WillPopScope (
+      onWillPop: ()async{
+          await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+            HomeMain14()));
+          return false;
+      },
+      child: Scaffold(
+        body: Stack(children: [
+          GoogleMap(
+            markers: {
+              if(origin!=null)origin!,
+            },
+
+            onMapCreated: GMapCont,
+            myLocationEnabled: false,
+            zoomControlsEnabled: false,
+            initialCameraPosition : initialCameraPosition,
+          ),
+          Positioned(
+          top: 77.h,
+          left: 25.w,
+          child: backButton(context)),
+          FutureBuilder(
+          future: getNotification(wynkid: context.read<FirstData>().uniqueId!),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if(!snapshot.hasData){
+              return DraggabbleSS;
+             }
+            else{
+              if(snapshot.data['statusCode'] == 200 ){
+                notified == false?
+                {
+                  NotificationService.showNotif('Wynk', 'You have a ride request'),
+                  notified = true
+                } :{};
+                sheetTimer?.cancel();
+                saveDetails(snapshot.data,context);
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: kBlueTint,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    width: 150.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 10.h,),
+                        SpinKitCircle(color: kYellow,),
+                        SizedBox(height: 10.h,),
+                        Text('Getting Ride Details',style: TextStyle(color: Colors.white,fontSize: 18.sp),textAlign: TextAlign.center,),
+                        SizedBox(height: 10.h,),
+                      ],
+                    ),
+                  ),
+                );
+              }
+             else{
+               return
+                 DraggabbleSS;
+              }
+            }
+
           },
 
-          onMapCreated: GMapCont,
-          myLocationEnabled: false,
-          zoomControlsEnabled: false,
-          initialCameraPosition : initialCameraPosition,
-        ),
-        Positioned(
-        top: 77.h,
-        left: 25.w,
-        child: backButton(context)),
-        FutureBuilder(
-        future: getNotification(wynkid: context.read<FirstData>().uniqueId!),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(!snapshot.hasData){
-            return DraggabbleSS;
-           }
-          else{
-            if(snapshot.data['statusCode'] == 200 ){
-              notified == false?
-              {
-                NotificationService.showNotif('Wynk', 'You have a ride request'),
-                notified = true
-              } :{};
-              sheetTimer?.cancel();
-              saveDetails(snapshot.data,context);
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: kBlueTint,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  width: 150.w,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 10.h,),
-                      SpinKitCircle(color: kYellow,),
-                      SizedBox(height: 10.h,),
-                      Text('Getting Ride Details',style: TextStyle(color: Colors.white,fontSize: 18.sp),textAlign: TextAlign.center,),
-                      SizedBox(height: 10.h,),
-                    ],
-                  ),
-                ),
-              );
-            }
-           else{
-             return
-               DraggabbleSS;
-            }
-          }
-
-        },
-
-        )
-      ],) ,);
+          )
+        ],) ,),
+    );
   }
 }

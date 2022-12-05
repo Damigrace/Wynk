@@ -8,7 +8,7 @@
 PRODUCT_NAME = wynk
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = ng.wynk.wynksupapp
+PRODUCT_BUNDLE_IDENTIFIER = ng.wynk.wynksupappsupapp
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 ng.wynk. All rights reserved.

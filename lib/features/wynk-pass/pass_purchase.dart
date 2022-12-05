@@ -54,6 +54,7 @@ class _PassPurchasePinState extends State<PassPurchasePin> {
                    backButton(context),
                   ],),
               ),
+
               SizedBox(height: 83.h,),
               Text('Please Enter Your PIN',style: TextStyle(fontSize: 25.sp,fontWeight: FontWeight.w600),),
               Align(

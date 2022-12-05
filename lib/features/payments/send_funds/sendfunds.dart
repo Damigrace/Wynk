@@ -14,7 +14,7 @@ import '../../../utilities/constants/colors.dart';
 import '../../../utilities/constants/textstyles.dart';
 import '../../../utilities/widgets.dart';
 import '../../wynk-pass/pass_purchase_success.dart';
-import '../airtime_payment_gateway.dart';
+import '../payment_gateway.dart';
 import '../payment_list.dart';
 
 class SendFunds1 extends StatefulWidget {

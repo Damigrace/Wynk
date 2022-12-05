@@ -11,7 +11,7 @@ import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/models/lists.dart';
 import '../../utilities/widgets.dart';
-import 'airtime_payment_gateway.dart';
+import 'payment_gateway.dart';
 class PowerUtilityMain extends StatefulWidget {
   const PowerUtilityMain({Key? key}) : super(key: key);
 
@@ -196,7 +196,7 @@ class _PowerUtilityMainState extends State<PowerUtilityMain> {
                             keyboardType:TextInputType.number,
                             style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
                             decoration:   InputDecoration.collapsed(
-                                hintText:  'Minimum of NGN 2,000',
+                                hintText:  'Minimum of ₦‎ 2,000',
                                 hintStyle:  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,
                                     color: kBlack1
                                 )),),
@@ -205,7 +205,7 @@ class _PowerUtilityMainState extends State<PowerUtilityMain> {
                     )
                 ),
                 SizedBox(height: 20.h,),
-                Text('You will be charged a fee of NGN 120 for \nthis transaction.',
+                Text('You will be charged a fee of ₦‎ 120 for \nthis transaction.',
                   style: TextStyle(fontSize: 12.5.sp,color: Colors.red),),
                 SizedBox(height: 20.h,),
                 SizedBox(

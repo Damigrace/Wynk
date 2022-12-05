@@ -12,7 +12,7 @@ import '../../../main.dart';
 import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/widgets.dart';
-import '../airtime_payment_gateway.dart';
+import '../payment_gateway.dart';
 class SendToWynk extends StatefulWidget {
   const SendToWynk({Key? key}) : super(key: key);
 
@@ -259,130 +259,18 @@ class _SendToWynkState extends State<SendToWynk> {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: kBlue),
-            onPressed: () async {
-              await showDialog(
-                  barrierDismissible: false,
-                  context: context, builder: (context){
-                return AlertDialog(
-                  contentPadding: EdgeInsets.all(30.w),
-                  shape:  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18)
-                  ),
-                  content: Container(
-                    width: 301.w,
-                    // height:270.h,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Enter PIN',
-                                  style: TextStyle(fontSize: 15.sp),textAlign: TextAlign.center,),
-                                SizedBox(height: 13.h,),
-                                Text('Enter your 4-digit PIN to authorise \nthis transaction.',
-                                    style: TextStyle(fontSize: 10.sp)),
-                              ],),
-                            GestureDetector(
-                              onTap: ()=>Navigator.pop(context),
-                              child: SizedBox(
-                                  width: 42.w,
-                                  height: 42.w,
-                                  child: Image.asset('lib/assets/images/rides/cancel1.png')),
-                            )
-                          ],),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            margin:  EdgeInsets.only(top: 20.h),
-                            height: 61.h,
-                            width: 260.w,
-                            decoration:  BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),),
-                            child: PinCodeTextField(
-                              showCursor: true,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              autoUnfocus: true,
-                              autoDisposeControllers: false,
-                              keyboardType: TextInputType.number,
-                              onChanged: (v){},
-                              autoFocus: true,
-                              length: 4,
-                              obscureText: true,
-                              animationType: AnimationType.fade,
-                              pinTheme: PinTheme(
-                                activeFillColor: kWhite,
-                                inactiveFillColor: kWhite,
-                                selectedFillColor: kWhite,
-                                activeColor: kGrey1,
-                                inactiveColor: kGrey1,
-                                selectedColor: kGrey1,
-                                shape: PinCodeFieldShape.box,
-                                borderRadius: BorderRadius.circular(5),
-                                fieldHeight: 61.h,
-                                fieldWidth: 51.w,
-                              ),
-                              animationDuration: Duration(milliseconds: 300),
-                              controller: transactionPinController,
-                              onCompleted: (value) async{
-                                pin = value;
-                                print('valueeeeeeeeeeeeeeeeeeeee : $value');
-                              },
-                              beforeTextPaste: (text) {
-                                print("Allowing to paste $text");
-                                //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                return true;
-                              }, appContext: context,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height:47.h),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            height: 50.h,
-                            width: 241.w,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: kBlue),
-                              onPressed: ()  async{
-                                spinner(context);
-                                Map loginResponse = await sendLoginDetails(pin: pin);
-                                transactionPinController.clear();
-                                if(loginResponse['statusCode'] != 200){
-                                  Navigator.pop(context);
-                                  showToast('Incorrect Transaction Pin');
-                                }
-                                else{
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                      PaymentGateway(
-                                        future: wallet2wallet(context.read<FirstData>().fromWallet,
-                                            sendFundsVaultNumCont.text, sendFundsAmountCont.text),
-                                        function: (){
-                                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                              SendCash()));
-                                        }, amount: sendFundsAmountCont.text, purpose: 'funds transfer',
-                                      )
-                                  ));
-
-                                }
-                              },
-                              child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
+            onPressed: (context.read<FirstData>().fromWallet == ''
+                || sendFundsAmountCont.text == ''
+                || sendFundsWynkid.text == ''
+            )?null:() async {
+              context.read<FirstData>().savePayRoute('w2w');
+              context.read<PaymentData>().saveToWallet(sendFundsVaultNumCont.text);
+              context.read<PaymentData>().saveAmount(sendFundsAmountCont.text);
+              paymentConfirm(
+                  context,
+                  sendFundsAmountCont.text,
+                  'Funds transfer'
+              );
 
             },
             child: Text('Transfer',style: TextStyle(fontSize: 18.sp,color: Colors.white),),

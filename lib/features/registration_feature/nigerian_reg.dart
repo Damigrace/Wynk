@@ -17,14 +17,14 @@ import 'otherRegNIn.dart';
 Map? userData;
 dynamic  base64String;
 
-class SignUpPersonalDetails extends StatefulWidget {
-  const SignUpPersonalDetails({Key? key}) : super(key: key);
+class NigerianReg extends StatefulWidget {
+  const NigerianReg({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPersonalDetails> createState() => _SignUpPersonalDetailsState();
+  State<NigerianReg> createState() => _NigerianRegState();
 }
 
-class _SignUpPersonalDetailsState extends State<SignUpPersonalDetails> {
+class _NigerianRegState extends State<NigerianReg> {
   bool showSpinner=false;
   @override
   Widget build(BuildContext context) {

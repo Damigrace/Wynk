@@ -8,7 +8,7 @@ import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
-import 'airtime_payment_gateway.dart';
+import 'payment_gateway.dart';
 import 'internet_sub_main.dart';
 class SmileSubPage extends StatefulWidget {
   const SmileSubPage({Key? key}) : super(key: key);
@@ -183,7 +183,7 @@ class _SmileSubPageState extends State<SmileSubPage> {
                       )
                   ),
                 ),
-                Text('You will be charged a fee of NGN 120 for \nthis transaction.',style: TextStyle(fontSize: 12.5.sp,color: Colors.red),),
+                Text('You will be charged a fee of ₦‎ 120 for \nthis transaction.',style: TextStyle(fontSize: 12.5.sp,color: Colors.red),),
                 SizedBox(height: 88.h,),
                 SizedBox(
                   height: 50.h,
@@ -250,7 +250,8 @@ class _SmileSubPageState extends State<SmileSubPage> {
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: kBlue),
-                                      onPressed: ()  async {
+                                      onPressed:
+                                          ()  async {
                                         Navigator.pop(context);
                                         spinner(context);
                                      await showDialog(
@@ -342,23 +343,18 @@ class _SmileSubPageState extends State<SmileSubPage> {
                                                    child: ElevatedButton(
                                                      style: ElevatedButton.styleFrom(
                                                          backgroundColor: kBlue),
-                                                     onPressed: ()  {
-                                                       Navigator.pop(context);
-                                                       Navigator.pop(context);
-                                                       Navigator.push(
+                                                     onPressed: () async{
+                                                       context.read<FirstData>().savePayRoute('smile');
+                                                       context.read<PaymentData>().saveAccountNum(smileAccCont.text);
+                                                       context.read<PaymentData>().saveCode(selectedCard!.code);
+                                                       context.read<PaymentData>().saveAmount(selectedCard!.price);
+                                                       context.read<PaymentData>().saveProductCode(pCode!);
+                                                       paymentConfirm(
                                                            context,
-                                                           MaterialPageRoute(
-                                                               builder: (context) =>
-                                                                   PaymentGateway(
-                                                                     future: smilePurchase(
-                                                                         smileAccCont.text, selectedCard!.code,
-                                                                         selectedCard!.price, pCode!, context.read<FirstData>().fromWallet!),
+                                                           airtimeAmountCont.text,
+                                                           'smile data purchase'
+                                                       );
 
-                                                                     function: (){
-                                                                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                                                           InternetSubMain()));
-                                                                     }, amount:selectedCard!.price, purpose: 'Smile subscription',
-                                                                   )));
                                                      },
                                                      child: Text('Pay',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
                                                    ),

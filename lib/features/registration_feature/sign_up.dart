@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wynk/features/registration_feature/sign_up_personal_details.dart';
+import 'package:wynk/features/registration_feature/nigerian_reg.dart';
 import 'package:wynk/main.dart';
 import 'package:wynk/utilities/constants/colors.dart';
 import 'package:wynk/utilities/constants/textstyles.dart';
@@ -137,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                           case 'Bank Verification Number': context.read<FirstData>().getSelectedId('bvn');break;
                           default:context.read<FirstData>().getSelectedId('nin');
                         }
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignUpPersonalDetails()
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const NigerianReg()
                         ));
                         setState(() {
                           showSpinner=false;

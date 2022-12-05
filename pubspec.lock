@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  animated_splash_screen:
-    dependency: "direct main"
-    description:
-      name: animated_splash_screen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   archive:
     dependency: transitive
     description:
@@ -286,13 +279,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  flutter_google_places:
-    dependency: "direct main"
-    description:
-      name: flutter_google_places
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -314,13 +300,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  flutter_phoenix:
-    dependency: "direct main"
-    description:
-      name: flutter_phoenix
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   flutter_phone_direct_caller:
     dependency: "direct main"
     description:
@@ -450,13 +429,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.5"
-  google_api_headers:
-    dependency: transitive
-    description:
-      name: google_api_headers
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.0"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -487,13 +459,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
-  google_maps_webservice:
-    dependency: "direct main"
-    description:
-      name: google_maps_webservice
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.20-nullsafety.5"
   google_place:
     dependency: "direct main"
     description:
@@ -704,27 +669,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
-  page_transition:
-    dependency: transitive
-    description:
-      name: page_transition
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.9"
   path:
     dependency: transitive
     description:
@@ -851,13 +795,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.26.0"
   screenshot:
     dependency: "direct main"
     description:

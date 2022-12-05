@@ -27,6 +27,7 @@ import '../../utilities/widgets.dart';
 import 'package:location/location.dart';
 
 import '../wynk-pass/wynk_pass_confirmation.dart';
+import 'home_main14.dart';
 class CaptainHome extends StatefulWidget {
   const CaptainHome({Key? key}) : super(key: key);
 
@@ -113,81 +114,88 @@ class _CaptainHomeState extends State<CaptainHome> with SingleTickerProviderStat
         zIndex: 30
     );
     markers.add(origin!);
-    return Scaffold(
-      key: _key,
-      drawer: Drawer(
-        width: 250.w,
-        child: DrawerWidget(),
-      ),
-      body: Stack(children: [
-        GoogleMap(
-          markers: markers.map((e) => e).toSet(),
-          onMapCreated: GMapCont,
-          myLocationEnabled: false,
-          zoomControlsEnabled: false,
-          initialCameraPosition : initialCameraPosition,
+    return WillPopScope(
+      onWillPop: ()async{
+        await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+            HomeMain14()));
+        return false;
+      },
+      child: Scaffold(
+        key: _key,
+        drawer: Drawer(
+          width: 250.w,
+          child: DrawerWidget(),
         ),
-        Positioned(
-          bottom: 0,
-          child: SizedBox(
-            height: 61.h,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: kBlue),
-                  onPressed: ()async{
+        body: Stack(children: [
+          GoogleMap(
+            markers: markers.map((e) => e).toSet(),
+            onMapCreated: GMapCont,
+            myLocationEnabled: false,
+            zoomControlsEnabled: false,
+            initialCameraPosition : initialCameraPosition,
+          ),
+          Positioned(
+            bottom: 0,
+            child: SizedBox(
+              height: 61.h,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: kBlue),
+                    onPressed: ()async{
 
-                    showDialog(context: context, builder: (context){
-                      return Container(child:
-                      SpinKitCubeGrid(
-                        color: kYellow,
-                      ),);
-                    });
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    String? wynkid = prefs.getString('Origwynkid');
-                    context.read<FirstData>().saveUniqueId(wynkid);
-                     final passStatus = await getCurrentPass();
+                      showDialog(context: context, builder: (context){
+                        return Container(child:
+                        SpinKitCubeGrid(
+                          color: kYellow,
+                        ),);
+                      });
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String? wynkid = prefs.getString('Origwynkid');
+                      context.read<FirstData>().saveUniqueId(wynkid);
+                       final passStatus = await getCurrentPass();
 
-                   if(passStatus['statusCode'] == 200){
-                     Navigator.pop(context);
-                     context.read<FirstData>().saveCapOnlineStat(true);
-                     Navigator.pushReplacementNamed(context,'/CaptainOnline');}
-                   else{
-                     showToast(passStatus['errorMessage']);
-                     final passNum = await passDetail();
-                     context.read<PassSubDetails>().prepaidPasses.clear();
-                     context.read<PassSubDetails>().postpaidPasses.clear();
-                     final passes = passNum['message'] as List;
-                     for(Map<String, dynamic> pass in passes){
-                      WhiteWynkPass passModel = WhiteWynkPass(
-                         subType: 'post-paid',
-                         amount: pass['amount'],
-                         passName: pass['pass_name'],
-                         passId: pass['pass_id'],
-                         duration: pass['duration'],
-                      );
-                      if(pass['pass_type'] == '1'){context.read<PassSubDetails>().savePrepaidPass(passModel);}
-                      if(pass['pass_type'] == '2'){context.read<PassSubDetails>().savePostpaidPass(passModel);}
+                     if(passStatus['statusCode'] == 200){
+                       Navigator.pop(context);
+                       context.read<FirstData>().saveCapOnlineStat(true);
+                       Navigator.pushReplacementNamed(context,'/CaptainOnline');}
+                     else{
+                       showToast(passStatus['errorMessage']);
+                       final passNum = await passDetail();
+                       context.read<PassSubDetails>().prepaidPasses.clear();
+                       context.read<PassSubDetails>().postpaidPasses.clear();
+                       final passes = passNum['message'] as List;
+                       for(Map<String, dynamic> pass in passes){
+                        WhiteWynkPass passModel = WhiteWynkPass(
+                           subType: 'post-paid',
+                           amount: pass['amount'],
+                           passName: pass['pass_name'],
+                           passId: pass['pass_id'],
+                           duration: pass['duration'],
+                        );
+                        if(pass['pass_type'] == '1'){context.read<PassSubDetails>().savePrepaidPass(passModel);}
+                        if(pass['pass_type'] == '2'){context.read<PassSubDetails>().savePostpaidPass(passModel);}
+                       }
+                       Navigator.pop(context);
+                       Navigator.pushNamed(context, '/PassHome');
                      }
-                     Navigator.pop(context);
-                     Navigator.pushNamed(context, '/PassHome');
-                   }
-                   },
-                  child: Text('GO ONLINE',style: TextStyle(fontSize: 15.sp),),
-                ),)
+                     },
+                    child: Text('GO ONLINE',style: TextStyle(fontSize: 15.sp),),
+                  ),)
+            ),
           ),
-        ),
-        Positioned(
-          top: 80.h,
-          right: 28.w,
-          child: GestureDetector(
-            onTap:  () { _key.currentState!.openDrawer();},
-            child: Image.asset('lib/assets/menu.webp'),
+          Positioned(
+            top: 80.h,
+            right: 28.w,
+            child: GestureDetector(
+              onTap:  () { _key.currentState!.openDrawer();},
+              child: Image.asset('lib/assets/menu.webp'),
+            ),
           ),
-        ),
-        UserProfileHeader(),
-      ],) ,);
+          UserProfileHeader(),
+        ],) ,),
+    );
   }
 }
 

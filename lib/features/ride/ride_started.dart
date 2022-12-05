@@ -508,10 +508,13 @@ class _CaptainRideStartedState extends State<CaptainRideStarted> {
                     ],),)
               )),
           Positioned(
-            top: 500.h,
+            top: 400.h,
             right: 0,
             child: GestureDetector(
-              child: CircleAvatar(child: Icon(Icons.more_horiz),),
+              child: CircleAvatar(
+
+                backgroundColor:Colors.green,
+                child: Icon(Icons.navigation_outlined),),
               onTap: (){
                 showOpenMapSheet();
               },

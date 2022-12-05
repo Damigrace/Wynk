@@ -196,7 +196,7 @@ class RidePaymentGateway extends StatelessWidget {
                        GestureDetector(
                          onTap: (){
                            Navigator.pushReplacementNamed(
-                               context,'/TripEnded');
+                               context,'/PatronTripEnded');
                          },
                          child: Container(
 

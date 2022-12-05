@@ -107,6 +107,7 @@ Future <void> main() async{
         ChangeNotifierProvider(create: (_) => CaptainDetails()),
         ChangeNotifierProvider(create: (_) => RideBooking()),
         ChangeNotifierProvider(create: (_) => WalletDetails()),
+        ChangeNotifierProvider(create: (_) => PaymentData()),
       ],
       child:  ScreenUtilInit(
         designSize: const Size(390,844),
@@ -166,7 +167,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<FirstData>().saveNuban('Not Available yet');
+
     return  GetMaterialApp(
       initialRoute: '/',
       routes: {
@@ -213,6 +214,55 @@ class WalletDetails with ChangeNotifier{
     wallets.add(val);
     notifyListeners();
   }
+}
+class PaymentData with ChangeNotifier{
+  String? phone;
+  String? channel;
+  String? amount;
+  String? service;
+  String? accountNum;
+  String? Productcode;
+  String? code;
+  String? toWallet;
+  String? accName;
+  saveAccountNum(String val){
+    accountNum = val;
+    notifyListeners();
+  }
+  saveAccountName(String val){
+    accName = val;
+    notifyListeners();
+  }
+  saveChannel(String val){
+    channel = val;
+    notifyListeners();
+  }
+  saveToWallet(String val){
+    toWallet = val;
+    notifyListeners();
+  }
+  saveCode(String val){
+    code = val;
+    notifyListeners();
+  }
+  saveProductCode(String val){
+    Productcode = val;
+    notifyListeners();
+  }
+  saveService(String val){
+    service = val;
+    notifyListeners();
+  }
+  saveAmount(String val){
+    amount = val;
+    notifyListeners();
+  }
+  savePhone (String val){
+    phone = val;
+    notifyListeners();
+  }
+
+
 }
 class FirstData with ChangeNotifier{
 
@@ -269,6 +319,11 @@ class FirstData with ChangeNotifier{
   String? serviceUnit;
   bool activeRide = false;
   bool capOnline = false;
+  dynamic? payRoute;
+  savePayRoute(dynamic val){
+    payRoute = val;
+    notifyListeners();
+  }
   saveCapOnlineStat(bool val){
     capOnline = val;
     notifyListeners();
@@ -305,6 +360,7 @@ class FirstData with ChangeNotifier{
     notifyListeners();
   }
   String? numCode;
+
   saveNumCode(String val){
     numCode = val;
     notifyListeners();
@@ -804,17 +860,7 @@ class _SplashScreenState extends State<SplashScreen> {
     context.read<FirstData>().saveUserType(userT);
     context.read<FirstData>().saveOriguser(userT);
   }
-  getWalletDet()async{
-    context.read<WalletDetails>().wallets.clear();
-    final res = await walletDetails(context);
-    final wallets = res['message']as List;
-    for(var wallet in wallets){
-      Wallet wal = Wallet(walletName: wallet['walletname'],
-          walletNum: wallet['walletnumber'], currentBalance: wallet['actualBalance']);
-     context.read<WalletDetails>().saveWallet(wal);
-    }
 
-  }
   getNuban()async{
     final res =await getNubanDet(context);
     if(res['statusCode'] == 200){
@@ -827,7 +873,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future <void> signin()async{
     getNuban();
     UserType();
-    getWalletDet();
     final prefs = await SharedPreferences.getInstance();
     context.read<FirstData>().getUserP(prefs.getString('userPic'));
     context.read<FirstData>().getUsername(prefs.getString('firstname'));

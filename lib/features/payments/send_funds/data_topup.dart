@@ -11,7 +11,7 @@ import '../../../services.dart';
 import '../../../utilities/constants/colors.dart';
 import '../../../utilities/constants/textstyles.dart';
 import '../../../utilities/widgets.dart';
-import '../airtime_payment_gateway.dart';
+import '../payment_gateway.dart';
 import '../mobile_recharge.dart';
 
 class DataTopUp extends StatefulWidget {
@@ -362,135 +362,16 @@ class _DataTopUpState extends State<DataTopUp> {
                   backgroundColor: kBlue),
               onPressed: (newRes == null || selectedCard == null ||context.read<FirstData>().fromWallet == null)?null
                   :() async{
-                  await showDialog(
-                      barrierDismissible: false,
-                      context: context, builder: (context){
-                    return AlertDialog(
-                      contentPadding: EdgeInsets.all(30.w),
-                      shape:  RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18)
-                      ),
-                      content: Container(
-                        width: 301.w,
-                        height:270.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Enter PIN',
-                                      style: TextStyle(fontSize: 15.sp),textAlign: TextAlign.center,),
-                                    SizedBox(height: 13.h,),
-                                    Text('Enter your 4-digit PIN to authorise \nthis transaction.',
-                                        style: TextStyle(fontSize: 10.sp)),
-                                  ],),
-                                GestureDetector(
-                                  onTap: ()=>Navigator.pop(context),
-                                  child: SizedBox(
-                                      width: 42.w,
-                                      height: 42.w,
-                                      child: Image.asset('lib/assets/images/rides/cancel1.png')),
-                                )
-                              ],),
-
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                margin:  EdgeInsets.only(top: 20.h,bottom: 28.h),
-                                height: 61.h,
-                                width: 260.w,
-                                decoration:  BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7),),
-                                child: PinCodeTextField(
-                                  showCursor: true,
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  autoUnfocus: true,
-                                  autoDisposeControllers: false,
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (v){},
-                                  autoFocus: true,
-                                  length: 4,
-                                  obscureText: true,
-                                  animationType: AnimationType.fade,
-                                  pinTheme: PinTheme(
-                                    activeFillColor: kWhite,
-                                    inactiveFillColor: kWhite,
-                                    selectedFillColor: kWhite,
-                                    activeColor: kGrey1,
-                                    inactiveColor: kGrey1,
-                                    selectedColor: kGrey1,
-                                    shape: PinCodeFieldShape.box,
-                                    borderRadius: BorderRadius.circular(5),
-                                    fieldHeight: 61.h,
-                                    fieldWidth: 51.w,
-                                  ),
-                                  animationDuration: Duration(milliseconds: 300),
-                                  controller: transactionPinController,
-                                  onCompleted: (v) async{
-                                    pin=v;
-
-                                  },
-                                  beforeTextPaste: (text) {
-                                    print("Allowing to paste $text");
-                                    //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                    //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                    return true;
-                                  }, appContext: context,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height:47.h),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                height: 50.h,
-                                width: 241.w,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: kBlue),
-                                  onPressed:() async {
-                                    spinner(context);
-                                    Map loginResponse = await sendLoginDetails(pin: pin!);
-                                    transactionPinController.clear();
-                                    if(loginResponse['statusCode'] != 200){
-                                      Navigator.pop(context);
-                                      showToast('Incorrect Transaction Pin');
-                                    }
-                                    else{
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      selectWalletCont.clear();
-                                      contactSearchCont.clear();
-                                      selectedVal = 5;
-                                      dataPlanCont.clear();
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                          PaymentGateway(
-                                            future: dataPurchase(newRes!, selectedCard!.serviceName,
-                                                selectedCard!.productCode, context.read<FirstData>().fromWallet!, selectedCard!.code),
-                                            function: (){
-                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                                  MobileRecharge()));
-                                            }, amount: selectedCard!.amount, purpose: 'data subscription',
-                                          )
-                                      ));
-
-                                    }
-                                  },
-                                  child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  });
-
+                context.read<FirstData>().savePayRoute('data');
+                context.read<PaymentData>().saveService(selectedCard!.serviceName);
+                context.read<PaymentData>().savePhone(newRes!);
+                context.read<PaymentData>().saveProductCode(selectedCard!.productCode);
+                context.read<PaymentData>().saveCode(selectedCard!.code);
+                paymentConfirm(
+                  context,
+                  selectedCard!.amount,
+                  'data purchase'
+                );
               },
               child: Text('Next',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
             ),

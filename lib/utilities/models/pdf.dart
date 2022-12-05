@@ -99,7 +99,7 @@ Future<Uint8List> pdf (
                       ],),
                     SizedBox(height: 10.h),
                     Container(
-                      width: 380.w,
+                      width: 400.w,
                         height: 400.h,
                         child: Image(MemoryImage(map)) ),
                     SizedBox(height: 40.h),

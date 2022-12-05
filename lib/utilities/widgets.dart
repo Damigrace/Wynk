@@ -719,14 +719,15 @@ class AddTypeInputBox extends StatelessWidget {
  TextEditingController controller;
  TextInputType textInputType;
  bool? readonly;
+ double? elevation;
  VoidCallback function;
-AddTypeInputBox({Key? key,  required this.hintText,required this.controller,required this.textInputType,this.readonly,required this.function}) : super(key: key);
+AddTypeInputBox({Key? key,  required this.hintText,required this.controller,required this.textInputType,this.readonly,this.elevation,required this.function}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Material(
           borderRadius: BorderRadius.circular(7),
-          elevation: 3,
+          elevation: elevation??3,
           child: Container(
               height: 61.h,
               width: double.infinity,
@@ -1529,6 +1530,9 @@ class _phoneFieldState extends State<phoneField> {
   @override
   Widget build(BuildContext context) {
     return IntlPhoneField(
+      onCountryChanged: (val){
+        context.read<FirstData>().saveNumCode('+${val.dialCode}');
+      },
       style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
       inputFormatters: [LengthLimitingTextInputFormatter(10),],
       autofocus: true,
@@ -1555,23 +1559,46 @@ class _phoneFieldState extends State<phoneField> {
       ),
       initialCountryCode: 'NG',
       showDropdownIcon: true,
+
       dropdownIconPosition:IconPosition.trailing,
       onChanged: (phone) {
+        print(context.read<FirstData>().numCode);
+        switch(context.read<FirstData>().numCode){
+          case '+234':{setState(() {
+            if (userNumLogController.text.length<10){
+              setState(() {
+                context.read<FirstData>().saveNumComplete(false);
+                bordCol = Colors.red;
+              });
+            }
+            else{
+              FocusScope.of(context).nextFocus();
+              context.read<FirstData>().saveNumComplete(true);
+              bordCol = kGrey1;
+            }
+          });
+            break;
+          }
+          case '+27':{setState(() {
+            if (userNumLogController.text.length<9){
+              setState(() {
+                context.read<FirstData>().saveNumComplete(false);
+                bordCol = Colors.red;
+              });
+            }
+            else{
+              FocusScope.of(context).nextFocus();
+              context.read<FirstData>().saveNumComplete(true);
+              bordCol = kGrey1;
+            }
+          });
+          break;
+          }
+        }
 
-        setState(() {
-          if (userNumLogController.text.length<10){
-            setState(() {
-              context.read<FirstData>().saveNumComplete(false);
-              bordCol = Colors.red;
-            });
-          }
-          else{
-            FocusScope.of(context).nextFocus();
-            context.read<FirstData>().saveNumComplete(true);
-            bordCol = kGrey1;
-          }
-        });
         numCode=phone.countryCode;
+        print('numCode:$numCode');
+
         context.read<FirstData>().saveNumCode(numCode!);
       },
     );
@@ -1644,8 +1671,18 @@ class WalletCont extends StatefulWidget {
 }
 
 class _WalletContState extends State<WalletCont> {
-  int? selectedWallet;
+  int? selectedWallet = 0;
   bool checkingWallet = false;
+  String? bal;
+  @override
+  void initState() {
+    // TODO: implement initState
+    selectWalletCont.text = context.read<WalletDetails>().wallets[0].walletName.toString()??'';
+    bal = context.read<WalletDetails>().wallets[0].currentBalance.toString()??'';
+    context.read<FirstData>().saveFromWallet(context.read<WalletDetails>().wallets[0].walletNum.toString());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1667,23 +1704,26 @@ class _WalletContState extends State<WalletCont> {
                 readOnly: true,
                 onEditingComplete:()=> FocusScope.of(context).nextFocus(),
                 autofocus: true,
-                style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,
+                style:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,overflow: TextOverflow.ellipsis,
                     color: Colors.black
                 ),
                 decoration:   InputDecoration.collapsed(
                   hintText: 'Select Wallet',
                   hintStyle:  TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,color: kGrey1),)),
           ),
+          SizedBox(width: 10.w,),
+          Container(child: Text('₦ $bal',style: TextStyle(fontSize: 18.sp,color: kYellow,fontWeight: FontWeight.w600)),),
+          SizedBox(width: 10.w,),
           GestureDetector(
               onTap: ()async{
 
                 if(context.read<WalletDetails>().wallets.isEmpty){
                   if(checkingWallet){showSnackBar(context, 'Loading wallet...');}
                   else{
-                    context.read<WalletDetails>().wallets.clear();
                     checkingWallet = true;
                     showSnackBar(context, 'Please wait...');
                   final res = await walletDetails(context);
+                    context.read<WalletDetails>().wallets.clear();
                   final wallets = res['message']as List;
                   for(var wallet in wallets){
                     if(wallet['actualBalance'] == '' ){
@@ -1719,6 +1759,7 @@ class _WalletContState extends State<WalletCont> {
                                     setState(() {
                                   selectedWallet = index;
                                   selectWalletCont.text = wallets.elementAt(index).walletName!;
+                                  bal = wallets.elementAt(index).currentBalance!.toString();
                                   Navigator.pop(context);
                                   context.read<FirstData>().saveFromWallet(wallets.elementAt(index).walletNum!);
                                 });

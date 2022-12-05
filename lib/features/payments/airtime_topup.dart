@@ -12,7 +12,7 @@ import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../utilities/widgets.dart';
-import 'airtime_payment_gateway.dart';
+import 'payment_gateway.dart';
 import 'mobile_recharge.dart';
 class AirtimeTopUp extends StatefulWidget {
   const AirtimeTopUp({Key? key}) : super(key: key);
@@ -295,7 +295,7 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
                     keyboardType:TextInputType.number,
                     style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600,),
                     decoration:   InputDecoration.collapsed(
-                        hintText:  'Minimum of NGN 50',
+                        hintText:  'Minimum of ₦‎ 50',
                         hintStyle:  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,
                             color: kBlack1
                         )),),
@@ -316,141 +316,19 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
               onPressed:(
                   newRes == null ||
                       channel == null
-                          || context.read<FirstData>().fromWallet == null
-                  || airtimeAmountCont.text == ""
+                          || context.read<FirstData>().fromWallet == ''
+                  ||
+                   airtimeAmountCont.text == ""
               )?null:
                   () async{
-                await showDialog(
-                    barrierDismissible: false,
-                    context: context, builder: (context){
-                  return AlertDialog(
-                    contentPadding: EdgeInsets.all(30.w),
-                    shape:  RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)
-                    ),
-                    content: Container(
-                      width: 301.w,
-                      // height:270.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Transaction details',style:  TextStyle(fontSize: 20.sp),),
-                              GestureDetector(
-                                onTap: ()=>Navigator.pop(context),
-                                child: SizedBox(
-                                    width: 42.w,
-                                    height: 42.w,
-                                    child: Image.asset('lib/assets/images/rides/cancel1.png')),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 15.h,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                            Text('Airtime Amount.',style:  TextStyle(fontSize: 16.sp),),
-                            Text('NGN ${airtimeAmountCont.text}',style:  TextStyle(fontSize: 18.sp,
-                            color: kBlue))
-                          ],),
-                          SizedBox(height: 10.h,),
-                          Container(color: kGrey1,height: 2,),
-                          SizedBox(height: 10.h,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 13.h,),
-                              Text('Enter your 4-digit PIN to authorise \nthis transaction.',
-                                  style: TextStyle(fontSize: 10.sp)),
-                            ],),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              margin:  EdgeInsets.only(top: 20.h),
-                              height: 61.h,
-                              width: 260.w,
-                              decoration:  BoxDecoration(
-                                borderRadius: BorderRadius.circular(7),),
-                              child: PinCodeTextField(
-                                showCursor: true,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                autoUnfocus: true,
-                                autoDisposeControllers: false,
-                                keyboardType: TextInputType.number,
-                                onChanged: (v){},
-                                autoFocus: true,
-                                length: 4,
-                                obscureText: true,
-                                animationType: AnimationType.fade,
-                                pinTheme: PinTheme(
-                                  activeFillColor: kWhite,
-                                  inactiveFillColor: kWhite,
-                                  selectedFillColor: kWhite,
-                                  activeColor: kGrey1,
-                                  inactiveColor: kGrey1,
-                                  selectedColor: kGrey1,
-                                  shape: PinCodeFieldShape.box,
-                                  borderRadius: BorderRadius.circular(5),
-                                  fieldHeight: 61.h,
-                                  fieldWidth: 51.w,
-                                ),
-                                animationDuration: Duration(milliseconds: 300),
-                                controller: transactionPinController,
-                                onCompleted: (value) async{
-                                  pin = value;
-                                },
-                                beforeTextPaste: (text) {
-                                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                  return true;
-                                }, appContext: context,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height:47.h),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              height: 50.h,
-                              width: 241.w,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: kBlue),
-                                onPressed: ()  async{
-                                  spinner(context);
-                                  Map loginResponse = await sendLoginDetails(pin: pin!);
-                                  transactionPinController.clear();
-                                  if(loginResponse['statusCode'] != 200){
-                                    Navigator.pop(context);
-                                    showToast('Incorrect Transaction Pin');
-                                  }
-                                  else{
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                        PaymentGateway(
-                                          future: airtime(newRes!, 'service', channel!,
-                                              context.read<FirstData>().fromWallet!, airtimeAmountCont.text),
-                                          function: (){
-                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                                MobileRecharge()));
-                                          }, amount: airtimeAmountCont.text, purpose: 'airtime purchase',
-                                        )
-                                    ));
-                                  }
-                                },
-                                child: Text('Confirm',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    context.read<FirstData>().savePayRoute('airtime');
+                    context.read<PaymentData>().saveChannel(channel!);
+                    context.read<PaymentData>().savePhone(newRes!);
+                  paymentConfirm(
+                     context,
+                     airtimeAmountCont.text,
+                    'airtime purchase'
                   );
-                });
 
               },
               child: Text('Next',style: TextStyle(fontSize: 18.sp,color: Colors.white),),
@@ -459,4 +337,6 @@ class _AirtimeTopUpState extends State<AirtimeTopUp>  {
         )
       ],);
   }
+
+
 }

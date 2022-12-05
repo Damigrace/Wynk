@@ -53,7 +53,7 @@ class _TripEndedState extends State<TripEnded> {
               SizedBox(width: 18.w,),
               Text('Wynk Vault',style: TextStyle(fontSize: 18.sp),),
               Flexible(child: SizedBox(width: 1000,)),
-              Text('NGN ---',style: TextStyle(fontSize: 18.sp),)
+              Text('₦‎ ---',style: TextStyle(fontSize: 18.sp),)
             ],),
           ),
           Container(

@@ -54,7 +54,12 @@ class _RegisterPageState extends State<RegisterPage> {
   String? get user=>Provider.of<FirstData>(context).userNumber;
   PhoneNumber number = PhoneNumber(isoCode: 'NG');
   int selectedV=0;
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<FirstData>().saveNumCode('+234');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white,

@@ -8,7 +8,7 @@
 //
 // import '../../utilities/constants/colors.dart';
 // import '../../utilities/widgets.dart';
-// import 'airtime_payment_gateway.dart';
+// import 'payment_gateway.dart';
 // class Airtime extends StatefulWidget {
 //   const Airtime({Key? key}) : super(key: key);
 //
@@ -195,7 +195,7 @@
 //                             keyboardType:TextInputType.text,
 //                             style: TextStyle(fontSize: 15.sp,),
 //                             decoration:   InputDecoration.collapsed(
-//                                 hintText:  'Minimum:NGN 500',
+//                                 hintText:  'Minimum:₦‎ 500',
 //                                 hintStyle:  TextStyle(fontSize: 15.sp,
 //                                     color: kBlack1
 //                                 )),),

@@ -8,15 +8,16 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-
-import '../../main.dart';
-import '../../services.dart';
-import '../../utilities/constants/colors.dart';
+import 'package:wynk/features/registration_feature/nigerian_reg.dart';
+import 'package:wynk/features/registration_feature/south_africa_reg.dart';
+import 'package:wynk/main.dart';
+import 'package:wynk/services.dart';
+import 'package:wynk/utilities/constants/colors.dart';
+import 'package:wynk/utilities/widgets.dart';
 import '../../utilities/constants/textstyles.dart';
 import '../../controllers.dart';
-import '../../utilities/widgets.dart';
-import '../registration_feature/sign_up_personal_details.dart';
-
+import '../../utilities/models/otp_field.dart';
+import '../registration_feature/sign_up.dart';
 class Verification extends StatefulWidget {
   const Verification({Key? key}) : super(key: key);
 
@@ -170,16 +171,22 @@ class _VerificationState extends State<Verification> {
                           onPressed: () async {
                             spinner(context);
                             Map verificationResult = await doOtpVerification(otp: userInputOtpPin,uniqueId:context.read<FirstData>().uniqueId );
-                            String statusCode=verificationResult['statusCode'].toString();
+                            String statusCode = verificationResult['statusCode'].toString();
                             if(timeOut==false && statusCode=='200'){
                               showSnackBar(context,'OTP successfully verified!');
+                              textEditingController.clear();
                               Navigator.pop(context);
-                              Get.to(()=>SignUpPersonalDetails());
+                              switch ( context.read<FirstData>().numCode){
+                                case '+234': Get.to(()=>NigerianReg()); break;
+                                case '+27':  Get.to(()=>SouthAfricaReg()); break;
+                              }
+
                             }
                             else if(timeOut==true){
                               showSnackBar(context,'Timed out');
                               Navigator.pop(context);}
                             else if(statusCode!='200'){
+                              textEditingController.clear();
                               showSnackBar(context,'Incorrect OTP!');
                               Navigator.pop(context);
                               print('Something is Wrong');}
@@ -199,6 +206,7 @@ class _VerificationState extends State<Verification> {
                                 context.read<FirstData>().saveUniqueId(sentOtpUser['wynkid']);
                                 showSnackBar(context, sentOtpUser['message']);
                                 Navigator.pop(context);
+                                textEditingController.clear();
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
                                 const Verification()
                                 ));

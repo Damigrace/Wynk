@@ -1,21 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import '../../controllers.dart';
+import '../../main.dart';
 import '../../services.dart';
 import '../../utilities/constants/colors.dart';
 import '../../utilities/widgets.dart';
 import '../landing_pages/home_main14.dart';
 import 'mobile_recharge.dart';
 class PaymentGateway extends StatelessWidget {
-   PaymentGateway({Key? key,required this.function,this.future,this.details,required this. amount, required this.purpose}) : super(key: key);
-  Function function;
-  Future? future;
+   PaymentGateway({Key? key, this.function,this.future,this.details,required this. amount, required this.purpose}) : super(key: key);
+  VoidCallback? function;
+  dynamic future;
   String? details;
   String? amount;
   String? purpose;
   @override
   Widget build(BuildContext context) {
-
+    switch(context.read<FirstData>().payRoute){
+      case 'airtime': future = airtime(context.read<PaymentData>().phone!, context.read<PaymentData>().channel!,
+          context.read<FirstData>().fromWallet!, airtimeAmountCont.text);break;
+      case 'data': future = dataPurchase(context.read<PaymentData>().phone!, context.read<PaymentData>().service!,
+          context.read<PaymentData>().Productcode!,
+          context.read<FirstData>().fromWallet!, context.read<PaymentData>().code!);break;
+      case 'w2w': future = wallet2wallet(context.read<FirstData>().fromWallet!,context.read<PaymentData>().toWallet!,
+          context.read<PaymentData>().amount!);break;
+      case 'smile': future = smilePurchase(context.read<PaymentData>().accountNum!,context.read<PaymentData>().code!,
+          context.read<PaymentData>().amount!,context.read<PaymentData>().Productcode!,context.read<FirstData>().fromWallet!);break;
+      case 'w2b': future = wallet2Bank(context.read<PaymentData>().accountNum!, context.read<FirstData>().fromWallet,
+          context.read<PaymentData>().amount!, context.read<PaymentData>().accName!,  context.read<PaymentData>().code!);break;
+      case 'gotv': future = multichoicePurchase(context.read<PaymentData>().code!, context.read<PaymentData>().amount!, context.read<PaymentData>().Productcode!,
+          context.read<FirstData>().fromWallet!);break;
+      case 'dstv': future = multichoicePurchase(context.read<PaymentData>().code!, context.read<PaymentData>().amount!, context.read<PaymentData>().Productcode!,
+          context.read<FirstData>().fromWallet!);break;
+    }
+print('buying airtime');
     return Scaffold(
         body: FutureBuilder(
           future: future,
@@ -63,7 +83,7 @@ class PaymentGateway extends StatelessWidget {
                           TextSpan(
 
                               style: TextStyle(fontSize: 14.sp,height: 1.3.h),
-                              text: 'You have successfully paid a sum of NGN ',
+                              text: 'You have successfully paid a sum of ₦‎ ',
                               children: [
                                 WidgetSpan(child:
                                 Row(
@@ -80,10 +100,9 @@ class PaymentGateway extends StatelessWidget {
                         ),
                         SizedBox(height: 54.h,),
                         GestureDetector(
-                          onTap: (){{
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                MobileRecharge()));
-                          };},
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 40.w),
                             width: double.infinity,
@@ -135,10 +154,9 @@ class PaymentGateway extends StatelessWidget {
                           textAlign: TextAlign.center,),
                         SizedBox(height: 30.h,),
                         GestureDetector(
-                          onTap: (){{
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                MobileRecharge()));
-                          };},
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 40.w),
                             width: double.infinity,
