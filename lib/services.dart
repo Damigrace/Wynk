@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart' ;
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -1609,4 +1610,37 @@ Future<void> paymentConfirm(
       ),
     );
   });
+}
+
+ const callChannel =  MethodChannel('CallChannel');
+
+Future getInfoToken ()async{
+  var url = await Uri.parse ('https://qgvnxr.api.infobip.com/webrtc/1/token');
+  var body = json.encode({
+    "identity": "Dami",
+    "applicationId": "2277594c-76ea-4b8e-a299-e2b6db41b9dc",
+    "displayName": "First Captain",
+    "timeToLive": 43200
+  });
+  var response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: body
+  );
+  var dataBody= json.decode(response.body);
+  print('token $dataBody');
+  return dataBody;
+}
+
+Future<String> call ()async{
+  String callStat;
+  try{
+    var result = await callChannel.invokeMethod('call');
+    callStat =  result.toString();
+  }on PlatformException catch(e){
+    callStat = 'error: ${e.message}';
+  }
+  return callStat;
 }

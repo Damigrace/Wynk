@@ -145,6 +145,7 @@ class _HomeMain14State extends State<HomeMain14> {
   }
 
 
+
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 50),(){refresh(context);});
@@ -668,7 +669,8 @@ class _HomeMain14State extends State<HomeMain14> {
                                   children: [
                                     GestureDetector(
                                         onTap:()async{
-
+                                         String token = await getInfoToken();
+                                         await call();
                                           // getCharges();
                                           //infobipVoiceCall();
                                          // multiChoiceLookup('DSTV');
